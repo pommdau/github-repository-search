@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		DA12C5E22D252C8000296345 /* IKEHGitHubAPI in Frameworks */ = {isa = PBXBuildFile; productRef = DA12C5E12D252C8000296345 /* IKEHGitHubAPI */; };
+		DA12C5EF2D2533C800296345 /* IKEHGitHubAPI in Frameworks */ = {isa = PBXBuildFile; productRef = DA12C5EE2D2533C800296345 /* IKEHGitHubAPI */; };
+		DA96BAAD2D25397D0081B93B /* HTTPTypes in Frameworks */ = {isa = PBXBuildFile; productRef = DA96BAAC2D25397D0081B93B /* HTTPTypes */; };
+		DA96BAAF2D25397D0081B93B /* HTTPTypesFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = DA96BAAE2D25397D0081B93B /* HTTPTypesFoundation */; };
+		DA96BAB22D2539880081B93B /* SwiftID in Frameworks */ = {isa = PBXBuildFile; productRef = DA96BAB12D2539880081B93B /* SwiftID */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,7 +31,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA96BAAD2D25397D0081B93B /* HTTPTypes in Frameworks */,
+				DA96BAB22D2539880081B93B /* SwiftID in Frameworks */,
 				DA12C5E22D252C8000296345 /* IKEHGitHubAPI in Frameworks */,
+				DA12C5EF2D2533C800296345 /* IKEHGitHubAPI in Frameworks */,
+				DA96BAAF2D25397D0081B93B /* HTTPTypesFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +79,10 @@
 			name = IKEHGitHubAPIDemo;
 			packageProductDependencies = (
 				DA12C5E12D252C8000296345 /* IKEHGitHubAPI */,
+				DA12C5EE2D2533C800296345 /* IKEHGitHubAPI */,
+				DA96BAAC2D25397D0081B93B /* HTTPTypes */,
+				DA96BAAE2D25397D0081B93B /* HTTPTypesFoundation */,
+				DA96BAB12D2539880081B93B /* SwiftID */,
 			);
 			productName = IKEHGitHubAPIDemo;
 			productReference = DA12C5CE2D252C6600296345 /* IKEHGitHubAPIDemo.app */;
@@ -101,7 +113,9 @@
 			mainGroup = DA12C5C52D252C6600296345;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				DA12C5E02D252C8000296345 /* XCLocalSwiftPackageReference "../IKEHGitHubAPI" */,
+				DA12C5ED2D2533C800296345 /* XCLocalSwiftPackageReference "../IKEHGitHubAPI" */,
+				DA96BAAB2D25397D0081B93B /* XCRemoteSwiftPackageReference "swift-http-types" */,
+				DA96BAB02D2539880081B93B /* XCRemoteSwiftPackageReference "swift-id" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DA12C5CF2D252C6600296345 /* Products */;
@@ -350,16 +364,54 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		DA12C5E02D252C8000296345 /* XCLocalSwiftPackageReference "../IKEHGitHubAPI" */ = {
+		DA12C5ED2D2533C800296345 /* XCLocalSwiftPackageReference "../IKEHGitHubAPI" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../IKEHGitHubAPI;
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		DA96BAAB2D25397D0081B93B /* XCRemoteSwiftPackageReference "swift-http-types" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-http-types";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.1;
+			};
+		};
+		DA96BAB02D2539880081B93B /* XCRemoteSwiftPackageReference "swift-id" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/koher/swift-id.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		DA12C5E12D252C8000296345 /* IKEHGitHubAPI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = IKEHGitHubAPI;
+		};
+		DA12C5EE2D2533C800296345 /* IKEHGitHubAPI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = IKEHGitHubAPI;
+		};
+		DA96BAAC2D25397D0081B93B /* HTTPTypes */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA96BAAB2D25397D0081B93B /* XCRemoteSwiftPackageReference "swift-http-types" */;
+			productName = HTTPTypes;
+		};
+		DA96BAAE2D25397D0081B93B /* HTTPTypesFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA96BAAB2D25397D0081B93B /* XCRemoteSwiftPackageReference "swift-http-types" */;
+			productName = HTTPTypesFoundation;
+		};
+		DA96BAB12D2539880081B93B /* SwiftID */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA96BAB02D2539880081B93B /* XCRemoteSwiftPackageReference "swift-id" */;
+			productName = SwiftID;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
