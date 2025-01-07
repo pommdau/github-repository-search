@@ -10,28 +10,32 @@ import Foundation
 import HTTPTypes
 
 extension GitHubAPIClient {
+    struct ResponseHeaderField: Equatable, Sendable {
+        let key: String
+        let value: String
+    }
+}
 
-    func request<Request>(with request: Request) async throws ->
-    Request.Response where Request: GitHubAPIRequestProtocol {
-        
+extension GitHubAPIClient {
+    func request<Request>(with request: Request) async throws -> (Request.ResponseBody, [ResponseHeaderField]) where Request: GitHubAPIRequestProtocol {
         // リクエストの作成と送信
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
         }
         
-        let (data, response): (Data, HTTPResponse)
+        let (data, httpResponse): (Data, HTTPResponse)
         do {
             if let body = request.body {
-                (data, response) = try await urlSession.upload(for: httpRequest, from: body)
+                (data, httpResponse) = try await urlSession.upload(for: httpRequest, from: body)
             } else {
-                (data, response) = try await urlSession.data(for: httpRequest)
+                (data, httpResponse) = try await urlSession.data(for: httpRequest)
             }
         } catch {
             throw GitHubAPIClientError.connectionError(error)
         }
-        
+                    
         // レスポンスが失敗のとき
-        if !(200..<300).contains(response.status.code) {
+        if !(200..<300).contains(httpResponse.status.code) {
             #if DEBUG
 //            let errorString = String(data: data, encoding: .utf8) ?? ""
 //            print(errorString)
@@ -51,8 +55,8 @@ extension GitHubAPIClient {
         //        print(responseString)
         #endif
         do {
-            let response = try JSONDecoder().decode(Request.Response.self, from: data)
-            return response
+            let response = try JSONDecoder().decode(Request.ResponseBody.self, from: data)
+            return (response, httpResponse.headerFields.map { .init(key: $0.name.rawName, value: $0.value) })
         } catch {
             throw GitHubAPIClientError.responseParseError(error)
         }

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftID
 
-struct Repo: Identifiable, Equatable, Sendable & Decodable {
+struct Repo: Identifiable, Equatable, Sendable, Decodable {
     struct ID: StringIDProtocol {
         let rawValue:  String
         init(rawValue: String) {
@@ -19,7 +19,7 @@ struct Repo: Identifiable, Equatable, Sendable & Decodable {
     let id: ID
     let name: String  // e.g. "Tetris"
     let fullName: String  // e.g. "dtrupenn/Tetris"
-    let owner: UserDTO
+    let owner: User
     let starsCount: Int
     let watchersCount: Int
     let forksCount: Int

@@ -18,7 +18,7 @@ extension GitHubAPIRequest {
 
 extension GitHubAPIRequest.SearchRepos: GitHubAPIRequestProtocol {
     
-    typealias Response = SearchResponseDTO<RepoDTO>
+    typealias ResponseBody = SearchResponseDTO<RepoDTO>
     
     var method: HTTPTypes.HTTPRequest.Method {
         .get
@@ -29,7 +29,9 @@ extension GitHubAPIRequest.SearchRepos: GitHubAPIRequestProtocol {
     }
 
     var queryItems: [URLQueryItem] {
-        [URLQueryItem(name: "q", value: keyword)]
+        return [
+            URLQueryItem(name: "q", value: keyword)            
+        ]
     }
 
     var header: HTTPTypes.HTTPFields {

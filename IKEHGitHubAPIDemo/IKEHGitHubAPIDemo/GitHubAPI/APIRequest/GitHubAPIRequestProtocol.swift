@@ -12,7 +12,7 @@ import HTTPTypesFoundation
 // MARK: - GitHubAPIRequestProtocol
 
 protocol GitHubAPIRequestProtocol {
-    associatedtype Response: Decodable
+    associatedtype ResponseBody: Decodable
     var method: HTTPRequest.Method { get }
     var path: String { get } // e.g. "/search/repositories"
     var queryItems: [URLQueryItem] { get }

@@ -17,6 +17,9 @@ final actor GitHubAPIClient {
     }
 
     func searchRepos(keyword: String) async throws -> [Repo] {
-        return RepoDTO.sampleData.map{ RepoTranslator.translate(from: $0) }
+        let result = try await request(with: GitHubAPIRequest.SearchRepos(keyword: keyword))
+        print(result.1)
+        let response = result.0
+        return response.items.map { RepoTranslator.translate(from: $0) }
     }
 }

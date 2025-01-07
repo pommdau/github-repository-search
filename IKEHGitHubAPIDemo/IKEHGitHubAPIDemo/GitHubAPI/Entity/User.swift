@@ -8,7 +8,7 @@
 import Foundation
 import SwiftID
 
-struct User: Identifiable, Equatable, Sendable & Decodable {
+struct User: Identifiable, Equatable, Sendable, Decodable {
     
     struct ID: StringIDProtocol {
         let rawValue:  String

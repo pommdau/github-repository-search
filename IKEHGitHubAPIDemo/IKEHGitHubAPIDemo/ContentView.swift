@@ -9,9 +9,23 @@ import SwiftUI
 import IKEHGitHubAPI
 
 struct ContentView: View {
+    
     var body: some View {
-        Text(Omikuji().text)
-            .padding()
+        VStack {
+            Button("Debug") {
+                Task {
+                    do {
+                        let repos = try await GitHubAPIClient.shared.searchRepos(keyword: "swift")
+                        print("stop")
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                    
+                }
+            }
+            Text(Omikuji().text)
+                .padding()
+        }
     }
 }
 
