@@ -10,14 +10,14 @@ import Foundation
 import HTTPTypes
 
 extension GitHubAPIClient {
-    struct ResponseHeaderField: Equatable, Sendable {
-        let key: String
-        let value: String
+    struct SearchResponseDTO<Body: Decodable> {
+        var httpFields: HTTPTypes.HTTPFields
+        var body: Body
     }
 }
 
 extension GitHubAPIClient {
-    func request<Request>(with request: Request) async throws -> (Request.ResponseBody, [ResponseHeaderField]) where Request: GitHubAPIRequestProtocol {
+    func request<Request>(with request: Request) async throws -> SearchResponseDTO<Request.ResponseBody> where Request: GitHubAPIRequestProtocol {
         // リクエストの作成と送信
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
@@ -56,7 +56,7 @@ extension GitHubAPIClient {
         #endif
         do {
             let response = try JSONDecoder().decode(Request.ResponseBody.self, from: data)
-            return (response, httpResponse.headerFields.map { .init(key: $0.name.rawName, value: $0.value) })
+            return SearchResponseDTO(httpFields: httpResponse.headerFields, body: response)
         } catch {
             throw GitHubAPIClientError.responseParseError(error)
         }
