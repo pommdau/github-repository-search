@@ -9,7 +9,7 @@
 import Foundation
 
 // ref: https://docs.github.com/en/rest/overview/resources-in-the-rest-api#client-errors
-struct GitHubAPIError: Decodable, Error {
+struct GitHubAPIErrorDTO: Sendable, Decodable, Error {
     struct Error: Decodable {
         var resource: String
         var field: String

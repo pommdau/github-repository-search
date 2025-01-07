@@ -8,14 +8,14 @@
 
 import Foundation
 
-extension Repo {
+extension RepoDTO {
     
-    static let sampleDataWithLongWord: Repo =
+    static let sampleDataWithLongWord: RepoDTO =
         .init(id: 44838949,
               name: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
               fullName: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
               owner:
-                User(id: 10639145,
+                UserDTO(id: 10639145,
                      name: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/10639145?v=4",
                      htmlPath: "https://github.com/apple/ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"),
@@ -29,12 +29,12 @@ extension Repo {
               description: String(repeating: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", count: 5),
               subscribersCount: 2508)
             
-    static let sampleDataWithoutSomeInfo: Repo =
+    static let sampleDataWithoutSomeInfo: RepoDTO =
         .init(id: 44838949,
               name: "swift",
               fullName: "apple/swift",
               owner:
-                User(id: 10639145,
+                UserDTO(id: 10639145,
                      name: "apple",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/10639145?v=4",
                      htmlPath: "https://github.com/apple"),
@@ -48,12 +48,12 @@ extension Repo {
               description: nil,
               subscribersCount: 0)
 
-    static let sampleDataForReposCellSkelton = Repo(
+    static let sampleDataForReposCellSkelton = RepoDTO(
         id: 44838949,
         name: "Lorem ipsum dol",
         fullName: "apple/swift",
         owner:
-            User(id: 10639145,
+            UserDTO(id: 10639145,
                  name: "Lorem ipsum",
                  avatarImagePath: "",
                  htmlPath: "https://github.com/apple"),
@@ -71,12 +71,12 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
         subscribersCount: 0
     )
     
-    static let sampleData: [Repo] = [
+    static let sampleData: [RepoDTO] = [
         .init(id: 44838949,
               name: "swift",
               fullName: "apple/swift",
               owner:
-                User(id: 10639145,
+                UserDTO(id: 10639145,
                      name: "apple",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/10639145?v=4",
                      htmlPath: "https://github.com/apple"),
@@ -93,7 +93,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "swift",
               fullName: "openstack/swift",
               owner:
-                User(id: 324574,
+                UserDTO(id: 324574,
                      name: "openstack",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/324574?v=4",
                      htmlPath: "https://github.com/openstack"),
@@ -110,7 +110,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "swift",
               fullName: "tensorflow/swift",
               owner:
-                User(id: 15658638,
+                UserDTO(id: 15658638,
                      name: "tensorflow",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/15658638?v=4",
                      htmlPath: "https://github.com/tensorflow"),
@@ -127,7 +127,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftyJSON",
               fullName: "SwiftyJSON/SwiftyJSON",
               owner:
-                User(id: 8858017,
+                UserDTO(id: 8858017,
                      name: "SwiftyJSON",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/8858017?v=4",
                      htmlPath: "https://github.com/SwiftyJSON"),
@@ -144,7 +144,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftGuide",
               fullName: "ipader/SwiftGuide",
               owner:
-                User(id: 373016,
+                UserDTO(id: 373016,
                      name: "ipader",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/373016?v=4",
                      htmlPath: "https://github.com/ipader"),
@@ -161,7 +161,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwifterSwift",
               fullName: "SwifterSwift/SwifterSwift",
               owner:
-                User(id: 25029478,
+                UserDTO(id: 25029478,
                      name: "SwifterSwift",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/25029478?v=4",
                      htmlPath: "https://github.com/SwifterSwift"),
@@ -178,7 +178,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftLint",
               fullName: "realm/SwiftLint",
               owner:
-                User(id: 7575099,
+                UserDTO(id: 7575099,
                      name: "realm",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/7575099?v=4",
                      htmlPath: "https://github.com/realm"),
@@ -195,7 +195,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "Swift",
               fullName: "iOS-Swift-Developers/Swift",
               owner:
-                User(id: 27724501,
+                UserDTO(id: 27724501,
                      name: "iOS-Swift-Developers",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/27724501?v=4",
                      htmlPath: "https://github.com/iOS-Swift-Developers"),
@@ -212,7 +212,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "swift",
               fullName: "airbnb/swift",
               owner:
-                User(id: 698437,
+                UserDTO(id: 698437,
                      name: "airbnb",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/698437?v=4",
                      htmlPath: "https://github.com/airbnb"),
@@ -229,7 +229,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "Swift",
               fullName: "jaguar07/Swift",
               owner:
-                User(id: 5323134,
+                UserDTO(id: 5323134,
                      name: "jaguar07",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/5323134?v=4",
                      htmlPath: "https://github.com/jaguar07"),
@@ -246,7 +246,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "swift",
               fullName: "facebookarchive/swift",
               owner:
-                User(id: 7560860,
+                UserDTO(id: 7560860,
                      name: "facebookarchive",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/7560860?v=4",
                      htmlPath: "https://github.com/facebookarchive"),
@@ -263,7 +263,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "RxSwift",
               fullName: "ReactiveX/RxSwift",
               owner:
-                User(id: 6407041,
+                UserDTO(id: 6407041,
                      name: "ReactiveX",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/6407041?v=4",
                      htmlPath: "https://github.com/ReactiveX"),
@@ -280,7 +280,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "Alamofire",
               fullName: "Alamofire/Alamofire",
               owner:
-                User(id: 7774181,
+                UserDTO(id: 7774181,
                      name: "Alamofire",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/7774181?v=4",
                      htmlPath: "https://github.com/Alamofire"),
@@ -297,7 +297,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftLanguageWeather",
               fullName: "JakeLin/SwiftLanguageWeather",
               owner:
-                User(id: 573856,
+                UserDTO(id: 573856,
                      name: "JakeLin",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/573856?v=4",
                      htmlPath: "https://github.com/JakeLin"),
@@ -314,7 +314,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftDate",
               fullName: "malcommac/SwiftDate",
               owner:
-                User(id: 235645,
+                UserDTO(id: 235645,
                      name: "malcommac",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/235645?v=4",
                      htmlPath: "https://github.com/malcommac"),
@@ -331,7 +331,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftMessages",
               fullName: "SwiftKickMobile/SwiftMessages",
               owner:
-                User(id: 13121066,
+                UserDTO(id: 13121066,
                      name: "SwiftKickMobile",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/13121066?v=4",
                      htmlPath: "https://github.com/SwiftKickMobile"),
@@ -348,7 +348,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftGen",
               fullName: "SwiftGen/SwiftGen",
               owner:
-                User(id: 24867377,
+                UserDTO(id: 24867377,
                      name: "SwiftGen",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/24867377?v=4",
                      htmlPath: "https://github.com/SwiftGen"),
@@ -365,7 +365,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "awesome-swift",
               fullName: "matteocrippa/awesome-swift",
               owner:
-                User(id: 475463,
+                UserDTO(id: 475463,
                      name: "matteocrippa",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/475463?v=4",
                      htmlPath: "https://github.com/matteocrippa"),
@@ -382,7 +382,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "swift-algorithm-club",
               fullName: "kodecocodes/swift-algorithm-club",
               owner:
-                User(id: 4722515,
+                UserDTO(id: 4722515,
                      name: "kodecocodes",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/4722515?v=4",
                      htmlPath: "https://github.com/kodecocodes"),
@@ -399,7 +399,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftyStoreKit",
               fullName: "bizz84/SwiftyStoreKit",
               owner:
-                User(id: 153167,
+                UserDTO(id: 153167,
                      name: "bizz84",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/153167?v=4",
                      htmlPath: "https://github.com/bizz84"),
@@ -416,7 +416,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftFormat",
               fullName: "nicklockwood/SwiftFormat",
               owner:
-                User(id: 546885,
+                UserDTO(id: 546885,
                      name: "nicklockwood",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/546885?v=4",
                      htmlPath: "https://github.com/nicklockwood"),
@@ -433,7 +433,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "About-SwiftUI",
               fullName: "Juanpe/About-SwiftUI",
               owner:
-                User(id: 1409041,
+                UserDTO(id: 1409041,
                      name: "Juanpe",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/1409041?v=4",
                      htmlPath: "https://github.com/Juanpe"),
@@ -450,7 +450,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "FlappySwift",
               fullName: "fullstackio/FlappySwift",
               owner:
-                User(id: 4064333,
+                UserDTO(id: 4064333,
                      name: "fullstackio",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/4064333?v=4",
                      htmlPath: "https://github.com/fullstackio"),
@@ -467,7 +467,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "swift-evolution",
               fullName: "apple/swift-evolution",
               owner:
-                User(id: 10639145,
+                UserDTO(id: 10639145,
                      name: "apple",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/10639145?v=4",
                      htmlPath: "https://github.com/apple"),
@@ -484,7 +484,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "realm-swift",
               fullName: "realm/realm-swift",
               owner:
-                User(id: 7575099,
+                UserDTO(id: 7575099,
                      name: "realm",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/7575099?v=4",
                      htmlPath: "https://github.com/realm"),
@@ -501,7 +501,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftOCR",
               fullName: "NMAC427/SwiftOCR",
               owner:
-                User(id: 9914734,
+                UserDTO(id: 9914734,
                      name: "NMAC427",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/9914734?v=4",
                      htmlPath: "https://github.com/NMAC427"),
@@ -518,7 +518,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftyBeaver",
               fullName: "SwiftyBeaver/SwiftyBeaver",
               owner:
-                User(id: 16286228,
+                UserDTO(id: 16286228,
                      name: "SwiftyBeaver",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/16286228?v=4",
                      htmlPath: "https://github.com/SwiftyBeaver"),
@@ -535,7 +535,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftUI",
               fullName: "Jinxiansen/SwiftUI",
               owner:
-                User(id: 16829428,
+                UserDTO(id: 16829428,
                      name: "Jinxiansen",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/16829428?v=4",
                      htmlPath: "https://github.com/Jinxiansen"),
@@ -552,7 +552,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftEntryKit",
               fullName: "huri000/SwiftEntryKit",
               owner:
-                User(id: 5504255,
+                UserDTO(id: 5504255,
                      name: "huri000",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/5504255?v=4",
                      htmlPath: "https://github.com/huri000"),
@@ -569,7 +569,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
               name: "SwiftUI",
               fullName: "ivanvorobei/SwiftUI",
               owner:
-                User(id: 10995774,
+                UserDTO(id: 10995774,
                      name: "ivanvorobei",
                      avatarImagePath: "https://avatars.githubusercontent.com/u/10995774?v=4",
                      htmlPath: "https://github.com/ivanvorobei"),
@@ -597,7 +597,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
  }
  */
 /// sampleDataの作成用のデバッグ関数
-extension Repo {
+extension RepoDTO {
     
     func createInitializerString() -> String {
         """

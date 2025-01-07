@@ -9,7 +9,7 @@
 import Foundation
 
 /// ViewModelの非同期処理を含めて確認するためのGitHubAPIServiceのStub
-final class GitHubAPIClientStub: GitHubAPIClientProtocol {
+final actor GitHubAPIClientStub: GitHubAPIClientProtocol {
 
     static let shared: GitHubAPIClientStub = .init()
 

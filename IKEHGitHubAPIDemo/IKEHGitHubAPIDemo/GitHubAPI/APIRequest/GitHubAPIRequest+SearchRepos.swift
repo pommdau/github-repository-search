@@ -1,9 +1,8 @@
 //
 //  GitHubAPIRequest+SearchRepos.swift
-//  iOSEngineerCodeCheck
+//  IKEHGitHubAPIDemo
 //
-//  Created by HIROKI IKEUCHI on 2022/11/08.
-//  Copyright © 2022 YUMEMI Inc. All rights reserved.
+//  Created by HIROKI IKEUCHI on 2025/01/07.
 //
 
 import Foundation
@@ -19,7 +18,7 @@ extension GitHubAPIRequest {
 
 extension GitHubAPIRequest.SearchRepos: GitHubAPIRequestProtocol {
     
-    typealias Response = SearchResponse<Repo>
+    typealias Response = SearchResponseDTO<RepoDTO>
     
     var method: HTTPTypes.HTTPRequest.Method {
         .get

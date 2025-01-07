@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct SearchResponse<Item: Decodable>: Decodable {
+struct SearchResponseDTO<Item>: Sendable, Decodable where Item: Sendable & Decodable {
 
     private enum CodingKeys: String, CodingKey {
         case totalCount = "total_count"

@@ -36,9 +36,9 @@ extension GitHubAPIClient {
 //            let errorString = String(data: data, encoding: .utf8) ?? ""
 //            print(errorString)
             #endif
-            let gitHubAPIError: GitHubAPIError
+            let gitHubAPIError: GitHubAPIErrorDTO
             do {
-                gitHubAPIError = try JSONDecoder().decode(GitHubAPIError.self, from: data)
+                gitHubAPIError = try JSONDecoder().decode(GitHubAPIErrorDTO.self, from: data)
             } catch {
                 throw GitHubAPIClientError.responseParseError(error)
             }

@@ -19,16 +19,16 @@ enum GitHubAPIClientError: Error {
     case responseParseError(Error)
 
     // APIからエラーレスポンスを受け取った
-    case apiError(GitHubAPIError)
+    case apiError(GitHubAPIErrorDTO)
     
     var message: String {
         switch self {
         case .invalidRequest:
-            return "APIリクエストの作成に失敗しました"
+            return "APIリクエストの作成に失敗しました";
         case .connectionError:
-            return "通信エラー"
+            return "通信エラー";
         case .responseParseError:
-            return "データの取得に失敗しました"
+            return "データの取得に失敗しました";                                                                                                
         case .apiError(let gitHubAPIError):
             return gitHubAPIError.message
         }

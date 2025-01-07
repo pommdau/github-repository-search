@@ -1,32 +1,24 @@
 //
 //  User.swift
-//  iOSEngineerCodeCheck
+//  IKEHGitHubAPIDemo
 //
-//  Created by HIROKI IKEUCHI on 2022/11/08.
-//  Copyright © 2022 YUMEMI Inc. All rights reserved.
+//  Created by HIROKI IKEUCHI on 2025/01/07.
 //
 
 import Foundation
+import SwiftID
 
-struct User: Identifiable, Codable {
+struct User: Identifiable, Equatable, Sendable & Decodable {
     
-    private enum CodingKeys: String, CodingKey {
-        case id
-        case name = "login"
-        case avatarImagePath = "avatar_url"
-        case htmlPath = "html_url"
-    }
-    
-    var id: Int
-    var name: String
-    var avatarImagePath: String
-    let htmlPath: String  // e.g. https://github.com/apple
-
-    var avatarImageURL: URL? {
-        URL(string: avatarImagePath)
+    struct ID: StringIDProtocol {
+        let rawValue:  String
+        init(rawValue: String) {
+            self.rawValue = rawValue
+        }
     }
 
-    var htmlURL: URL? {
-        URL(string: htmlPath)
-    }    
+    let id: ID
+    let name: String
+    let avatarImageURL: URL?
+    let html: URL?  // e.g. https://github.com/apple
 }
