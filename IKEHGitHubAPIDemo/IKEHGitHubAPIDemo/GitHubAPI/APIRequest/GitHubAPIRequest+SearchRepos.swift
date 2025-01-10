@@ -35,7 +35,7 @@ extension GitHubAPIRequest.SearchRepos: GitHubAPIRequestProtocol {
         queryItems.append(URLQueryItem(name: "q", value: keyword))
         if let page {
             queryItems.append(URLQueryItem(name: "page", value: "\(page)"))
-        }        
+        }
         queryItems.append(URLQueryItem(name: "per_page", value: "\(perPage)"))
         
         return queryItems

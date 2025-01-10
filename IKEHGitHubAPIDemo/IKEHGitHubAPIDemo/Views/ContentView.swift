@@ -18,7 +18,7 @@ struct ContentView: View {
             HStack {
                 TextField("Enter Keyword !", text: $keyword)
                 searchButton()
-            }                
+            }
             .padding()
 
             List {
@@ -57,7 +57,7 @@ extension ContentView {
             Button("Load More...") {
                 Task {
                     do {
-                        let response = try await GitHubAPIClient.shared.searchRepos(keyword: nextLink.word, page: nextLink.page)
+                        let response = try await GitHubAPIClient.shared.searchRepos(keyword: nextLink.keyword, page: nextLink.page)
                         self.repos.append(contentsOf: response.items)
                         self.relationLink = response.relationLink
                     } catch {
