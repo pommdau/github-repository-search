@@ -32,7 +32,7 @@ struct ContentView: View {
                 .disabled(searchingWord.isEmpty)
             }
             .padding()
-            
+
             List {
                 ForEach(repos) { repo in
                     RepoCell(repo: repo)
