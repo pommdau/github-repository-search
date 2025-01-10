@@ -12,7 +12,7 @@ import HTTPTypesFoundation
 // MARK: - GitHubAPIRequestProtocol
 
 protocol GitHubAPIRequestProtocol {
-    associatedtype ResponseBody: Decodable
+    associatedtype SearchResponseItem: Sendable & Decodable & Equatable // 検索対象のDTO
     var method: HTTPRequest.Method { get }
     var path: String { get } // e.g. "/search/repositories"
     var queryItems: [URLQueryItem] { get }
@@ -23,6 +23,8 @@ protocol GitHubAPIRequestProtocol {
 // MARK: - 共通のパラメータ/処理
 
 extension GitHubAPIRequestProtocol {
+    
+    typealias SearchResponse = SearchResponseDTO<SearchResponseItem>
     
     // e.g. "https"
     private var scheme: String {

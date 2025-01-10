@@ -29,6 +29,16 @@ struct RelationLink: Equatable, Sendable {
 }
 
 extension RelationLink {
+    /**
+     レスポンスヘッダーのLink文字列からページング情報を作成します。
+     
+     - Parameter rawValue: HTTPレスポンスヘッダーのLink文字列。
+     
+     rawValueの例:
+     ```
+     Link: <https://api.github.com/search/repositories?q=swift&page=2>; rel="next", <https://api.github.com/search/repositories?q=swift&page=34>; rel="last"
+     ```
+     */
     static func create(rawValue: String) -> RelationLink {
         var relationLink = RelationLink()
         let elements = rawValue.split(separator: ",")

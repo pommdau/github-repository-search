@@ -9,25 +9,25 @@
 import Foundation
 import HTTPTypes
 
-struct ResponseHeader {
-    var ralationLink: RelationLink?
-    
-    init(headerFields: HTTPFields) {
-        if let link = headerFields.first(where: { $0.name.rawName == "Link" }) {
-            self.ralationLink = RelationLink.create(rawValue: link.value)
-        }
-    }
-}
+//struct ResponseHeader {
+//    var ralationLink: RelationLink?
+//    
+//    init(headerFields: HTTPFields) {
+//        if let link = headerFields.first(where: { $0.name.rawName == "Link" }) {
+//            self.ralationLink = RelationLink.create(rawValue: link.value)
+//        }
+//    }
+//}
+//
+//extension GitHubAPIClient {
+//    struct Response<Body> {
+//        var header: ResponseHeader
+//        var body: Body
+//    }
+//}
 
 extension GitHubAPIClient {
-    struct Response<Body> {
-        var header: ResponseHeader
-        var body: Body
-    }
-}
-
-extension GitHubAPIClient {
-    func request<Request>(with request: Request) async throws -> GitHubAPIClient.Response<Request.ResponseBody> where Request: GitHubAPIRequestProtocol {
+    func search<Request>(with request: Request) async throws -> Request.SearchResponse where Request: GitHubAPIRequestProtocol {
         // リクエストの作成と送信
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
@@ -64,14 +64,20 @@ extension GitHubAPIClient {
         //        let responseString = String(data: data, encoding: .utf8) ?? ""
         //        print(responseString)
         #endif
+                
+        // レスポンスのデータをDTOへデコード
+        var searchResponse: Request.SearchResponse
         do {
-            let responseBody = try JSONDecoder().decode(Request.ResponseBody.self, from: data)
-            return Response(
-                header: .init(headerFields: httpResponse.headerFields),
-                body: responseBody
-            )
+            searchResponse = try JSONDecoder().decode(Request.SearchResponse.self, from: data)
         } catch {
             throw GitHubAPIClientError.responseParseError(error)
         }
+        
+        // ヘッダにLink(ページング)情報があれば返り値に追加
+        if let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
+            searchResponse.relationLink = RelationLink.create(rawValue: link.value)
+        }
+        
+        return searchResponse
     }
 }

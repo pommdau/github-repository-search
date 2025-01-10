@@ -10,6 +10,8 @@ import Foundation
 
 struct SearchResponseDTO<Item>: Sendable, Decodable where Item: Sendable & Decodable {
 
+    // MARK: - レスポンスのBodyをDecodeして取得される情報
+    
     private enum CodingKeys: String, CodingKey {
         case totalCount = "total_count"
         case items
@@ -17,4 +19,8 @@ struct SearchResponseDTO<Item>: Sendable, Decodable where Item: Sendable & Decod
 
     let totalCount: Int
     let items: [Item]
+    
+    // MARK: - レスポンスのHeaderから所得される情報
+    
+    var relationLink: RelationLink? // ページング情報
 }
