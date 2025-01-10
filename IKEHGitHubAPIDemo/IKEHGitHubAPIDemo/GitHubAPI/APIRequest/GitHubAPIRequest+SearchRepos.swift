@@ -11,6 +11,7 @@ import HTTPTypes
 extension GitHubAPIRequest {
     struct SearchRepos {
         let keyword: String
+        let page: Int?
     }
 }
 
@@ -29,9 +30,15 @@ extension GitHubAPIRequest.SearchRepos: GitHubAPIRequestProtocol {
     }
 
     var queryItems: [URLQueryItem] {
-        return [
-            URLQueryItem(name: "q", value: keyword)            
-        ]
+        var queryItems: [URLQueryItem] = []
+        queryItems.append(URLQueryItem(name: "q", value: keyword))
+        if let page {
+            queryItems.append(URLQueryItem(name: "page", value: "\(page)"))
+        }
+        
+        queryItems.append(URLQueryItem(name: "per_page", value: "\(3)"))
+        
+        return queryItems
     }
 
     var header: HTTPTypes.HTTPFields {
