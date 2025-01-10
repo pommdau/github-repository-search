@@ -53,7 +53,7 @@ extension RelationLink {
                 continue
             }
             
-            // "rel=\"next\"" -> "next"
+            // rel="next" -> next
             let relationKey = linkElements[1]
                 .replacingOccurrences(of: " ", with: "")
                 .replacingOccurrences(of: "rel=\"", with: "")

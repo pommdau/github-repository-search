@@ -9,15 +9,25 @@
 import Foundation
 import HTTPTypes
 
+struct ResponseHeader {
+    var ralationLink: RelationLink?
+    
+    init(headerFields: HTTPFields) {
+        if let link = headerFields.first(where: { $0.name.rawName == "Link" }) {
+            self.ralationLink = RelationLink.create(rawValue: link.value)
+        }
+    }
+}
+
 extension GitHubAPIClient {
-    struct SearchResponseDTO<Body: Decodable> {
-        var httpFields: HTTPTypes.HTTPFields
+    struct Response<Body> {
+        var header: ResponseHeader
         var body: Body
     }
 }
 
 extension GitHubAPIClient {
-    func request<Request>(with request: Request) async throws -> SearchResponseDTO<Request.ResponseBody> where Request: GitHubAPIRequestProtocol {
+    func request<Request>(with request: Request) async throws -> GitHubAPIClient.Response<Request.ResponseBody> where Request: GitHubAPIRequestProtocol {
         // リクエストの作成と送信
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
@@ -55,8 +65,11 @@ extension GitHubAPIClient {
         //        print(responseString)
         #endif
         do {
-            let response = try JSONDecoder().decode(Request.ResponseBody.self, from: data)
-            return SearchResponseDTO(httpFields: httpResponse.headerFields, body: response)
+            let responseBody = try JSONDecoder().decode(Request.ResponseBody.self, from: data)
+            return Response(
+                header: .init(headerFields: httpResponse.headerFields),
+                body: responseBody
+            )
         } catch {
             throw GitHubAPIClientError.responseParseError(error)
         }

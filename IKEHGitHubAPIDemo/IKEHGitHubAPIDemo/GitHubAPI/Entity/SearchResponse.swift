@@ -35,16 +35,16 @@ import struct HTTPTypes.HTTPFields
  access-control-expose-headers: ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO, X-GitHub-Request-Id, Deprecation, Sunset
  */
 
-struct SearchResponseHeader: Equatable, Sendable {
-    var ralationLink: RelationLink?
-}
-
-struct SearchResponse<Item>: Equatable, Sendable where Item: Equatable & Sendable {
-    var header: SearchResponseHeader
-    var items: [Item]
-    
-    init(headerFields: HTTPFields, items: [Item]) {
-        self.header = HTTPFieldsTranslator.translate(from: headerFields)
-        self.items = items
-    }
-}
+//struct SearchResponseHeader: Equatable, Sendable {
+//    var ralationLink: RelationLink?
+//}
+//
+//struct SearchResponse<Item>: Equatable, Sendable where Item: Equatable & Sendable {
+//    var header: SearchResponseHeader
+//    var items: [Item]
+//    
+//    init(headerFields: HTTPFields, items: [Item]) {
+//        self.header = HTTPFieldsTranslator.translate(from: headerFields)
+//        self.items = items
+//    }
+//}
