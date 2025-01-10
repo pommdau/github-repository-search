@@ -24,7 +24,7 @@ protocol GitHubAPIRequestProtocol {
 
 extension GitHubAPIRequestProtocol {
     
-    typealias Response = SearchResponse<Item>
+    typealias SearchResponseType = SearchResponse<Item>
     
     // e.g. "https"
     private var scheme: String {

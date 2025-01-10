@@ -9,23 +9,33 @@ import SwiftUI
 import IKEHGitHubAPI
 
 struct ContentView: View {
+    @State private var searchText = "Swift"
+    @State private var repos: [Repo] = []
     
     var body: some View {
         VStack {
-            Button("Debug") {
-                Task {
-                    do {
-                        let repos = try await GitHubAPIClient.shared.searchRepos(keyword: "swift")
-                        print("stop")
-                    } catch {
-                        print(error.localizedDescription)
+            HStack {
+                TextField("Enter Word", text: $searchText)
+                Button("Search") {
+                    Task {
+                        do {
+                            let response = try await GitHubAPIClient.shared.searchRepos(keyword: searchText)
+                            self.repos = response.items
+                        } catch {
+                            print(error.localizedDescription)
+                        }
                     }
-                    
                 }
+                .disabled(searchText.isEmpty)
             }
-            Text(Omikuji().text)
-                .padding()
+            .padding()
+            
+            List(repos) { repo in
+                RepoCell(repo: repo)
+                    .padding(.vertical, 4)
+            }
         }
+        
     }
 }
 
