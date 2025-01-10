@@ -18,7 +18,8 @@ extension GitHubAPIRequest {
 
 extension GitHubAPIRequest.SearchRepos: GitHubAPIRequestProtocol {
     
-    typealias ResponseBody = SearchResponseDTO<RepoDTO>
+//    typealias Response = SearchResponseDTO<RepoDTO>
+    typealias SearchResponseItem = RepoDTO
     
     var method: HTTPTypes.HTTPRequest.Method {
         .get
