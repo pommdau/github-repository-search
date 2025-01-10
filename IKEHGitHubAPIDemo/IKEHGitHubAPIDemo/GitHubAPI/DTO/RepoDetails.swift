@@ -9,7 +9,7 @@
 import Foundation
 
 // e.g. https://api.github.com/repos/apple/swift
-struct RepoDetailsDTO: Sendable, Decodable {
+struct RepoDetails: Sendable, Decodable {
     
     private enum CodingKeys: String, CodingKey {
         case subscribersCount = "subscribers_count"

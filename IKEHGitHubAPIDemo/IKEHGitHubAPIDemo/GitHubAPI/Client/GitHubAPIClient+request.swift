@@ -27,7 +27,7 @@ import HTTPTypes
 //}
 
 extension GitHubAPIClient {
-    func search<Request>(with request: Request) async throws -> Request.SearchResponse where Request: GitHubAPIRequestProtocol {
+    func search<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
         // リクエストの作成と送信
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
@@ -50,9 +50,9 @@ extension GitHubAPIClient {
 //            let errorString = String(data: data, encoding: .utf8) ?? ""
 //            print(errorString)
             #endif
-            let gitHubAPIError: GitHubAPIErrorDTO
+            let gitHubAPIError: GitHubAPIError
             do {
-                gitHubAPIError = try JSONDecoder().decode(GitHubAPIErrorDTO.self, from: data)
+                gitHubAPIError = try JSONDecoder().decode(GitHubAPIError.self, from: data)
             } catch {
                 throw GitHubAPIClientError.responseParseError(error)
             }
@@ -66,9 +66,9 @@ extension GitHubAPIClient {
         #endif
                 
         // レスポンスのデータをDTOへデコード
-        var searchResponse: Request.SearchResponse
+        var searchResponse: Request.Response
         do {
-            searchResponse = try JSONDecoder().decode(Request.SearchResponse.self, from: data)
+            searchResponse = try JSONDecoder().decode(Request.Response.self, from: data)
         } catch {
             throw GitHubAPIClientError.responseParseError(error)
         }

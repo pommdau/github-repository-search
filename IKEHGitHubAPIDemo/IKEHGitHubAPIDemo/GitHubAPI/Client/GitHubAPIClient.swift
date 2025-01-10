@@ -16,7 +16,7 @@ final actor GitHubAPIClient {
         self.urlSession = urlSession
     }
 
-    func searchRepos(keyword: String) async throws -> SearchResponseDTO<RepoDTO> {
+    func searchRepos(keyword: String) async throws -> SearchResponse<Repo> {
         let response = try await search(with: GitHubAPIRequest.SearchRepos(keyword: keyword))
         return response
     }

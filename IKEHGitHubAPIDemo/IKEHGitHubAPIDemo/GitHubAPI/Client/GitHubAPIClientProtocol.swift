@@ -10,5 +10,5 @@ import Foundation
 
 protocol GitHubAPIClientProtocol {
     static var shared: Self { get }
-    func searchRepos(keyword: String) async throws -> [Repo]
+//    func searchRepos(keyword: String) async throws -> [Repo]
 }

@@ -9,17 +9,17 @@
 import Foundation
 
 /// ViewModelの非同期処理を含めて確認するためのGitHubAPIServiceのStub
-final actor GitHubAPIClientStub: GitHubAPIClientProtocol {
-
-    static let shared: GitHubAPIClientStub = .init()
-
-    var searchContinuation: CheckedContinuation<[Repo], Error>?
-
-    private init() {}
-
-    func searchRepos(keyword: String) async throws -> [Repo] {
-        try await withCheckedThrowingContinuation { continuation in
-            searchContinuation = continuation
-        }
-    }
-}
+//final actor GitHubAPIClientStub: GitHubAPIClientProtocol {
+//
+//    static let shared: GitHubAPIClientStub = .init()
+//
+//    var searchContinuation: CheckedContinuation<[Repo], Error>?
+//
+//    private init() {}
+//
+//    func searchRepos(keyword: String) async throws -> [Repo] {
+//        try await withCheckedThrowingContinuation { continuation in
+//            searchContinuation = continuation
+//        }
+//    }
+//}

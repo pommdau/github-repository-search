@@ -9,7 +9,7 @@
 import Foundation
 
 // アーキテクチャのRepositoryと区別するためRepoの名称を使う
-struct RepoDTO: Sendable, Identifiable, Decodable, Equatable {
+struct Repo: Sendable, Identifiable, Decodable, Equatable {
     
     private enum CodingKeys: String, CodingKey {
         case id
@@ -30,7 +30,7 @@ struct RepoDTO: Sendable, Identifiable, Decodable, Equatable {
     let id: Int
     let name: String  // e.g. "Tetris"
     let fullName: String  // e.g. "dtrupenn/Tetris"
-    let owner: UserDTO
+    let owner: User
     let starsCount: Int
     let watchersCount: Int
     let forksCount: Int
@@ -54,7 +54,7 @@ struct RepoDTO: Sendable, Identifiable, Decodable, Equatable {
         return URL(string: websitePath)
     }
 
-    mutating func update(_ detail: RepoDetailsDTO) {
+    mutating func update(_ detail: RepoDetails) {
         self.subscribersCount = detail.subscribersCount
     }
 }

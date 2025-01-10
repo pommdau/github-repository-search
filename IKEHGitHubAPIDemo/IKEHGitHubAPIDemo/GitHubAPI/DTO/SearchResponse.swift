@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct SearchResponseDTO<Item>: Sendable, Decodable where Item: Sendable & Decodable {
+struct SearchResponse<Item>: Sendable, Decodable where Item: Sendable & Decodable {
 
     // MARK: - レスポンスのBodyをDecodeして取得される情報
     

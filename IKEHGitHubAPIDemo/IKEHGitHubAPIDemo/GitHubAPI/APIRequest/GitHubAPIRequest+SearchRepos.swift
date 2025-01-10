@@ -18,7 +18,7 @@ extension GitHubAPIRequest {
 
 extension GitHubAPIRequest.SearchRepos: GitHubAPIRequestProtocol {
     
-    typealias SearchResponseItem = RepoDTO
+    typealias Item = Repo
     
     var method: HTTPTypes.HTTPRequest.Method {
         .get

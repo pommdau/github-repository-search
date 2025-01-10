@@ -19,7 +19,7 @@ enum GitHubAPIClientError: Error {
     case responseParseError(Error)
 
     // APIからエラーレスポンスを受け取った
-    case apiError(GitHubAPIErrorDTO)
+    case apiError(GitHubAPIError)
     
     var message: String {
         switch self {
