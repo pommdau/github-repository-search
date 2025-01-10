@@ -12,6 +12,7 @@ extension GitHubAPIRequest {
     struct SearchRepos {
         let keyword: String
         let page: Int?
+        let perPage: Int = 10 // 検索結果の上限数 Range: 1~100. Default: 30
     }
 }
 
@@ -34,9 +35,8 @@ extension GitHubAPIRequest.SearchRepos: GitHubAPIRequestProtocol {
         queryItems.append(URLQueryItem(name: "q", value: keyword))
         if let page {
             queryItems.append(URLQueryItem(name: "page", value: "\(page)"))
-        }
-        
-        queryItems.append(URLQueryItem(name: "per_page", value: "\(3)"))
+        }        
+        queryItems.append(URLQueryItem(name: "per_page", value: "\(perPage)"))
         
         return queryItems
     }
