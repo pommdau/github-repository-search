@@ -11,6 +11,7 @@ import IKEHGitHubAPI
 struct ContentView: View {
     @State private var keyword = "Swift"
     @State private var repos: [Repo] = []
+    @State private var lastRepoID: Int?
     @State private var relationLink: RelationLink?
     
     var body: some View {
@@ -25,8 +26,11 @@ struct ContentView: View {
                 ForEach(repos) { repo in
                     RepoCell(repo: repo)
                         .padding(.vertical, 4)
+                        .onAppear() {                            
+                            handleLoadMoreRepo()
+                        }
                 }
-                loadMoreButton()
+//                loadMoreButton()
             }
         }
     }
@@ -37,11 +41,13 @@ extension ContentView {
     @ViewBuilder
     private func searchButton() -> some View {
         Button("Search") {
+            self.lastRepoID = nil
             self.relationLink = nil
             Task {
                 do {
                     let response = try await GitHubAPIClient.shared.searchRepos(keyword: keyword)
                     self.repos = response.items
+                    self.lastRepoID = repos.last?.id
                     self.relationLink = response.relationLink
                 } catch {
                     print(error.localizedDescription)
@@ -51,19 +57,43 @@ extension ContentView {
         .disabled(keyword.isEmpty)
     }
     
-    @ViewBuilder
-    private func loadMoreButton() -> some View {
-        if let nextLink = relationLink?.next {
-            Button("Load More...") {
-                Task {
-                    do {
-                        let response = try await GitHubAPIClient.shared.searchRepos(keyword: nextLink.keyword, page: nextLink.page)
-                        self.repos.append(contentsOf: response.items)
-                        self.relationLink = response.relationLink
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                }
+//    @ViewBuilder
+//    private func loadMoreButton() -> some View {
+//        if let nextLink = relationLink?.next {
+//            Button("Load More...") {
+//                Task {
+//                    do {
+//                        let response = try await GitHubAPIClient.shared.searchRepos(keyword: nextLink.keyword, page: nextLink.page)
+//                        self.repos.append(contentsOf: response.items)
+//                        self.lastRepoID = repos.last?.id
+//                        self.relationLink = response.relationLink
+//                    } catch {
+//                        print(error.localizedDescription)
+//                    }
+//                }
+//            }
+//        }
+//    }
+    
+    private func handleLoadMoreRepo() {
+        
+        guard
+            let nextLink = relationLink?.next,
+            let lastRepoID = repos.last?.id else {
+            return
+        }
+        
+        print(lastRepoID)
+//        return;
+        
+        Task {
+            do {
+                let response = try await GitHubAPIClient.shared.searchRepos(keyword: nextLink.keyword, page: nextLink.page)
+                self.repos.append(contentsOf: response.items)
+                self.lastRepoID = repos.last?.id
+                self.relationLink = response.relationLink
+            } catch {
+                print(error.localizedDescription)
             }
         }
     }
