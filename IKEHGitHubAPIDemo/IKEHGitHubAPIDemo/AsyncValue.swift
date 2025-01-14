@@ -109,4 +109,18 @@ extension AsyncValuesView {
 //        self.loadingView = loadingView
 //        self.errorView = errorView
 //    }
+    
+        init(values: AsyncValues<T, E>,
+             @ViewBuilder dataView: @escaping ([T]) -> DataView,
+             @ViewBuilder initialView: @escaping () -> InitialView,
+             @ViewBuilder errorView: @escaping (E, [T]) -> ErrorView)
+             where DataView == LoadingView
+        {
+            self.values = values
+            self.dataView = dataView
+            self.initialView = initialView
+            self.loadingView = dataView
+            self.errorView = errorView
+        }
+    
 }
