@@ -32,7 +32,7 @@ struct SearchResultView: View {
     @State private var relationLink: RelationLink?
     
     var body: some View {
-        AsyncValueView(values: repos) { repos in
+        AsyncValuesView(values: repos) { repos in
             List(repos) { repo in
                 RepoCell(repo: repo)
                     .padding(.vertical, 4)

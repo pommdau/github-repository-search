@@ -36,7 +36,7 @@ enum AsyncValues<T, E: Error> {
 }
 
 
-struct AsyncValueView<
+struct AsyncValuesView<
     T,
     E: Error,
     DataView: View,
@@ -65,7 +65,7 @@ struct AsyncValueView<
 }
 
 
-extension AsyncValueView {
+extension AsyncValuesView {
 //    /// dataViewだけ
 //    init(value: AsyncValue<T, E>,
 //         @ViewBuilder dataView: @escaping (T) -> DataView)
