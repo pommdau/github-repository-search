@@ -38,17 +38,15 @@ struct AsyncValueView<
     var errorView: (E, [T]) -> ErrorView
 
     var body: some View {
-        ZStack(alignment: .center) {
-            switch values {
-            case .initial:
-                initialView()
-            case let .loading(elements):
-                loadingView(elements)
-            case let .loaded(t):
-                dataView(t)
-            case let .error(e, values):
-                errorView(e, values)
-            }
+        switch values {
+        case .initial:
+            initialView()
+        case let .loading(elements):
+            loadingView(elements)
+        case let .loaded(t):
+            dataView(t)
+        case let .error(e, values):
+            errorView(e, values)
         }
     }
 }
