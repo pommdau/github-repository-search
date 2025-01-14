@@ -14,8 +14,14 @@ struct SampleView: View {
     }
 }
 
-struct ContentView: View {
-    @State private var keyword = "Swift"
+struct SearchResultView: View {
+    
+    // isSearchingは.searchableと同じViewで使用できないため、本Viewを切り出している
+    @Environment(\.isSearching) private var isSearching: Bool
+    @Environment(\.dismissSearch) private var dismissSearch
+    
+    let keyword: String
+    
     @State private var repos: AsyncValues<Repo, GitHubAPIError> = .initial
 //        @State private var repos: AsyncValues<Repo, GitHubAPIError> = .loading([])
 //    @State private var repos: AsyncValues<Repo, GitHubAPIError> = .loaded(Repo.sampleData)
@@ -26,42 +32,35 @@ struct ContentView: View {
     @State private var relationLink: RelationLink?
     
     var body: some View {
-        VStack {
-            HStack {
-                TextField("Enter Keyword !", text: $keyword)
-                searchButton()
+        AsyncValueView(values: repos) { repos in
+            List(repos) { repo in
+                RepoCell(repo: repo)
+                    .padding(.vertical, 4)
             }
-            .padding()
-            
-            List {
-                AsyncValueView(values: repos) { repos in
-                    ForEach(repos) { repo in
-                        RepoCell(repo: repo)
-                            .padding(.vertical, 4)
-                    }
-                } initialView: {
-                    Text("Search GitHub Repositories!")
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                } loadingView: { repos in
-                    VStack(alignment: .leading) {
-                        ForEach(repos) { repo in
-                            RepoCell(repo: repo)
-                                .padding(.vertical, 4)
-                            Divider()
-                        }
-                        ProgressView()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                            .padding(.vertical, 8)
-                    }
-                } errorView: { error, repos in
-                    Text(error.localizedDescription)
+        } initialView: {
+            Text("Search GitHub Repositories!")
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        } loadingView: { repos in
+            VStack {
+                List(repos) { repo in
+                    RepoCell(repo: repo)
+                        .padding(.vertical, 4)
+                    Divider()
                 }
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    .padding(.vertical, 8)
             }
+        } errorView: { error, repos in
+            Text(error.localizedDescription)
+        }
+        .onChange(of: isSearching) { oldValue, newValue in
+            print(newValue)
         }
     }
 }
 
-extension ContentView {
+extension SearchResultView {
     
     @ViewBuilder
     private func searchButton() -> some View {
@@ -128,5 +127,5 @@ extension ContentView {
 }
 
 #Preview {
-    ContentView()
+    SearchResultView(keyword: "Swift")
 }

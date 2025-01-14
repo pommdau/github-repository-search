@@ -11,7 +11,7 @@ import SwiftUI
 struct IKEHGitHubAPIDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SearchScreen()
         }
     }
 }
