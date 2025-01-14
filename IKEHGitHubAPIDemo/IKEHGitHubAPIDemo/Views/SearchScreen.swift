@@ -25,7 +25,7 @@ struct SearchScreen: View {
     }
 }
 
-enum SearchingStatus {
+enum SearchingStatus: Equatable {
     case initial /// 読み込み開始前
     case loading /// 読み込み中 or リフレッシュ中
     case loaded /// 読み込み成功
@@ -78,6 +78,7 @@ final class SearchScreenViewState {
             do {
                 let response = try await GitHubAPIClient.shared.searchRepos(keyword: nextLink.keyword, page: nextLink.page)
                 repos.append(contentsOf: response.items)
+                self.searchStatus = .loaded
                 relationLink = response.relationLink
             } catch {
                 print(error.localizedDescription)
@@ -164,9 +165,16 @@ struct SearchResultView2: View {
 }
 
 #Preview("SearchResultView2") {
-    SearchResultView2(repos: Array(Repo.sampleData[0...2]),
+    SearchResultView2(repos: Array(Repo.sampleData[0...6]),
+                      status: .loaded)
+}
+
+#Preview("SearchResultView2") {
+    SearchResultView2(repos: Array(Repo.sampleData[0...5]),
                       status: .loading)
 }
+
+
 
 #Preview {
 //    SearchResultView2(asyncRepos: .loading(Array(Repo.sampleData[0...2])))
