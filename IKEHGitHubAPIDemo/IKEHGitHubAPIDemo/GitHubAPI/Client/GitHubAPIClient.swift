@@ -17,6 +17,7 @@ final actor GitHubAPIClient {
     }
 
     func searchRepos(keyword: String, page: Int? = nil) async throws -> SearchResponse<Repo> {
+        try? await Task.sleep(nanoseconds: 3_000_000_000)
         let response = try await search(with: GitHubAPIRequest.SearchRepos(keyword: keyword, page: page))
         return response
     }

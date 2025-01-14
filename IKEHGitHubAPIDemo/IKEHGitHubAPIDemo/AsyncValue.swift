@@ -20,6 +20,19 @@ enum AsyncValues<T, E: Error> {
     case loading([T]) /// 読み込み中 or リフレッシュ中
     case loaded([T]) /// 読み込み成功
     case error(E, [T]) ///エラー
+
+    var values: [T] {
+        switch self {
+        case .initial:
+            return []
+        case let .loading(values):
+            return values
+        case let .loaded(values):
+            return values
+        case let .error(_, values):
+            return values
+        }
+    }
 }
 
 
