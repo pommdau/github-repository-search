@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import SwiftUI
 
 @MainActor
 @Observable
 final class SearchScreenViewState {
     var keyword: String = "Swift"
-    var asyncRepos: AsyncValues<Repo, Error> = .initial
-    var relationLink: RelationLink?
+    private(set) var asyncRepos: AsyncValues<Repo, Error> = .initial
+    private var relationLink: RelationLink?
     private(set) var searchTask: Task<(), Never>?
         
     func handleSearchKeyword() {
@@ -33,7 +34,9 @@ final class SearchScreenViewState {
         searchTask = Task {
             do {
                 let response = try await GitHubAPIClient.shared.searchRepos(keyword: keyword)
-                asyncRepos = .loaded(response.items)
+                withAnimation {
+                    asyncRepos = .loaded(response.items)
+                }
                 relationLink = response.relationLink
             } catch {
                 if Task.isCancelled {
@@ -70,7 +73,9 @@ final class SearchScreenViewState {
         searchTask = Task {
             do {
                 let response = try await GitHubAPIClient.shared.searchRepos(keyword: nextLink.keyword, page: nextLink.page)
-                asyncRepos = .loaded(asyncRepos.values + response.items)
+                withAnimation {
+                    asyncRepos = .loaded(asyncRepos.values + response.items)
+                }
                 relationLink = response.relationLink
             } catch {
                 if Task.isCancelled {

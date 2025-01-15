@@ -21,4 +21,9 @@ final actor GitHubAPIClient {
         let response = try await search(with: GitHubAPIRequest.SearchRepos(keyword: keyword, page: page))
         return response
     }
+    
+    func searchUsers(keyword: String, page: Int? = nil) async throws -> SearchResponse<User> {
+        let response = try await search(with: GitHubAPIRequest.SearchUsers(keyword: keyword, page: page))
+        return response
+    }
 }

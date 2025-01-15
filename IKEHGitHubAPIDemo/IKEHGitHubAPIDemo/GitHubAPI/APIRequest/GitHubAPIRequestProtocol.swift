@@ -16,7 +16,6 @@ protocol GitHubAPIRequestProtocol {
     var method: HTTPRequest.Method { get }
     var path: String { get } // e.g. "/search/repositories"
     var queryItems: [URLQueryItem] { get }
-    var header: HTTPFields { get }
     var body: Data? { get }
 }
 
@@ -24,7 +23,11 @@ protocol GitHubAPIRequestProtocol {
 
 extension GitHubAPIRequestProtocol {
     
+    // MARK: - Define Type
+    
     typealias SearchResponseType = SearchResponse<Item>
+    
+    // MARK: - Computed Property
     
     // e.g. "https"
     private var scheme: String {
@@ -53,6 +56,17 @@ extension GitHubAPIRequestProtocol {
         
         return components.url
     }
+    
+    var header: HTTPTypes.HTTPFields {
+        var headerFields = HTTPTypes.HTTPFields()
+        headerFields[.accept] = "application/vnd.github.v3+json"
+        if let apiVersionKey = HTTPField.Name.init("X-GitHub-Api-Version") {
+            headerFields[apiVersionKey] = "2022-11-28"
+        }
+        return headerFields
+    }
+    
+    // MARK: - Methods
     
     func buildHTTPRequest() -> HTTPRequest? {
         guard let url else {

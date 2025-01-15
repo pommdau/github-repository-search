@@ -27,13 +27,17 @@ struct SearchScreen: View {
         .onSubmit(of: .search) {
             viewState.handleSearchKeyword()
         }
+        .onAppear {
+            Task {
+                do {
+                    let reponse = try await GitHubAPIClient.shared.searchUsers(keyword: viewState.keyword)
+                    print("stop")
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
     }
-}
-
-
-
-#Preview {
-//    SearchResultView2(asyncRepos: .loading(Array(Repo.sampleData[0...2])))
 }
 
 #Preview {

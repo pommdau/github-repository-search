@@ -1,15 +1,15 @@
 //
-//  GitHubAPIRequest+SearchRepos.swift
+//  GitHubAPIRequest+SearchUsers.swift
 //  IKEHGitHubAPIDemo
 //
-//  Created by HIROKI IKEUCHI on 2025/01/07.
+//  Created by HIROKI IKEUCHI on 2025/01/15.
 //
 
 import Foundation
 import HTTPTypes
 
 extension GitHubAPIRequest {
-    struct SearchRepos {
+    struct SearchUsers {
         let keyword: String
         let page: Int?
         let perPage: Int = 10 // 検索結果の上限数 Range: 1~100. Default: 30
@@ -18,16 +18,16 @@ extension GitHubAPIRequest {
 
 // MARK: - GitHubAPIRequestProtocol
 
-extension GitHubAPIRequest.SearchRepos: GitHubAPIRequestProtocol {
+extension GitHubAPIRequest.SearchUsers: GitHubAPIRequestProtocol {
     
-    typealias Item = Repo
+    typealias Item = User
     
     var method: HTTPTypes.HTTPRequest.Method {
         .get
     }
     
     var path: String {
-        "/search/repositories"
+        "/search/users"
     }
 
     var queryItems: [URLQueryItem] {
