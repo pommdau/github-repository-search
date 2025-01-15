@@ -24,21 +24,78 @@ struct SearchScreen: View {
                 })
         }
         .searchable(text: $viewState.keyword, prompt: "Enter Keyword")
+//        .searchSuggestions {
+//            SearchSuggestionView(keyword: viewState.keyword) { type in
+////                switch type {
+////                case .repo:
+////                    viewState.handleSearchKeyword()
+////                case .user:
+////                    print("todo")
+////                }
+//                print("じっそうしてして")
+//            }
+//        }
         .onSubmit(of: .search) {
             viewState.handleSearchKeyword()
         }
-        .onAppear {
-            Task {
-                do {
-                    let reponse = try await GitHubAPIClient.shared.searchUsers(keyword: viewState.keyword)
-                    print("stop")
-                } catch {
-                    print(error.localizedDescription)
-                }
+        .toolbar {
+            Button("Hoge") {
+                print("hoge")
             }
         }
     }
 }
+
+enum SearchSuggestionType: CaseIterable {
+    case repo
+    case user
+    
+    var iconSystemName: String {
+        switch self {
+        case .repo:
+            "text.book.closed"
+        case .user:
+            "person"
+        }
+    }
+    
+    var titleFormat: String {
+        switch self {
+            case .repo:
+            "\"%@\"を含むリポジトリ"
+        case .user:
+            "\"%@\"を含む人"
+        }
+    }
+}
+
+struct SearchSuggestionView: View {
+    
+    let keyword: String
+    var didSelect: (SearchSuggestionType) -> Void = { _ in }
+    
+    var body: some View {
+        if keyword.isEmpty {
+            EmptyView()
+        } else {
+            ForEach(SearchSuggestionType.allCases, id: \.self) { type in
+                Button {
+                    didSelect(type)
+                } label: {
+                    Label(String(format: type.titleFormat, keyword), systemImage: type.iconSystemName)
+                }
+                .foregroundStyle(.primary)
+            }
+        }
+    }
+}
+
+#Preview {
+    List {
+        SearchSuggestionView(keyword: "Swift")
+    }
+}
+
 
 #Preview {
     SearchScreen()

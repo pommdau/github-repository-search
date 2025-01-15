@@ -53,6 +53,7 @@ struct SearchResultView: View {
         }
         .ignoresSafeArea(edges: .bottom)
         .onChange(of: isSearching) {
+            print(isSearching ? "searching" : "not searching")
             if !isSearching {
                 // 検索がキャンセルされた場合
                 cancelSearching()
