@@ -31,35 +31,36 @@ enum SearchStatus: Equatable {
 @Observable
 final class SearchScreenViewState {
     var keyword: String = "Swift"
-    var repos: [Repo] = []
-//    var asyncRepos: AsyncValues<Repo, Error> = .initial
+    var asyncRepos: AsyncValues<Repo, Error> = .initial
     var relationLink: RelationLink?
-    var searchStatus: SearchStatus = .initial
     private(set) var searchTask: Task<(), Never>?
         
     func handleSearchKeyword() {
-        if keyword.isEmpty || searchStatus == .loading {
+        if case .loading = asyncRepos {
+            return
+        }
+        
+        if keyword.isEmpty {
             return
         }
                 
-        searchStatus = .loading
+        asyncRepos = .loading(asyncRepos.values)
         relationLink = nil
 
         searchTask = Task {
             do {
                 let response = try await GitHubAPIClient.shared.searchRepos(keyword: keyword)
-                repos = response.items
-                searchStatus = .loaded
+                asyncRepos = .loaded(response.items)
                 relationLink = response.relationLink
             } catch {
                 if Task.isCancelled {
-                    if repos.isEmpty {
-                        searchStatus = .initial
+                    if asyncRepos.values.isEmpty {
+                        asyncRepos = .initial
                     } else {
-                        searchStatus = .loaded
+                        asyncRepos = .loaded(asyncRepos.values)
                     }
                 } else {
-                    searchStatus = .error(error)
+                    asyncRepos = .error(error, asyncRepos.values)
                     print(error.localizedDescription)
                 }
             }
@@ -67,25 +68,23 @@ final class SearchScreenViewState {
     }
     
     func handleSearchMore() {
-        if searchStatus == .loading {
+        if case .loading = asyncRepos {
             return
         }
         guard let nextLink = relationLink?.next else {
             return
         }
-        
-        searchStatus = .loading
+        asyncRepos = .loadingMore(asyncRepos.values)
         searchTask = Task {
             do {
                 let response = try await GitHubAPIClient.shared.searchRepos(keyword: nextLink.keyword, page: nextLink.page)
-                repos.append(contentsOf: response.items)
-                searchStatus = .loaded
+                asyncRepos = .loaded(asyncRepos.values + response.items)
                 relationLink = response.relationLink
             } catch {
                 if Task.isCancelled {
-                    searchStatus = .loaded
+                    asyncRepos = .loaded(asyncRepos.values)
                 } else {
-                    searchStatus = .error(error)
+                    asyncRepos = .error(error, asyncRepos.values)
                     print(error.localizedDescription)
                 }
             }

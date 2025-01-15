@@ -27,9 +27,7 @@ struct SearchResultView: View {
             return false
         }
     }
-    
-//    let repos: [Repo]
-//    let status: SearchStatus
+
     var asyncRepos: AsyncValues<Repo, Error> = .initial
     var cancelSearching: () -> Void = {}
     var bottomCellOnAppear: (Int) -> Void = { _ in }
