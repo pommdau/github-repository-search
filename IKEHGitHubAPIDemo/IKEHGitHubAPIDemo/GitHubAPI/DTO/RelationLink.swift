@@ -19,7 +19,7 @@ struct RelationLink: Equatable, Sendable {
         }
         var id: ID
         var url: URL
-        var keyword: String
+        var searchText: String
         var page: Int
     }
     
@@ -58,8 +58,8 @@ extension RelationLink {
             guard let url = URL(string: path),
                   let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true),
                   let queryItems = urlComponents.queryItems,
-                  let keywordItem = queryItems.first(where: { $0.name == "q" }),
-                  let keyword = keywordItem.value,
+                  let searchTextItem = queryItems.first(where: { $0.name == "q" }),
+                  let searchText = searchTextItem.value,
                   let pageItem = queryItems.first(where: { $0.name == "page" }),
                   let pageValue = pageItem.value,
                   let pageNumber = Int(pageValue) else {
@@ -74,13 +74,13 @@ extension RelationLink {
             
             switch relationKey {
             case "prev":
-                relationLink.prev = .init(id: "\(relationKey)", url: url, keyword: keyword, page: pageNumber)
+                relationLink.prev = .init(id: "\(relationKey)", url: url, searchText: searchText, page: pageNumber)
             case "next":
-                relationLink.next = .init(id: "\(relationKey)", url: url, keyword: keyword, page: pageNumber)
+                relationLink.next = .init(id: "\(relationKey)", url: url, searchText: searchText, page: pageNumber)
             case "last":
-                relationLink.last = .init(id: "\(relationKey)", url: url, keyword: keyword, page: pageNumber)
+                relationLink.last = .init(id: "\(relationKey)", url: url, searchText: searchText, page: pageNumber)
             case "first":
-                relationLink.first = .init(id: "\(relationKey)", url: url, keyword: keyword, page: pageNumber)
+                relationLink.first = .init(id: "\(relationKey)", url: url, searchText: searchText, page: pageNumber)
             default:
                 preconditionFailure()
             }

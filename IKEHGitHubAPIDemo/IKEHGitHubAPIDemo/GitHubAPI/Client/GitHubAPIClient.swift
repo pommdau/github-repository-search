@@ -16,14 +16,14 @@ final actor GitHubAPIClient {
         self.urlSession = urlSession
     }
 
-    func searchRepos(keyword: String, page: Int? = nil) async throws -> SearchResponse<Repo> {
+    func searchRepos(searchText: String, page: Int? = nil) async throws -> SearchResponse<Repo> {
         try? await Task.sleep(nanoseconds: 3_000_000_000)
-        let response = try await search(with: GitHubAPIRequest.SearchRepos(keyword: keyword, page: page))
+        let response = try await search(with: GitHubAPIRequest.SearchRepos(searchText: searchText, page: page))
         return response
     }
     
-    func searchUsers(keyword: String, page: Int? = nil) async throws -> SearchResponse<User> {
-        let response = try await search(with: GitHubAPIRequest.SearchUsers(keyword: keyword, page: page))
+    func searchUsers(searchText: String, page: Int? = nil) async throws -> SearchResponse<User> {
+        let response = try await search(with: GitHubAPIRequest.SearchUsers(searchText: searchText, page: page))
         return response
     }
 }

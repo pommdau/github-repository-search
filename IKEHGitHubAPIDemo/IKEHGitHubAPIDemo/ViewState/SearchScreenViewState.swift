@@ -11,12 +11,13 @@ import SwiftUI
 @MainActor
 @Observable
 final class SearchScreenViewState {
-    var keyword: String = "Swift"
+    var searchText: String = "Swift"
+    var searchType: SearchType = .user
     private(set) var asyncRepos: AsyncValues<Repo, Error> = .initial
     private var relationLink: RelationLink?
     private(set) var searchTask: Task<(), Never>?
         
-    func handleSearchKeyword() {
+    func handleSearchText() {
         
         // すでに検索中であれば何もしない
         if case .loading = asyncRepos {
@@ -24,7 +25,7 @@ final class SearchScreenViewState {
         }
         
         // 検索ワード未入力の場合
-        if keyword.isEmpty {
+        if searchText.isEmpty {
             return
         }
         
@@ -33,7 +34,7 @@ final class SearchScreenViewState {
 
         searchTask = Task {
             do {
-                let response = try await GitHubAPIClient.shared.searchRepos(keyword: keyword)
+                let response = try await GitHubAPIClient.shared.searchRepos(searchText: searchText)
                 withAnimation {
                     asyncRepos = .loaded(response.items)
                 }
@@ -51,6 +52,14 @@ final class SearchScreenViewState {
                 }
             }
         }
+    }
+    
+    func searchRepos() {
+        
+    }
+    
+    func searchUsers() {
+        
     }
     
     func handleSearchMore() {
@@ -72,7 +81,7 @@ final class SearchScreenViewState {
         asyncRepos = .loadingMore(asyncRepos.values)
         searchTask = Task {
             do {
-                let response = try await GitHubAPIClient.shared.searchRepos(keyword: nextLink.keyword, page: nextLink.page)
+                let response = try await GitHubAPIClient.shared.searchRepos(searchText: nextLink.searchText, page: nextLink.page)
                 withAnimation {
                     asyncRepos = .loaded(asyncRepos.values + response.items)
                 }

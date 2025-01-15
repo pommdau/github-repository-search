@@ -13,6 +13,7 @@ struct SearchScreen: View {
     
     var body: some View {
         NavigationStack {
+            searchTypePicker()
             SearchResultView(
                 asyncRepos: viewState.asyncRepos,
                 cancelSearching: {
@@ -23,20 +24,9 @@ struct SearchScreen: View {
                     viewState.handleSearchMore()
                 })
         }
-        .searchable(text: $viewState.keyword, prompt: "Enter Keyword")
-//        .searchSuggestions {
-//            SearchSuggestionView(keyword: viewState.keyword) { type in
-////                switch type {
-////                case .repo:
-////                    viewState.handleSearchKeyword()
-////                case .user:
-////                    print("todo")
-////                }
-//                print("じっそうしてして")
-//            }
-//        }
+        .searchable(text: $viewState.searchText, prompt: "Enter Keyword")
         .onSubmit(of: .search) {
-            viewState.handleSearchKeyword()
+            viewState.handleSearchText()
         }
         .toolbar {
             Button("Hoge") {
@@ -44,58 +34,25 @@ struct SearchScreen: View {
             }
         }
     }
-}
-
-enum SearchSuggestionType: CaseIterable {
-    case repo
-    case user
     
-    var iconSystemName: String {
-        switch self {
-        case .repo:
-            "text.book.closed"
-        case .user:
-            "person"
-        }
-    }
-    
-    var titleFormat: String {
-        switch self {
-            case .repo:
-            "\"%@\"を含むリポジトリ"
-        case .user:
-            "\"%@\"を含む人"
-        }
-    }
-}
-
-struct SearchSuggestionView: View {
-    
-    let keyword: String
-    var didSelect: (SearchSuggestionType) -> Void = { _ in }
-    
-    var body: some View {
-        if keyword.isEmpty {
-            EmptyView()
-        } else {
-            ForEach(SearchSuggestionType.allCases, id: \.self) { type in
-                Button {
-                    didSelect(type)
-                } label: {
-                    Label(String(format: type.titleFormat, keyword), systemImage: type.iconSystemName)
+    @ViewBuilder
+    private func searchTypePicker() -> some View {
+        HStack(spacing: 0) {
+            Text("Search: ")
+                .padding(.trailing, -12)
+            Picker("SearchType", selection: $viewState.searchType) {
+                ForEach(SearchType.allCases) { type in
+                    /// 選択項目の一覧
+                    Text(type.title).tag(type)
                 }
-                .foregroundStyle(.primary)
             }
+            .accentColor(.primary)
+            .pickerStyle(.menu)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.leading, 18)
     }
 }
-
-#Preview {
-    List {
-        SearchSuggestionView(keyword: "Swift")
-    }
-}
-
 
 #Preview {
     SearchScreen()
