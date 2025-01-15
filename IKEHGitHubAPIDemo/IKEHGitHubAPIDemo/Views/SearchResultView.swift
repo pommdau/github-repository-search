@@ -66,16 +66,20 @@ struct SearchResultView: View {
         } else {
             List {
                 ForEach(repos.values) { repo in
-                    RepoCell(repo: repo)
-                        .padding(.vertical, 4)
-                        .onAppear {
-                            guard let lastRepo = repos.values.last else {
-                                return
+                    NavigationLink {
+                        Text(repo.fullName)
+                    } label: {
+                        RepoCell(repo: repo)
+                            .padding(.vertical, 4)
+                            .onAppear {
+                                guard let lastRepo = repos.values.last else {
+                                    return
+                                }
+                                if lastRepo.id == repo.id {
+                                    bottomCellOnAppear(repo.id)
+                                }
                             }
-                            if lastRepo.id == repo.id {
-                                bottomCellOnAppear(repo.id)
-                            }
-                        }
+                    }
                 }
                 if case .loadingMore = repos {
                     // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
@@ -90,35 +94,47 @@ struct SearchResultView: View {
 }
 
 #Preview("SearchResultView_initial") {
-    SearchResultView(asyncRepos: .initial)
+    NavigationStack {
+        SearchResultView(asyncRepos: .initial)
+    }
 }
 
 #Preview("SearchResultView_loaded") {
-    SearchResultView(asyncRepos:
-            .loaded(Array(Repo.sampleData[0...6]))
-    )
+    NavigationStack {
+        SearchResultView(asyncRepos:
+                .loaded(Array(Repo.sampleData[0...6]))
+        )
+    }
 }
 
 #Preview("SearchResultView_loading_initial") {
-    SearchResultView(asyncRepos:
-            .loading([])
-    )
+    NavigationStack {
+        SearchResultView(asyncRepos:
+                .loading([])
+        )
+    }
 }
 
 #Preview("SearchResultView_loading_second") {
-    SearchResultView(asyncRepos:
-            .loading(Array(Repo.sampleData[0...2]))
-    )
+    NavigationStack {
+        SearchResultView(asyncRepos:
+                .loading(Array(Repo.sampleData[0...2]))
+        )
+    }
 }
 
 #Preview("SearchResultView_loadingmore") {
-    SearchResultView(asyncRepos:
-            .loadingMore(Array(Repo.sampleData[0...2]))
-    )
+    NavigationStack {
+        SearchResultView(asyncRepos:
+                .loadingMore(Array(Repo.sampleData[0...2]))
+        )
+    }
 }
 
 #Preview("SearchResultView_error") {
-    SearchResultView(asyncRepos:
-            .error(MessageError(description: "sample error"), [])
-    )
+    NavigationStack {
+        SearchResultView(asyncRepos:
+                .error(MessageError(description: "sample error"), [])
+        )
+    }
 }
