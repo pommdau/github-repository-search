@@ -13,10 +13,16 @@ struct SearchScreen: View {
     
     var body: some View {
         NavigationStack {
-            SearchResultView(repos: viewState.repos, status: viewState.searchStatus) { _ in
-                // 一番下のセルが表示された場合
-                viewState.handleSearchMore()
-            }
+            SearchResultView(
+                repos: viewState.repos,
+                status: viewState.searchStatus,
+                cancelSearching: {
+                    viewState.cancelSearching()
+                },
+                bottomCellOnAppear: { _ in
+                    // 一番下のセルが表示された場合
+                    viewState.handleSearchMore()
+                })
         }
         .searchable(text: $viewState.keyword, prompt: "Enter Keyword")
         .onSubmit(of: .search) {

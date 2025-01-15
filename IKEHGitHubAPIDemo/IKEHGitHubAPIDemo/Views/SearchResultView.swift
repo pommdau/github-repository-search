@@ -8,8 +8,14 @@
 import SwiftUI
 
 struct SearchResultView: View {
+    
+    // isSearchingは.searchableと同じViewで使用できないため、本Viewを切り出している
+    @Environment(\.isSearching)
+    private var isSearching: Bool
+    
     let repos: [Repo]
     let status: SearchStatus
+    var cancelSearching: () -> Void = {}
     var bottomCellOnAppear: (Int) -> Void = { _ in }
     
     var body: some View {
@@ -24,6 +30,12 @@ struct SearchResultView: View {
             Spacer()
         }
         .ignoresSafeArea(edges: .bottom)
+        .onChange(of: isSearching) {
+            if !isSearching {
+                // 検索がキャンセルされた場合
+                cancelSearching()
+            }
+        }
     }
     
     @ViewBuilder
