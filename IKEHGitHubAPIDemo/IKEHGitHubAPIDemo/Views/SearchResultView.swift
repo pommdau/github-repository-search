@@ -33,10 +33,12 @@ struct SearchResultView: View {
     var bottomCellOnAppear: (Int) -> Void = { _ in }
     
     var body: some View {
-        VStack {
+        List {
             switch asyncRepos {
             case .initial:
                 Text("Search GitHub Repositories!")
+                    .foregroundStyle(.secondary)
+                    .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             case .loading:
                 // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
@@ -47,7 +49,6 @@ struct SearchResultView: View {
             case .loaded, .loadingMore, .error:
                 dataView(repos: asyncRepos)
             }
-            Spacer()
         }
         .ignoresSafeArea(edges: .bottom)
         .onChange(of: isSearching) {
@@ -62,32 +63,31 @@ struct SearchResultView: View {
     private func dataView(repos: AsyncValues<Repo, Error>) -> some View {
         if showNoResultLabel {
             Text("No Result")
+                .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         } else {
-            List {
-                ForEach(repos.values) { repo in
-                    NavigationLink {
-                        Text(repo.fullName)
-                    } label: {
-                        RepoCell(repo: repo)
-                            .padding(.vertical, 4)
-                            .onAppear {
-                                guard let lastRepo = repos.values.last else {
-                                    return
-                                }
-                                if lastRepo.id == repo.id {
-                                    bottomCellOnAppear(repo.id)
-                                }
+            ForEach(repos.values) { repo in
+                NavigationLink {
+                    Text(repo.fullName)
+                } label: {
+                    RepoCell(repo: repo)
+                        .padding(.vertical, 4)
+                        .onAppear {
+                            guard let lastRepo = repos.values.last else {
+                                return
                             }
-                    }
+                            if lastRepo.id == repo.id {
+                                bottomCellOnAppear(repo.id)
+                            }
+                        }
                 }
-                if case .loadingMore = repos {
-                    // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
-                    ProgressView("searching...")
-                        .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .id(UUID())
-                }
+            }
+            if case .loadingMore = repos {
+                // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
+                ProgressView("searching...")
+                    .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .id(UUID())
             }
         }
     }
@@ -99,6 +99,14 @@ struct SearchResultView: View {
     }
 }
 
+#Preview("SearchResultView_loading") {
+    NavigationStack {
+        SearchResultView(asyncRepos:
+                .loading([])
+        )
+    }
+}
+
 #Preview("SearchResultView_loaded") {
     NavigationStack {
         SearchResultView(asyncRepos:
@@ -107,18 +115,10 @@ struct SearchResultView: View {
     }
 }
 
-#Preview("SearchResultView_loading_initial") {
+#Preview("SearchResultView_loaded_norepos") {
     NavigationStack {
         SearchResultView(asyncRepos:
-                .loading([])
-        )
-    }
-}
-
-#Preview("SearchResultView_loading_second") {
-    NavigationStack {
-        SearchResultView(asyncRepos:
-                .loading(Array(Repo.sampleData[0...2]))
+                .loaded([])
         )
     }
 }
