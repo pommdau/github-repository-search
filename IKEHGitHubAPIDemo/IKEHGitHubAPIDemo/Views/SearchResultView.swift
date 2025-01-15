@@ -13,19 +13,41 @@ struct SearchResultView: View {
     @Environment(\.isSearching)
     private var isSearching: Bool
     
-    let repos: [Repo]
-    let status: SearchStatus
+    var showNoResultLabel: Bool {
+        // 検索結果が0であることが前提
+        if !asyncRepos.values.isEmpty {
+            return false
+        }
+        
+        // 検索済み or エラーのとき
+        switch asyncRepos {
+        case .loaded, .error:
+            return true
+        default:
+            return false
+        }
+    }
+    
+//    let repos: [Repo]
+//    let status: SearchStatus
+    var asyncRepos: AsyncValues<Repo, Error> = .initial
     var cancelSearching: () -> Void = {}
     var bottomCellOnAppear: (Int) -> Void = { _ in }
     
     var body: some View {
         VStack {
-            switch status {
+            switch asyncRepos {
             case .initial:
                 Text("Search GitHub Repositories!")
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-            case .loading, .loaded, .error:
-                dataView(repos: repos, status: status)
+            case .loading:
+                // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
+                ProgressView("searching...")
+                    .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .id(UUID())
+            case .loaded, .loadingMore, .error:
+                dataView(repos: asyncRepos)
             }
             Spacer()
         }
@@ -39,17 +61,17 @@ struct SearchResultView: View {
     }
     
     @ViewBuilder
-    private func dataView(repos: [Repo], status: SearchStatus) -> some View {
-        if status != .loading && repos.isEmpty {
+    private func dataView(repos: AsyncValues<Repo, Error>) -> some View {
+        if showNoResultLabel {
             Text("No Result")
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         } else {
             List {
-                ForEach(repos) { repo in
+                ForEach(repos.values) { repo in
                     RepoCell(repo: repo)
                         .padding(.vertical, 4)
                         .onAppear {
-                            guard let lastRepo = repos.last else {
+                            guard let lastRepo = repos.values.last else {
                                 return
                             }
                             if lastRepo.id == repo.id {
@@ -57,7 +79,7 @@ struct SearchResultView: View {
                             }
                         }
                 }
-                if status == .loading {
+                if case .loadingMore = repos {
                     // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
                     ProgressView("searching...")
                         .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
@@ -69,23 +91,36 @@ struct SearchResultView: View {
     }
 }
 
+#Preview("SearchResultView_initial") {
+    SearchResultView(asyncRepos: .initial)
+}
+
 #Preview("SearchResultView_loaded") {
-    SearchResultView(repos: Array(Repo.sampleData[0...6]),
-                      status: .loaded)
+    SearchResultView(asyncRepos:
+            .loaded(Array(Repo.sampleData[0...6]))
+    )
 }
 
 #Preview("SearchResultView_loading_initial") {
-    NavigationStack {
-        SearchResultView(repos: [],
-                          status: .loading)
-        
-    }
+    SearchResultView(asyncRepos:
+            .loading([])
+    )
 }
 
-#Preview("SearchResultView_loading") {
-    NavigationStack {
-        SearchResultView(repos: Array(Repo.sampleData[0...1]),
-                          status: .loading)
-        
-    }
+#Preview("SearchResultView_loading_second") {
+    SearchResultView(asyncRepos:
+            .loading(Array(Repo.sampleData[0...2]))
+    )
+}
+
+#Preview("SearchResultView_loadingmore") {
+    SearchResultView(asyncRepos:
+            .loadingMore(Array(Repo.sampleData[0...2]))
+    )
+}
+
+#Preview("SearchResultView_error") {
+    SearchResultView(asyncRepos:
+            .error(MessageError(description: "sample error"), [])
+    )
 }

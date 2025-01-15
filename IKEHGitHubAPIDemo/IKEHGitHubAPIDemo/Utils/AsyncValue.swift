@@ -15,27 +15,45 @@ enum AsyncValue<T, E: Error> {
     case error(E, T?) ///エラー
 }
 
-enum AsyncValues<T, E: Error> {
-    case initial /// 読み込み開始前
-    case loading([T]) /// 読み込み中 or リフレッシュ中
-    case loaded([T]) /// 読み込み成功
-    case error(E, [T]) ///エラー
+enum AsyncValues<T: Equatable, E: Error>: Equatable {
+    case initial
+    case loading([T])
+    case loaded([T])
+    case loadingMore([T])
+    case error(E, [T])
 
     var values: [T] {
         switch self {
         case .initial:
             return []
-        case let .loading(values):
+        case let .loading(values),
+             let .loaded(values),
+             let .loadingMore(values),
+             let .error(_, values):
             return values
-        case let .loaded(values):
-            return values
-        case let .error(_, values):
-            return values
+        }
+    }
+
+    static func == (lhs: AsyncValues<T, E>, rhs: AsyncValues<T, E>) -> Bool {
+        switch (lhs, rhs) {
+        case (.initial, .initial):
+            return true
+        case let (.loading(lhsValues), .loading(rhsValues)):
+            return lhsValues == rhsValues
+        case let (.loaded(lhsValues), .loaded(rhsValues)):
+            return lhsValues == rhsValues
+        case let (.loadingMore(lhsValues), .loadingMore(rhsValues)):
+            return lhsValues == rhsValues
+        case let (.error(lhsError, lhsValues), .error(rhsError, rhsValues)):
+            return lhsError.localizedDescription == rhsError.localizedDescription &&
+                   lhsValues == rhsValues
+        default:
+            return false
         }
     }
 }
 
-
+/*
 struct AsyncValuesView<
     T,
     E: Error,
@@ -124,3 +142,4 @@ extension AsyncValuesView {
         }
     
 }
+*/

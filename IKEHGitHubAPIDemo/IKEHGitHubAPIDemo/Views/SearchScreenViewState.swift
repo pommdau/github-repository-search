@@ -32,6 +32,7 @@ enum SearchStatus: Equatable {
 final class SearchScreenViewState {
     var keyword: String = "Swift"
     var repos: [Repo] = []
+//    var asyncRepos: AsyncValues<Repo, Error> = .initial
     var relationLink: RelationLink?
     var searchStatus: SearchStatus = .initial
     private(set) var searchTask: Task<(), Never>?
