@@ -7,26 +7,6 @@
 
 import Foundation
 
-enum SearchStatus: Equatable {
-    case initial /// 読み込み開始前
-    case loading /// 読み込み中 or リフレッシュ中
-    case loaded /// 読み込み成功
-    case error(Error) ///エラー
-
-    static func ==(lhs: SearchStatus, rhs: SearchStatus) -> Bool {
-        switch (lhs, rhs) {
-        case (.initial, .initial),
-             (.loading, .loading),
-             (.loaded, .loaded):
-            return true
-        case let (.error(lhsError), .error(rhsError)):
-            return lhsError.localizedDescription == rhsError.localizedDescription
-        default:
-            return false
-        }
-    }
-}
-
 @MainActor
 @Observable
 final class SearchScreenViewState {
@@ -36,14 +16,17 @@ final class SearchScreenViewState {
     private(set) var searchTask: Task<(), Never>?
         
     func handleSearchKeyword() {
+        
+        // すでに検索中であれば何もしない
         if case .loading = asyncRepos {
             return
         }
         
+        // 検索ワード未入力の場合
         if keyword.isEmpty {
             return
         }
-                
+        
         asyncRepos = .loading(asyncRepos.values)
         relationLink = nil
 
@@ -68,12 +51,21 @@ final class SearchScreenViewState {
     }
     
     func handleSearchMore() {
-        if case .loading = asyncRepos {
+        
+        // 他でダウンロード処理中であればキャンセル
+        switch asyncRepos {
+        case .loading, .loadingMore:
             return
+        default:
+            break
         }
+        
+        // リンク情報がなければ何もしない
         guard let nextLink = relationLink?.next else {
             return
         }
+        
+        // 検索開始
         asyncRepos = .loadingMore(asyncRepos.values)
         searchTask = Task {
             do {
