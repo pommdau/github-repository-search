@@ -36,9 +36,14 @@ final class SearchScreenViewState {
     var relationLink: RelationLink?
     
     func handleSearchKeyword() {
+        if keyword.isEmpty || searchStatus == .loading {
+            return
+        }
+        
         self.repos = []
         self.searchStatus = .loading
         self.relationLink = nil
+        print("検索するよ")
         Task {
             do {
                 let response = try await GitHubAPIClient.shared.searchRepos(keyword: keyword)
@@ -52,6 +57,11 @@ final class SearchScreenViewState {
     }
     
     func handleSearchMore() {
+        
+        if searchStatus == .loading {
+            return
+        }
+        
         guard let nextLink = relationLink?.next else {
             return
         }

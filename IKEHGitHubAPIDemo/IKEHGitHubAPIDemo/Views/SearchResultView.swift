@@ -23,6 +23,7 @@ struct SearchResultView: View {
             }
             Spacer()
         }
+        .ignoresSafeArea(edges: .bottom)
     }
     
     @ViewBuilder
@@ -45,50 +46,34 @@ struct SearchResultView: View {
                         }
                 }
                 if status == .loading {
+                    // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
                     ProgressView("searching...")
                         .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
                         .frame(maxWidth: .infinity, alignment: .center)
+                        .id(UUID())
                 }
             }
         }
     }
-    
-    @ViewBuilder
-    private func loadingView(repos: [Repo]) -> some View {
-        List {
-            Section {
-                ForEach(repos) { repo in
-                    RepoCell(repo: repo)
-                        .padding(.vertical, 4)
-                }
-            }
-            ProgressView()
-                .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
-                .frame(maxWidth: .infinity, alignment: .center)
-        }
-    }
-    
-//    @ViewBuilder
-//    private func progressView() -> some View {
-//        switch asyncRepos {
-//        case .loading(_):
-//            ProgressView()
-//        default:
-//            EmptyView()
-//        }
-//    }
 }
 
-#Preview("SearchResultView2") {
+#Preview("SearchResultView_loaded") {
     SearchResultView(repos: Array(Repo.sampleData[0...6]),
                       status: .loaded)
 }
 
-#Preview("SearchResultView2") {
+#Preview("SearchResultView_loading_initial") {
+    NavigationStack {
+        SearchResultView(repos: [],
+                          status: .loading)
+        
+    }
+}
+
+#Preview("SearchResultView_loading") {
     NavigationStack {
         SearchResultView(repos: Array(Repo.sampleData[0...1]),
                           status: .loading)
         
     }
-    .searchable(text: .constant("hoge"), prompt: "Enter Keyword")
 }
