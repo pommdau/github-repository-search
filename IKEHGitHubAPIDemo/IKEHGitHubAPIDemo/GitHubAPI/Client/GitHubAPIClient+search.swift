@@ -10,7 +10,8 @@ import Foundation
 import HTTPTypes
 
 extension GitHubAPIClient {
-    func search<Request>(with request: Request) async throws -> Request.SearchResponseType where Request: GitHubAPIRequestProtocol {
+    
+    private func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> (Data, HTTPResponse) where Request: GitHubAPIRequestProtocol {
         // リクエストの作成と送信
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
@@ -26,13 +27,13 @@ extension GitHubAPIClient {
         } catch {
             throw GitHubAPIClientError.connectionError(error)
         }
-                    
+        
         // レスポンスが失敗のとき
         if !(200..<300).contains(httpResponse.status.code) {
-            #if DEBUG
-//            let errorString = String(data: data, encoding: .utf8) ?? ""
-//            print(errorString)
-            #endif
+#if DEBUG
+            //            let errorString = String(data: data, encoding: .utf8) ?? ""
+            //            print(errorString)
+#endif
             let gitHubAPIError: GitHubAPIError
             do {
                 gitHubAPIError = try JSONDecoder().decode(GitHubAPIError.self, from: data)
@@ -41,13 +42,20 @@ extension GitHubAPIClient {
             }
             throw GitHubAPIClientError.apiError(gitHubAPIError)
         }
-
+                
         // レスポンスが成功のとき
         #if DEBUG
         //        let responseString = String(data: data, encoding: .utf8) ?? ""
         //        print(responseString)
         #endif
-                
+        
+        return (data, httpResponse)
+    }
+        
+    func search<Request>(with request: Request) async throws -> Request.SearchResponseType where Request: GitHubAPIRequestProtocol {
+        // リクエストの作成と送信
+        let (data, httpResponse): (Data, HTTPResponse) = try await self.request(with: request)
+        
         // レスポンスのデータをDTOへデコード
         var searchResponse: Request.SearchResponseType
         do {
@@ -56,7 +64,7 @@ extension GitHubAPIClient {
             throw GitHubAPIClientError.responseParseError(error)
         }
         
-        // ヘッダにLink(ページング)情報があれば返り値に追加
+        // ヘッダにページング情報があれば返り値に追加
         if let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
             searchResponse.relationLink = RelationLink.create(rawValue: link.value)
         }

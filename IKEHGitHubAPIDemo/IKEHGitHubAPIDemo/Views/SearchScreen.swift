@@ -28,11 +28,6 @@ struct SearchScreen: View {
         .onSubmit(of: .search) {
             viewState.handleSearchText()
         }
-        .toolbar {
-            Button("Hoge") {
-                print("hoge")
-            }
-        }
     }
     
     @ViewBuilder
