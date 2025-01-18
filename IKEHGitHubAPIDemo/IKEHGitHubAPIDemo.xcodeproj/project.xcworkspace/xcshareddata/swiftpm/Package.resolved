@@ -1,0 +1,24 @@
+{
+  "originHash" : "b0f28ed5d5636aced827af039e54a054af152de7353a46e810eba3fe878f9b0f",
+  "pins" : [
+    {
+      "identity" : "swift-http-types",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-http-types",
+      "state" : {
+        "revision" : "ef18d829e8b92d731ad27bb81583edd2094d1ce3",
+        "version" : "1.3.1"
+      }
+    },
+    {
+      "identity" : "swift-id",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/koher/swift-id.git",
+      "state" : {
+        "revision" : "d7ae15c49d1157e6f3c235e47e6075041ba6c51e",
+        "version" : "1.0.0"
+      }
+    }
+  ],
+  "version" : 3
+}
