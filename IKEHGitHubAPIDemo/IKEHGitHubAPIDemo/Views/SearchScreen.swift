@@ -28,6 +28,7 @@ struct SearchScreen: View {
                     // 一番下のセルが表示された場合
                     viewState.handleSearchMore()
                 })
+            LoginDemoView()
         }
         .searchable(text: $viewState.searchText, prompt: "Enter Keyword")
         .onSubmit(of: .search) {
