@@ -110,12 +110,9 @@ extension GitHubAPIClient {
         }
         self.accessToken = fetchInitialTokensResponse.accessToken
         self.refreshToken = fetchInitialTokensResponse.refreshToken
-        
-        let expiredAt1 = calculateExpirationDate(expiresIn: fetchInitialTokensResponse.expiresIn)
-        let expiredAt2 = calculateExpirationDate(expiresIn: fetchInitialTokensResponse.refreshTokenExpiresIn)
-        print(DateFormatter.forTokenCheck.string(from: expiredAt1))
-        print(DateFormatter.forTokenCheck.string(from: expiredAt2))
-        
+//        self.accessTokenExpiredAt = calculateExpirationDate(expiresIn: fetchInitialTokensResponse.expiresIn)
+        self.accessTokenExpiredAt = calculateExpirationDate(expiresIn: fetchInitialTokensResponse.expiresIn)
+        self.refreshTokenExpiredAt = calculateExpirationDate(expiresIn: fetchInitialTokensResponse.refreshTokenExpiresIn)                
         return ""
     }
 }
