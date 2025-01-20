@@ -6,11 +6,17 @@
 //
 
 import Foundation
+import SwiftUI
 
 final actor GitHubAPIClient {
 
     static let shared: GitHubAPIClient = .init()
     private(set) var urlSession: URLSession
+
+    // ログイン処理の管理ID
+    @MainActor
+    @AppStorage("login-state-id")
+    var lastLoginStateID = ""
     
     init(urlSession: URLSession = URLSession.shared) {
         self.urlSession = urlSession

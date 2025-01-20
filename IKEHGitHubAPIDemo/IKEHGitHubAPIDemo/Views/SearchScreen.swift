@@ -13,6 +13,11 @@ struct SearchScreen: View {
     
     var body: some View {
         NavigationStack {
+            Button("Debug") {
+                Task {
+                    try? GitHubAPIClient.shared.openLoginPage()
+                }
+            }
             searchTypePicker()
             SearchResultView(
                 asyncRepos: viewState.asyncRepos,
@@ -28,7 +33,32 @@ struct SearchScreen: View {
         .onSubmit(of: .search) {
             viewState.handleSearchText()
         }
+        .onOpenURL { (url) in
+            Task {
+                let sessionCode = try await GitHubAPIClient.shared.handleLoginCallbackURL(url)
+                print(sessionCode)
+                try? await GitHubAPIClient.shared.fetchAccessToken(sessionCode: sessionCode)
+            }
+        }
+        .onAppear() {
+//            try? GitHubAPIClient.shared.openLoginPage()
+        }
     }
+    
+//    func openGitHubLogin() {
+//        let clientId = "Iv23lisCHbtSIHnPe9qR" // GitHubで取得したClient ID
+//        let redirectUri = "ikehgithubapi://callback" // コールバックURL
+//        let scope = "repo user" // 必要なスコープ
+//        let state = UUID().uuidString // CSRF対策用のランダム文字列
+//
+//        let authURL = """
+//        https://github.com/login/oauth/authorize?client_id=\(clientId)&redirect_uri=\(redirectUri)&state=\(state)
+//        """
+//
+//        if let url = URL(string: authURL) {
+//            UIApplication.shared.open(url)
+//        }
+//    }
     
     @ViewBuilder
     private func searchTypePicker() -> some View {
