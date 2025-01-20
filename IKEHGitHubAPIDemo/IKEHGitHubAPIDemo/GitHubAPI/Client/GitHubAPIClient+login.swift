@@ -108,11 +108,13 @@ extension GitHubAPIClient {
         } catch {
             throw GitHubAPIClientError.responseParseError(error)
         }
-        self.accessToken = fetchInitialTokensResponse.accessToken
-        self.refreshToken = fetchInitialTokensResponse.refreshToken
-//        self.accessTokenExpiredAt = calculateExpirationDate(expiresIn: fetchInitialTokensResponse.expiresIn)
-        self.accessTokenExpiredAt = calculateExpirationDate(expiresIn: fetchInitialTokensResponse.expiresIn)
-        self.refreshTokenExpiredAt = calculateExpirationDate(expiresIn: fetchInitialTokensResponse.refreshTokenExpiresIn)                
+
+        await tokenManager.set(
+            accessToken: fetchInitialTokensResponse.accessToken,
+            refreshToken: fetchInitialTokensResponse.refreshToken,
+            accessTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.accessTokenExpiresIn),
+            refreshTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.refreshTokenExpiresIn)
+        )
         return ""
     }
 }
@@ -124,7 +126,7 @@ func calculateExpirationDate(startedAt: Date = .now, expiresIn: Int) -> Date {
 
 struct FetchInitialTokensResponse: Codable, Sendable {
     let accessToken: String
-    let expiresIn: Int
+    let accessTokenExpiresIn: Int
     let refreshToken: String
     let refreshTokenExpiresIn: Int
     let tokenType: String
@@ -132,7 +134,7 @@ struct FetchInitialTokensResponse: Codable, Sendable {
 
     enum CodingKeys: String, CodingKey {
         case accessToken = "access_token"
-        case expiresIn = "expires_in"
+        case accessTokenExpiresIn = "expires_in"
         case refreshToken = "refresh_token"
         case refreshTokenExpiresIn = "refresh_token_expires_in"
         case tokenType = "token_type"
