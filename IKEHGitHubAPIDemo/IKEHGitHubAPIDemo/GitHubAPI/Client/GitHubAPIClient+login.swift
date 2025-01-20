@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import HTTPTypes
 import SwiftUI
 import HTTPTypes
 import HTTPTypesFoundation
