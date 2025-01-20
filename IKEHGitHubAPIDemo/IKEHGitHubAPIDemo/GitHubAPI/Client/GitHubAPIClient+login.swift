@@ -130,31 +130,24 @@ extension GitHubAPIClient {
             throw MessageError(description: "error")
         }
         
-        // リクエストボディの作成
-        let body: [String: String] = [
-            "client_id": GitHubAPIClient.PrivateConstants.clientID,
-            "client_secret": GitHubAPIClient.PrivateConstants.clientSecret,
-            "grant_type": "refresh_token",
-            "refresh_token": refreshToken
-        ]
-        let bodyData = try JSONSerialization.data(withJSONObject: body, options: [])
-                
-        // リクエスト設定
-        var headerFields = HTTPTypes.HTTPFields()
-        headerFields[.contentType] = "application/json"
-        headerFields[.accept] = "application/json"
-        let request = HTTPRequest(method: .post,
-                                  url: URL(string: "https://github.com/login/oauth/access_token")!,
-                                  headerFields: headerFields)
+        let request = GitHubAPIRequest.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
+                                                         clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
+                                                         refreshToken: refreshToken)
+        guard
+            let httpRequest = request.buildHTTPRequest(),
+            let body = request.body
+        else {
+            return
+        }
         
         // URLSessionを使ってPOSTリクエストを送信
-        let (data, response) = try await URLSession.shared.upload(for: request, from: bodyData)
+        let (data, response) = try await URLSession.shared.upload(for: httpRequest, from: body)
         
         // レスポンスが失敗のとき
         if !(200..<300).contains(response.status.code) {
 #if DEBUG
-//            let errorString = String(data: data, encoding: .utf8) ?? ""
-//            print(errorString)
+            let errorString = String(data: data, encoding: .utf8) ?? ""
+            print(errorString)
 #endif
             let gitHubAPIError: GitHubAPIError
             do {
