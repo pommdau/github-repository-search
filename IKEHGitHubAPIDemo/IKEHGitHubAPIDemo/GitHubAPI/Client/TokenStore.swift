@@ -66,4 +66,11 @@ final actor TokenStore {
             self.refreshTokenExpiredAt = refreshTokenExpiredAt
         }
     }
+    
+    func removeAll() {
+        accessToken = nil
+        accessTokenExpiredAt = nil
+        refreshToken = nil
+        refreshTokenExpiredAt = nil
+    }
 }

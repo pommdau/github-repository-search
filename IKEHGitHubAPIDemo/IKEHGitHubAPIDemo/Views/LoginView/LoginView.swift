@@ -38,6 +38,11 @@ struct LoginView: View {
                 .foregroundStyle(.secondary)
                 .frame(width: 240)
         }
+        .frame(maxWidth: .infinity)
+        .overlay {
+            LoginDebugView()
+                .offset(y: 360)
+        }
     }
 }
 

@@ -50,7 +50,7 @@ extension GitHubAPIClient {
         return sessionCode // 初回認証時にのみ利用する一時的なcode
     }
     
-    func fetchAccessToken(sessionCode: String) async throws -> String {
+    func fetchAccessToken(sessionCode: String) async throws {
         let tokenURL = URL(string: "https://github.com/login/oauth/access_token")!
         
         // リクエストボディの作成
@@ -82,8 +82,79 @@ extension GitHubAPIClient {
         // レスポンスが失敗のとき
         if !(200..<300).contains(response.status.code) {
 #if DEBUG
-            let errorString = String(data: data, encoding: .utf8) ?? ""
-            print(errorString)
+//            let errorString = String(data: data, encoding: .utf8) ?? ""
+//            print(errorString)
+#endif
+            let gitHubAPIError: GitHubAPIError
+            do {
+                gitHubAPIError = try JSONDecoder().decode(GitHubAPIError.self, from: data)
+            } catch {
+                throw GitHubAPIClientError.responseParseError(error)
+            }
+            throw GitHubAPIClientError.apiError(gitHubAPIError)
+        }
+                
+        // レスポンスが成功のとき
+        #if DEBUG
+//                let responseString = String(data: data, encoding: .utf8) ?? ""
+//                print(responseString)
+        #endif
+        
+        // レスポンスのデータをDTOへデコード
+        var fetchInitialTokensResponse: FetchInitialTokensResponse
+        do {
+            fetchInitialTokensResponse = try JSONDecoder().decode(FetchInitialTokensResponse.self, from: data)
+        } catch {
+            throw GitHubAPIClientError.responseParseError(error)
+        }
+
+        await tokenManager.set(
+            accessToken: fetchInitialTokensResponse.accessToken,
+            refreshToken: fetchInitialTokensResponse.refreshToken,
+            accessTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.accessTokenExpiresIn),
+            refreshTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.refreshTokenExpiresIn)
+        )
+    }
+    
+    func logout() async {
+        // TODO: delete処理
+        // https://docs.github.com/ja/apps/creating-github-apps/authenticating-with-a-github-app/refreshing-user-access-tokens
+        await tokenManager.removeAll()
+    }
+    
+    /// https://docs.github.com/ja/apps/creating-github-apps/authenticating-with-a-github-app/refreshing-user-access-tokens
+    func updateAccessToken() async throws {
+        
+        guard let refreshToken = await tokenManager.refreshToken else {
+            // TODO
+            throw MessageError(description: "error")
+        }
+        
+        // リクエストボディの作成
+        let body: [String: String] = [
+            "client_id": GitHubAPIClient.PrivateConstants.clientID,
+            "client_secret": GitHubAPIClient.PrivateConstants.clientSecret,
+            "grant_type": "refresh_token",
+            "refresh_token": refreshToken
+        ]
+        let bodyData = try JSONSerialization.data(withJSONObject: body, options: [])
+                
+        // リクエスト設定
+        var headerFields = HTTPTypes.HTTPFields()
+        headerFields[.contentType] = "application/json"
+        headerFields[.accept] = "application/json"
+        let request = HTTPRequest(method: .post,
+                                  url: URL(string: "https://github.com/login/oauth/access_token")!,
+                                  headerFields: headerFields)
+        
+        // URLSessionを使ってPOSTリクエストを送信
+        let (data, response) = try await URLSession.shared.upload(for: request, from: bodyData)
+        
+        // レスポンスが失敗のとき
+        if !(200..<300).contains(response.status.code) {
+#if DEBUG
+//            let errorString = String(data: data, encoding: .utf8) ?? ""
+//            print(errorString)
 #endif
             let gitHubAPIError: GitHubAPIError
             do {
@@ -114,7 +185,6 @@ extension GitHubAPIClient {
             accessTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.accessTokenExpiresIn),
             refreshTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.refreshTokenExpiresIn)
         )
-        return ""
     }
 }
 

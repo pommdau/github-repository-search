@@ -12,7 +12,7 @@ struct IKEHGitHubAPIDemoApp: App {
     var body: some Scene {
         WindowGroup {
 //            SearchScreen()
-            LoginView()
+            LoginDebugView()
         }
     }
 }
