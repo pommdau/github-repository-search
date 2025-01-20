@@ -18,6 +18,16 @@ final actor GitHubAPIClient {
     @AppStorage("login-state-id")
     var lastLoginStateID = ""
     
+    // TODO: keychainへの登録
+    
+    @AppStorage("githubapi-access-token")
+    var accessToken: String?
+    
+    @AppStorage("githubapi-refresh-token")
+    var refreshToken: String?
+    
+    
+    
     init(urlSession: URLSession = URLSession.shared) {
         self.urlSession = urlSession
     }

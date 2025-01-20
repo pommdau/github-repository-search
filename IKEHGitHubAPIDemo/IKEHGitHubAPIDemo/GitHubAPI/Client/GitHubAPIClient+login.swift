@@ -12,29 +12,24 @@ import HTTPTypes
 import HTTPTypesFoundation
 
 extension GitHubAPIClient {
-    
+            
     @MainActor
     func openLoginPage() throws {
         // ログインURLの作成
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "github.com"
-        components.path = "/login/oauth/authorize"
-        lastLoginStateID = UUID().uuidString
+        guard var components = URLComponents(string: "https://github.com/login/oauth/authorize") else {
+            throw GitHubAPIClientError.loginError
+        }
+        lastLoginStateID = UUID().uuidString // 多重ログイン防止のためログインセッションのIDを記録
         components.queryItems = [
             URLQueryItem(name: "client_id", value: PrivateConstants.clientID),
             URLQueryItem(name: "redirect_uri", value: "ikehgithubapi://callback"), // Callback URL
-            URLQueryItem(name: "scope", value: "repo"), // Callback URL
             URLQueryItem(name: "state", value: lastLoginStateID)
         ]
-        
         guard let loginURL = components.url else {
             throw GitHubAPIClientError.loginError
         }
-        
-        Task { @MainActor in
-            UIApplication.shared.open(loginURL)
-        }
+
+        UIApplication.shared.open(loginURL)
     }
     
     @MainActor
@@ -105,30 +100,45 @@ extension GitHubAPIClient {
                 let responseString = String(data: data, encoding: .utf8) ?? ""
                 print(responseString)
         #endif
-                
-
-//        
-//        // レスポンスを確認
-//        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-//            
-//            let errorString = String(data: data, encoding: .utf8) ?? ""
-//            print(errorString)
-//            
-//            throw NSError(domain: "GitHubAPI", code: 0,
-//                          userInfo: [NSLocalizedDescriptionKey: "Invalid response from server"])
-//        }
-//        
-//        // レスポンスからアクセストークンを抽出
-//        guard
-//            let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-//            let accessToken = json["access_token"] as? String
-//        else {
-//            throw NSError(domain: "GitHubAPI", code: 0, userInfo: [NSLocalizedDescriptionKey: "Failed to parse access token"])
-//        }
-//        
-//        return accessToken
+        
+        // レスポンスのデータをDTOへデコード
+        var fetchInitialTokensResponse: FetchInitialTokensResponse
+        do {
+            fetchInitialTokensResponse = try JSONDecoder().decode(FetchInitialTokensResponse.self, from: data)
+        } catch {
+            throw GitHubAPIClientError.responseParseError(error)
+        }
+        self.accessToken = fetchInitialTokensResponse.accessToken
+        self.refreshToken = fetchInitialTokensResponse.refreshToken
+        
+        let expiredAt1 = calculateExpirationDate(expiresIn: fetchInitialTokensResponse.expiresIn)
+        let expiredAt2 = calculateExpirationDate(expiresIn: fetchInitialTokensResponse.refreshTokenExpiresIn)
+        print(DateFormatter.forTokenCheck.string(from: expiredAt1))
+        print(DateFormatter.forTokenCheck.string(from: expiredAt2))
         
         return ""
     }
-    
+}
+
+// リフレッシュトークンの発行日時と有効期限（秒）を元に期限切れの時刻を計算
+func calculateExpirationDate(startedAt: Date = .now, expiresIn: Int) -> Date {
+    return startedAt.addingTimeInterval(TimeInterval(expiresIn))
+}
+
+struct FetchInitialTokensResponse: Codable, Sendable {
+    let accessToken: String
+    let expiresIn: Int
+    let refreshToken: String
+    let refreshTokenExpiresIn: Int
+    let tokenType: String
+    let scope: String
+
+    enum CodingKeys: String, CodingKey {
+        case accessToken = "access_token"
+        case expiresIn = "expires_in"
+        case refreshToken = "refresh_token"
+        case refreshTokenExpiresIn = "refresh_token_expires_in"
+        case tokenType = "token_type"
+        case scope
+    }
 }
