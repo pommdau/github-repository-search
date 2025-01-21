@@ -46,21 +46,6 @@ struct SearchScreen: View {
         }
     }
     
-//    func openGitHubLogin() {
-//        let clientId = "Iv23lisCHbtSIHnPe9qR" // GitHubで取得したClient ID
-//        let redirectUri = "ikehgithubapi://callback" // コールバックURL
-//        let scope = "repo user" // 必要なスコープ
-//        let state = UUID().uuidString // CSRF対策用のランダム文字列
-//
-//        let authURL = """
-//        https://github.com/login/oauth/authorize?client_id=\(clientId)&redirect_uri=\(redirectUri)&state=\(state)
-//        """
-//
-//        if let url = URL(string: authURL) {
-//            UIApplication.shared.open(url)
-//        }
-//    }
-    
     @ViewBuilder
     private func searchTypePicker() -> some View {
         HStack(spacing: 0) {
