@@ -17,16 +17,6 @@ extension GitHubAPIRequest.OAuth {
 }
 
 extension GitHubAPIRequest.OAuth.UpdateAccessToken : NewGitHubAPIRequestProtocol, OAuthRequestProtocol {
-    typealias Response = FetchTokenResponse
-
-    var method: HTTPTypes.HTTPRequest.Method {
-        .post
-    }
-    
-    var queryItems: [URLQueryItem] {
-        return []
-    }
-
     var body: Data? {
         let body: [String: String] = [
             "client_id": clientID,

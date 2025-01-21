@@ -20,7 +20,7 @@ extension NewGitHubAPIRequestProtocol where Self: SearchRequestProtocol {
     typealias Response = SearchResponse<Item>
     
     var method: HTTPTypes.HTTPRequest.Method {
-        .post
+        .get
     }
     
     var baseURL: URL? {
@@ -29,8 +29,8 @@ extension NewGitHubAPIRequestProtocol where Self: SearchRequestProtocol {
     
     var header: HTTPTypes.HTTPFields {
         var headerFields = HTTPTypes.HTTPFields()
-        headerFields[.contentType] = "application/json"
-        headerFields[.accept] = "application/json"
+//        headerFields[.contentType] = "application/json"
+        headerFields[.accept] = "application/vnd.github+json"
         return headerFields
     }
     

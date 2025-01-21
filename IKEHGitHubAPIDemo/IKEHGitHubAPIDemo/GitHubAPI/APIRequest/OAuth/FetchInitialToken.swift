@@ -9,24 +9,14 @@ import Foundation
 import HTTPTypes
 
 extension GitHubAPIRequest.OAuth {
-    struct FetchFirstToken {
+    struct FetchInitialToken {
         let clientID: String
         let clientSecret: String
         let sessionCode: String
     }
 }
 
-extension GitHubAPIRequest.OAuth.FetchFirstToken: NewGitHubAPIRequestProtocol, OAuthRequestProtocol {
-    typealias Response = FetchTokenResponse
-    
-    var method: HTTPTypes.HTTPRequest.Method {
-        .post
-    }
-
-    var queryItems: [URLQueryItem] {
-        return []
-    }
-
+extension GitHubAPIRequest.OAuth.FetchInitialToken: NewGitHubAPIRequestProtocol, OAuthRequestProtocol {
     var body: Data? {
         let body: [String: String] = [
             "client_id": clientID,

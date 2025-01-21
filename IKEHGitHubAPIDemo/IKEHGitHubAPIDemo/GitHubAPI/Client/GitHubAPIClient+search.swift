@@ -16,12 +16,18 @@ extension GitHubAPIClient {
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
         }
+        print(httpRequest.url?.absoluteString)
         
         let (data, httpResponse): (Data, HTTPResponse)
         do {
             if let body = request.body {
                 (data, httpResponse) = try await urlSession.upload(for: httpRequest, from: body)
             } else {
+//                do {
+//                    let (data, httpResponse) = try await urlSession.data(for: httpRequest)
+//                } catch {
+//                    print(error.localizedDescription)
+//                }
                 (data, httpResponse) = try await urlSession.data(for: httpRequest)
             }
         } catch {
@@ -51,28 +57,6 @@ extension GitHubAPIClient {
         
         return (data, httpResponse)
     }
-        
-//    func search<Request>(with request: Request) async throws -> (Request.Response, RelationLink?)
-//    where Request: NewGitHubAPIRequestProtocol & SearchRequestProtocol {
-//        // リクエストの作成と送信
-//        let (data, httpResponse): (Data, HTTPResponse) = try await self.request(with: request)
-//        
-//        // レスポンスのデータをDTOへデコード
-//        var response: Request.Response
-//        do {
-//            response = try JSONDecoder().decode(Request.Response.self, from: data)
-//        } catch {
-//            throw GitHubAPIClientError.responseParseError(error)
-//        }
-//        
-//        // ヘッダにページング情報があれば返り値に追加
-//        var relationLink: RelationLink?
-//        if let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
-//            relationLink = RelationLink.create(rawValue: link.value)
-//        }
-//        
-//        return (response, relationLink)
-//    }
     
     func search<Request, Item>(with request: Request) async throws -> SearchResponse<Item>
     where Request: NewGitHubAPIRequestProtocol & SearchRequestProtocol, Item: Decodable & Sendable {

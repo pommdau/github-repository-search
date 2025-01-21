@@ -24,8 +24,10 @@ enum GitHubAPIClientError: Error {
 
     // APIからエラーレスポンスを受け取った
     case apiError(GitHubAPIError)
-    
-    var message: String {
+}
+
+extension GitHubAPIClientError: LocalizedError {
+    var errorDescription: String? {
         switch self {
         case .loginError:
             return "ログインに失敗しました";
@@ -34,9 +36,9 @@ enum GitHubAPIClientError: Error {
         case .connectionError:
             return "通信エラー";
         case .responseParseError:
-            return "データの取得に失敗しました";                                                                                                
+            return "データの取得に失敗しました";
         case .apiError(let gitHubAPIError):
-            return gitHubAPIError.message
+            return "APIエラー: \(gitHubAPIError.message)"
         }
     }
 }

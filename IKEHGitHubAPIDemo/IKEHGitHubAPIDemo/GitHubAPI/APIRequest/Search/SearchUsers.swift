@@ -17,7 +17,7 @@ extension GitHubAPIRequest.Search {
 }
 
 extension GitHubAPIRequest.Search.Users: NewGitHubAPIRequestProtocol, SearchRequestProtocol {
-    typealias Item = Repo
+    typealias Item = User
     var path: String {
         "/users"
     }

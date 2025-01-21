@@ -78,7 +78,7 @@ extension GitHubAPIClient {
     }
     
     func fetchFirstToken(sessionCode: String) async throws {
-        let request = GitHubAPIRequest.OAuth.FetchFirstToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
+        let request = GitHubAPIRequest.OAuth.FetchInitialToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
                                                        clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
                                                        sessionCode: sessionCode)
                                        

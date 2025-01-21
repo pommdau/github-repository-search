@@ -8,11 +8,16 @@
 import Foundation
 import HTTPTypes
 
-protocol OAuthRequestProtocol {
-    
-}
+protocol OAuthRequestProtocol { }
 
 extension NewGitHubAPIRequestProtocol where Self: OAuthRequestProtocol {
+    
+    typealias Response = FetchTokenResponse
+    
+    var method: HTTPTypes.HTTPRequest.Method {
+        .post
+    }
+    
     var baseURL: URL? {
         return URL(string: "https://github.com")
     }
@@ -20,6 +25,10 @@ extension NewGitHubAPIRequestProtocol where Self: OAuthRequestProtocol {
     // e.g. "/search/repositories"
     var path: String {
         "/login/oauth/access_token"
+    }
+        
+    var queryItems: [URLQueryItem] {
+        return []
     }
     
     var header: HTTPTypes.HTTPFields {

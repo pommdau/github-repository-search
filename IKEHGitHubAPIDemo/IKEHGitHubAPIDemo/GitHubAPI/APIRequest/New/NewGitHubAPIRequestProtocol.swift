@@ -16,9 +16,9 @@ protocol NewGitHubAPIRequestProtocol {
     
     var baseURL: URL? { get }
     var path: String { get } // e.g. "/search/repositories"
+    var queryItems: [URLQueryItem] { get }
     
     var header: HTTPTypes.HTTPFields { get }
-    var queryItems: [URLQueryItem] { get }
     var body: Data? { get }
 }
 
@@ -44,6 +44,10 @@ extension NewGitHubAPIRequestProtocol {
         guard let url else {
             return nil
         }
+        
+        print(method)
+        print(url)
+        print(header)
         
         return HTTPRequest(
             method: method,

@@ -51,8 +51,14 @@ struct LoginDebugView: View {
                 
                 Button("Search Repos") {
                     Task {
-                        try await GitHubAPIClient.shared.searchRepos(searchText: "swiftui")
-                        await loadTokens()
+                        do {
+                            let response = try await GitHubAPIClient.shared.searchRepos(searchText: "swiftui")
+                            let repos = response.items
+                            print(repos.count)
+                            await loadTokens()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
