@@ -7,12 +7,11 @@
 
 import Foundation
 import HTTPTypes
-import HTTPTypesFoundation
 
 // MARK: - GitHubAPIRequestProtocol
 
 protocol NewGitHubAPIRequestProtocol {
-    associatedtype Response: Codable
+    associatedtype Response: Decodable
     var method: HTTPRequest.Method { get }
     
     var baseURL: URL? { get }

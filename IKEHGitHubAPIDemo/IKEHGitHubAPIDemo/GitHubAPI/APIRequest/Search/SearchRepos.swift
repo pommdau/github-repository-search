@@ -1,0 +1,24 @@
+//
+//  SearchRepo.swift
+//  IKEHGitHubAPIDemo
+//
+//  Created by HIROKI IKEUCHI on 2025/01/21.
+//
+
+import Foundation
+import HTTPTypes
+
+extension GitHubAPIRequest.Search {
+    struct Repos {
+        let query: String
+        let page: Int?
+        var perPage: Int? = 10
+    }
+}
+
+extension GitHubAPIRequest.Search.Repos: NewGitHubAPIRequestProtocol, SearchRequestProtocol {
+    typealias Item = Repo
+    var path: String {
+        "/repositories"
+    }
+}

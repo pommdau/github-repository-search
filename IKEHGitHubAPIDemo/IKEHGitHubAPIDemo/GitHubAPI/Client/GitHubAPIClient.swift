@@ -48,13 +48,22 @@ final actor GitHubAPIClient {
     }
 
     func searchRepos(searchText: String, page: Int? = nil) async throws -> SearchResponse<Repo> {
-        try? await Task.sleep(nanoseconds: 3_000_000_000)
-        let response = try await search(with: GitHubAPIRequest.SearchRepos(searchText: searchText, page: page))
+//        try? await Task.sleep(nanoseconds: 3_000_000_000)
+//        let response = try await search(with: GitHubAPIRequest.SearchRepos(searchText: searchText, page: page))
+        var response: SearchResponse<Repo>
+        let relationLink: RelationLink?
+        (response, relationLink) = try await search(with: GitHubAPIRequest.Search.Repos(query: searchText, page: page))
+        response.relationLink = relationLink
         return response
     }
     
-    func searchUsers(searchText: String, page: Int? = nil) async throws -> SearchResponse<User> {
-        let response = try await search(with: GitHubAPIRequest.SearchUsers(searchText: searchText, page: page))
-        return response
-    }
+//    func searchRepos(query: String, page: Int? = nil) async throws -> SearchResponse<Repo> {
+//        let response = try await search(with: GitHubAPIRequest.Search.Repos(query: query, page: page))
+//        return response
+//    }
+//    
+//    func searchUsers(searchText: String, page: Int? = nil) async throws -> SearchResponse<User> {
+//        let response = try await search(with: GitHubAPIRequest.SearchUsers(searchText: searchText, page: page))
+//        return response
+//    }
 }

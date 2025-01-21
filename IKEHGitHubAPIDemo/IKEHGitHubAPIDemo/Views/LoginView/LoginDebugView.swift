@@ -48,6 +48,14 @@ struct LoginDebugView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
+                
+                Button("Search Repos") {
+                    Task {
+                        try await GitHubAPIClient.shared.searchRepos(searchText: "swiftui")
+                        await loadTokens()
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
             }
             
             Section("Access Token") {

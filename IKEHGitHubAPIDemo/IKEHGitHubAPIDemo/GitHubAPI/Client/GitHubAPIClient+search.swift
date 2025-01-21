@@ -11,7 +11,7 @@ import HTTPTypes
 
 extension GitHubAPIClient {
     
-    func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> (Data, HTTPResponse) where Request: GitHubAPIRequestProtocol {
+    private func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> (Data, HTTPResponse) where Request: NewGitHubAPIRequestProtocol {
         // リクエストの作成と送信
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
@@ -52,24 +52,26 @@ extension GitHubAPIClient {
         return (data, httpResponse)
     }
         
-    func search<Request>(with request: Request) async throws -> Request.SearchResponseType where Request: GitHubAPIRequestProtocol {
+    func search<Request>(with request: Request) async throws -> (Request.Response, RelationLink?)
+    where Request: NewGitHubAPIRequestProtocol & SearchRequestProtocol {
         // リクエストの作成と送信
         let (data, httpResponse): (Data, HTTPResponse) = try await self.request(with: request)
         
         // レスポンスのデータをDTOへデコード
-        var searchResponse: Request.SearchResponseType
+        var response: Request.Response
         do {
-            searchResponse = try JSONDecoder().decode(Request.SearchResponseType.self, from: data)
+            response = try JSONDecoder().decode(Request.Response.self, from: data)
         } catch {
             throw GitHubAPIClientError.responseParseError(error)
         }
         
         // ヘッダにページング情報があれば返り値に追加
+        var relationLink: RelationLink?
         if let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
-            searchResponse.relationLink = RelationLink.create(rawValue: link.value)
+            relationLink = RelationLink.create(rawValue: link.value)
         }
         
-        return searchResponse
+        return (response, relationLink)
     }
     
     func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> Request.Response where Request: NewGitHubAPIRequestProtocol {
@@ -120,4 +122,5 @@ extension GitHubAPIClient {
         
         return response
     }
+
 }
