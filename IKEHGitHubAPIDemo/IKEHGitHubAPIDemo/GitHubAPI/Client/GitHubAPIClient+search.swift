@@ -52,29 +52,54 @@ extension GitHubAPIClient {
         return (data, httpResponse)
     }
         
-    func search<Request>(with request: Request) async throws -> (Request.Response, RelationLink?)
-    where Request: NewGitHubAPIRequestProtocol & SearchRequestProtocol {
+//    func search<Request>(with request: Request) async throws -> (Request.Response, RelationLink?)
+//    where Request: NewGitHubAPIRequestProtocol & SearchRequestProtocol {
+//        // リクエストの作成と送信
+//        let (data, httpResponse): (Data, HTTPResponse) = try await self.request(with: request)
+//        
+//        // レスポンスのデータをDTOへデコード
+//        var response: Request.Response
+//        do {
+//            response = try JSONDecoder().decode(Request.Response.self, from: data)
+//        } catch {
+//            throw GitHubAPIClientError.responseParseError(error)
+//        }
+//        
+//        // ヘッダにページング情報があれば返り値に追加
+//        var relationLink: RelationLink?
+//        if let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
+//            relationLink = RelationLink.create(rawValue: link.value)
+//        }
+//        
+//        return (response, relationLink)
+//    }
+    
+    func search<Request, Item>(with request: Request) async throws -> SearchResponse<Item>
+    where Request: NewGitHubAPIRequestProtocol & SearchRequestProtocol, Item: Decodable & Sendable {
         // リクエストの作成と送信
         let (data, httpResponse): (Data, HTTPResponse) = try await self.request(with: request)
         
         // レスポンスのデータをDTOへデコード
-        var response: Request.Response
+        var response: SearchResponse<Item>
         do {
-            response = try JSONDecoder().decode(Request.Response.self, from: data)
+            response = try JSONDecoder().decode(SearchResponse<Item>.self, from: data)
         } catch {
             throw GitHubAPIClientError.responseParseError(error)
         }
         
         // ヘッダにページング情報があれば返り値に追加
-        var relationLink: RelationLink?
         if let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
-            relationLink = RelationLink.create(rawValue: link.value)
+            response.relationLink = RelationLink.create(rawValue: link.value)
         }
-        
-        return (response, relationLink)
+        return response
     }
-    
-    func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> Request.Response where Request: NewGitHubAPIRequestProtocol {
+}
+
+// MARK: - OAuth用
+
+extension GitHubAPIClient {
+    func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> Request.Response
+    where Request: NewGitHubAPIRequestProtocol {
         // リクエストの作成と送信
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
@@ -122,5 +147,4 @@ extension GitHubAPIClient {
         
         return response
     }
-
 }

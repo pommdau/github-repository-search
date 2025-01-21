@@ -50,10 +50,7 @@ final actor GitHubAPIClient {
     func searchRepos(searchText: String, page: Int? = nil) async throws -> SearchResponse<Repo> {
 //        try? await Task.sleep(nanoseconds: 3_000_000_000)
 //        let response = try await search(with: GitHubAPIRequest.SearchRepos(searchText: searchText, page: page))
-        var response: SearchResponse<Repo>
-        let relationLink: RelationLink?
-        (response, relationLink) = try await search(with: GitHubAPIRequest.Search.Repos(query: searchText, page: page))
-        response.relationLink = relationLink
+        var response: SearchResponse<Repo> = try await search(with: GitHubAPIRequest.Search.Repos(query: searchText, page: page))
         return response
     }
     
