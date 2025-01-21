@@ -102,3 +102,46 @@ extension GitHubAPIRequest.UpdateAccessToken: NewGitHubAPIRequestProtocol {
         return try? JSONSerialization.data(withJSONObject: body, options: [])
     }
 }
+
+extension GitHubAPIRequest {
+    struct FetchFirstToken {
+        let clientID: String
+        let clientSecret: String
+        let sessionCode: String
+    }
+}
+
+// MARK: - GitHubAPIRequestProtocol
+
+extension GitHubAPIRequest.FetchFirstToken: NewGitHubAPIRequestProtocol {
+    typealias Response = FetchInitialTokensResponse
+    
+    var method: HTTPTypes.HTTPRequest.Method {
+        .post
+    }
+    
+    var path: String {
+        "/login/oauth/access_token"
+    }
+    
+    
+    var header: HTTPTypes.HTTPFields {
+        var headerFields = HTTPTypes.HTTPFields()
+        headerFields[.contentType] = "application/json"
+        headerFields[.accept] = "application/json"
+        return headerFields
+    }
+
+    var queryItems: [URLQueryItem] {
+        return []
+    }
+
+    var body: Data? {
+        let body: [String: String] = [
+            "client_id": clientID,
+            "client_secret": clientSecret,
+            "code": sessionCode
+        ]
+        return try? JSONSerialization.data(withJSONObject: body, options: [])
+    }
+}

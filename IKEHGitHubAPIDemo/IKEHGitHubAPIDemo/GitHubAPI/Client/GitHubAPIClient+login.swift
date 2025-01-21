@@ -122,7 +122,7 @@ extension GitHubAPIClient {
         await tokenManager.removeAll()
     }
     
-    /// https://docs.github.com/ja/apps/creating-github-apps/authenticating-with-a-github-app/refreshing-user-access-tokens
+   
     func updateAccessToken() async throws {
         
         guard let refreshToken = await tokenManager.refreshToken else {
@@ -133,15 +133,53 @@ extension GitHubAPIClient {
         let request = GitHubAPIRequest.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
                                                          clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
                                                          refreshToken: refreshToken)
-        guard
-            let httpRequest = request.buildHTTPRequest(),
-            let body = request.body
-        else {
-            return
-        }
         
-        // URLSessionを使ってPOSTリクエストを送信
-        let (data, response) = try await URLSession.shared.upload(for: httpRequest, from: body)
+        let (data, response) = try await self.request(with: request)
+        
+        // レスポンスが失敗のとき
+        if !(200..<300).contains(response.status.code) {
+#if DEBUG
+            let errorString = String(data: data, encoding: .utf8) ?? ""
+            print(errorString)
+#endif
+            let gitHubAPIError: GitHubAPIError
+            do {
+                gitHubAPIError = try JSONDecoder().decode(GitHubAPIError.self, from: data)
+            } catch {
+                throw GitHubAPIClientError.responseParseError(error)
+            }
+            throw GitHubAPIClientError.apiError(gitHubAPIError)
+        }
+                
+        // レスポンスが成功のとき
+        #if DEBUG
+                let responseString = String(data: data, encoding: .utf8) ?? ""
+                print(responseString)
+        #endif
+        
+        // レスポンスのデータをDTOへデコード
+        var fetchInitialTokensResponse: FetchInitialTokensResponse
+        do {
+            fetchInitialTokensResponse = try JSONDecoder().decode(FetchInitialTokensResponse.self, from: data)
+        } catch {
+            throw GitHubAPIClientError.responseParseError(error)
+        }
+
+        await tokenManager.set(
+            accessToken: fetchInitialTokensResponse.accessToken,
+            refreshToken: fetchInitialTokensResponse.refreshToken,
+            accessTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.accessTokenExpiresIn),
+            refreshTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.refreshTokenExpiresIn)
+        )
+    }
+    
+    func fetchFirstToken(sessionCode: String) async throws {
+        let request = GitHubAPIRequest.FetchFirstToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
+                                                       clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
+                                                       sessionCode: sessionCode)
+                                       
+                                               
+        let (data, response) = try await self.request(with: request)
         
         // レスポンスが失敗のとき
         if !(200..<300).contains(response.status.code) {
