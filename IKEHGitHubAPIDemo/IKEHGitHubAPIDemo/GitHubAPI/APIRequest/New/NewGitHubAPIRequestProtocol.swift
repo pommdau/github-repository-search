@@ -11,28 +11,21 @@ import HTTPTypesFoundation
 
 // MARK: - GitHubAPIRequestProtocol
 
-protocol GitHubAPIOAuthRequestProtocol {
+protocol NewGitHubAPIRequestProtocol {
     associatedtype Response: Codable
     var method: HTTPRequest.Method { get }
+    
+    var baseURL: URL? { get }
+    var path: String { get } // e.g. "/search/repositories"
+    
+    var header: HTTPTypes.HTTPFields { get }
     var queryItems: [URLQueryItem] { get }
     var body: Data? { get }
 }
 
 // MARK: - 共通のパラメータ/処理
 
-extension GitHubAPIOAuthRequestProtocol {
-            
-    // MARK: - Computed Property
-        
-    private var baseURL: URL? {
-        return URL(string: "https://github.com")
-    }
-    
-    // e.g. "/search/repositories"
-    private var path: String {
-        "/login/oauth/access_token"
-    }
-    
+extension NewGitHubAPIRequestProtocol {                
     /// クエリパラメータを含めたURL
     var url: URL? {
         guard
@@ -44,13 +37,6 @@ extension GitHubAPIOAuthRequestProtocol {
         components.queryItems = queryItems
         
         return components.url
-    }
-    
-    var header: HTTPTypes.HTTPFields {
-        var headerFields = HTTPTypes.HTTPFields()
-        headerFields[.contentType] = "application/json"
-        headerFields[.accept] = "application/json"
-        return headerFields
     }
     
     // MARK: - Methods

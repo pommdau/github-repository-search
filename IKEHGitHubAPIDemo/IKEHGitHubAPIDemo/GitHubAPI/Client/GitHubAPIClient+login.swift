@@ -64,7 +64,7 @@ extension GitHubAPIClient {
             throw MessageError(description: "error")
         }
         
-        let request = GitHubAPIRequest.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
+        let request = GitHubAPIRequest.OAuth.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
                                                          clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
                                                          refreshToken: refreshToken)
         
@@ -78,7 +78,7 @@ extension GitHubAPIClient {
     }
     
     func fetchFirstToken(sessionCode: String) async throws {
-        let request = GitHubAPIRequest.FetchFirstToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
+        let request = GitHubAPIRequest.OAuth.FetchFirstToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
                                                        clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
                                                        sessionCode: sessionCode)
                                        

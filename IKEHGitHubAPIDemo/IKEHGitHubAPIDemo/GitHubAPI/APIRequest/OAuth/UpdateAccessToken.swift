@@ -1,0 +1,39 @@
+//
+//  GitHubAPIRequest+OAuth+UpdateAccessToken.swift
+//  IKEHGitHubAPIDemo
+//
+//  Created by HIROKI IKEUCHI on 2025/01/21.
+//
+
+import Foundation
+import HTTPTypes
+
+extension GitHubAPIRequest.OAuth {
+    struct UpdateAccessToken {
+        let clientID: String
+        let clientSecret: String
+        let refreshToken: String
+    }
+}
+
+extension GitHubAPIRequest.OAuth.UpdateAccessToken : NewGitHubAPIRequestProtocol, OAuthRequestProtocol {
+    typealias Response = FetchTokenResponse
+
+    var method: HTTPTypes.HTTPRequest.Method {
+        .post
+    }
+    
+    var queryItems: [URLQueryItem] {
+        return []
+    }
+
+    var body: Data? {
+        let body: [String: String] = [
+            "client_id": clientID,
+            "client_secret": clientSecret,
+            "grant_type": "refresh_token",
+            "refresh_token": refreshToken
+        ]
+        return try? JSONSerialization.data(withJSONObject: body, options: [])
+    }
+}

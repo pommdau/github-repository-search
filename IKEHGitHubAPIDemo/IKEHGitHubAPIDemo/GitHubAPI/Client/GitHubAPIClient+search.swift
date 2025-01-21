@@ -72,7 +72,7 @@ extension GitHubAPIClient {
         return searchResponse
     }
     
-    func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> Request.Response where Request: GitHubAPIOAuthRequestProtocol {
+    func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> Request.Response where Request: NewGitHubAPIRequestProtocol {
         // リクエストの作成と送信
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
