@@ -38,7 +38,7 @@ struct SearchScreen: View {
             Task {
                 let sessionCode = try await GitHubAPIClient.shared.handleLoginCallbackURL(url)
                 print(sessionCode)
-                try? await GitHubAPIClient.shared.fetchAccessToken(sessionCode: sessionCode)
+//                try? await GitHubAPIClient.shared.fetchAccessToken(sessionCode: sessionCode)
             }
         }
         .onAppear() {

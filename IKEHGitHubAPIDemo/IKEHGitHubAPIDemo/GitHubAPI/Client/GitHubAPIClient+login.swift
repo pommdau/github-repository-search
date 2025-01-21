@@ -50,72 +50,6 @@ extension GitHubAPIClient {
         return sessionCode // 初回認証時にのみ利用する一時的なcode
     }
     
-    func fetchAccessToken(sessionCode: String) async throws {
-        let tokenURL = URL(string: "https://github.com/login/oauth/access_token")!
-        
-        // リクエストボディの作成
-        let body: [String: String] = [
-            "client_id": GitHubAPIClient.PrivateConstants.clientID,
-            "client_secret": GitHubAPIClient.PrivateConstants.clientSecret,
-            "code": sessionCode // コールバックで受け取った認証コード
-        ]
-        let bodyData = try JSONSerialization.data(withJSONObject: body, options: [])
-        
-        let testBody = try JSONSerialization.jsonObject(with: bodyData, options: []) as! [String: String]
-        
-        // リクエスト設定
-//        var request = URLRequest(url: tokenURL)
-//        request.httpMethod = "POST"
-//        request.addValue("application/vnd.github.v3+json", forHTTPHeaderField: "Accept")
-//        request.httpBody = try JSONSerialization.data(withJSONObject: body)
-        
-        var headerFields = HTTPTypes.HTTPFields()
-        headerFields[.contentType] = "application/json"
-        headerFields[.accept] = "application/json"
-        let request = HTTPRequest(method: .post,
-                                  url: URL(string: "https://github.com/login/oauth/access_token")!,
-                                  headerFields: headerFields)
-        
-        // URLSessionを使ってPOSTリクエストを送信
-        let (data, response) = try await URLSession.shared.upload(for: request, from: bodyData)
-        
-        // レスポンスが失敗のとき
-        if !(200..<300).contains(response.status.code) {
-#if DEBUG
-//            let errorString = String(data: data, encoding: .utf8) ?? ""
-//            print(errorString)
-#endif
-            let gitHubAPIError: GitHubAPIError
-            do {
-                gitHubAPIError = try JSONDecoder().decode(GitHubAPIError.self, from: data)
-            } catch {
-                throw GitHubAPIClientError.responseParseError(error)
-            }
-            throw GitHubAPIClientError.apiError(gitHubAPIError)
-        }
-                
-        // レスポンスが成功のとき
-        #if DEBUG
-//                let responseString = String(data: data, encoding: .utf8) ?? ""
-//                print(responseString)
-        #endif
-        
-        // レスポンスのデータをDTOへデコード
-        var fetchInitialTokensResponse: FetchInitialTokensResponse
-        do {
-            fetchInitialTokensResponse = try JSONDecoder().decode(FetchInitialTokensResponse.self, from: data)
-        } catch {
-            throw GitHubAPIClientError.responseParseError(error)
-        }
-
-        await tokenManager.set(
-            accessToken: fetchInitialTokensResponse.accessToken,
-            refreshToken: fetchInitialTokensResponse.refreshToken,
-            accessTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.accessTokenExpiresIn),
-            refreshTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.refreshTokenExpiresIn)
-        )
-    }
-    
     func logout() async {
         // TODO: delete処理
         // https://docs.github.com/ja/apps/creating-github-apps/authenticating-with-a-github-app/refreshing-user-access-tokens
@@ -134,42 +68,12 @@ extension GitHubAPIClient {
                                                          clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
                                                          refreshToken: refreshToken)
         
-        let (data, response) = try await self.request(with: request)
-        
-        // レスポンスが失敗のとき
-        if !(200..<300).contains(response.status.code) {
-#if DEBUG
-            let errorString = String(data: data, encoding: .utf8) ?? ""
-            print(errorString)
-#endif
-            let gitHubAPIError: GitHubAPIError
-            do {
-                gitHubAPIError = try JSONDecoder().decode(GitHubAPIError.self, from: data)
-            } catch {
-                throw GitHubAPIClientError.responseParseError(error)
-            }
-            throw GitHubAPIClientError.apiError(gitHubAPIError)
-        }
-                
-        // レスポンスが成功のとき
-        #if DEBUG
-                let responseString = String(data: data, encoding: .utf8) ?? ""
-                print(responseString)
-        #endif
-        
-        // レスポンスのデータをDTOへデコード
-        var fetchInitialTokensResponse: FetchInitialTokensResponse
-        do {
-            fetchInitialTokensResponse = try JSONDecoder().decode(FetchInitialTokensResponse.self, from: data)
-        } catch {
-            throw GitHubAPIClientError.responseParseError(error)
-        }
-
+        let response = try await self.request(with: request)
         await tokenManager.set(
-            accessToken: fetchInitialTokensResponse.accessToken,
-            refreshToken: fetchInitialTokensResponse.refreshToken,
-            accessTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.accessTokenExpiresIn),
-            refreshTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.refreshTokenExpiresIn)
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken,
+            accessTokenExpiredAt: calculateExpirationDate(expiresIn: response.accessTokenExpiresIn),
+            refreshTokenExpiredAt: calculateExpirationDate(expiresIn: response.refreshTokenExpiresIn)
         )
     }
     
@@ -179,42 +83,13 @@ extension GitHubAPIClient {
                                                        sessionCode: sessionCode)
                                        
                                                
-        let (data, response) = try await self.request(with: request)
-        
-        // レスポンスが失敗のとき
-        if !(200..<300).contains(response.status.code) {
-#if DEBUG
-            let errorString = String(data: data, encoding: .utf8) ?? ""
-            print(errorString)
-#endif
-            let gitHubAPIError: GitHubAPIError
-            do {
-                gitHubAPIError = try JSONDecoder().decode(GitHubAPIError.self, from: data)
-            } catch {
-                throw GitHubAPIClientError.responseParseError(error)
-            }
-            throw GitHubAPIClientError.apiError(gitHubAPIError)
-        }
-                
-        // レスポンスが成功のとき
-        #if DEBUG
-                let responseString = String(data: data, encoding: .utf8) ?? ""
-                print(responseString)
-        #endif
-        
-        // レスポンスのデータをDTOへデコード
-        var fetchInitialTokensResponse: FetchInitialTokensResponse
-        do {
-            fetchInitialTokensResponse = try JSONDecoder().decode(FetchInitialTokensResponse.self, from: data)
-        } catch {
-            throw GitHubAPIClientError.responseParseError(error)
-        }
+        let response = try await self.request(with: request)
 
         await tokenManager.set(
-            accessToken: fetchInitialTokensResponse.accessToken,
-            refreshToken: fetchInitialTokensResponse.refreshToken,
-            accessTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.accessTokenExpiresIn),
-            refreshTokenExpiredAt: calculateExpirationDate(expiresIn: fetchInitialTokensResponse.refreshTokenExpiresIn)
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken,
+            accessTokenExpiredAt: calculateExpirationDate(expiresIn: response.accessTokenExpiresIn),
+            refreshTokenExpiredAt: calculateExpirationDate(expiresIn: response.refreshTokenExpiresIn)
         )
     }
 }
@@ -224,7 +99,7 @@ func calculateExpirationDate(startedAt: Date = .now, expiresIn: Int) -> Date {
     return startedAt.addingTimeInterval(TimeInterval(expiresIn))
 }
 
-struct FetchInitialTokensResponse: Codable, Sendable {
+struct FetchTokenResponse: Codable, Sendable {
     let accessToken: String
     let accessTokenExpiresIn: Int
     let refreshToken: String

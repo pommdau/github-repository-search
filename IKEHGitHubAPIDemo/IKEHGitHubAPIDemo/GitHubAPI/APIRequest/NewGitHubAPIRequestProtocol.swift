@@ -12,7 +12,7 @@ import HTTPTypesFoundation
 // MARK: - GitHubAPIRequestProtocol
 
 protocol NewGitHubAPIRequestProtocol {
-    associatedtype Response
+    associatedtype Response: Codable
     var method: HTTPRequest.Method { get }
     var path: String { get } // e.g. "/search/repositories"
     var header: HTTPTypes.HTTPFields { get }
@@ -70,7 +70,7 @@ extension GitHubAPIRequest {
 // MARK: - GitHubAPIRequestProtocol
 
 extension GitHubAPIRequest.UpdateAccessToken: NewGitHubAPIRequestProtocol {
-    typealias Response = FetchInitialTokensResponse
+    typealias Response = FetchTokenResponse
     
     var method: HTTPTypes.HTTPRequest.Method {
         .post
@@ -114,7 +114,7 @@ extension GitHubAPIRequest {
 // MARK: - GitHubAPIRequestProtocol
 
 extension GitHubAPIRequest.FetchFirstToken: NewGitHubAPIRequestProtocol {
-    typealias Response = FetchInitialTokensResponse
+    typealias Response = FetchTokenResponse
     
     var method: HTTPTypes.HTTPRequest.Method {
         .post

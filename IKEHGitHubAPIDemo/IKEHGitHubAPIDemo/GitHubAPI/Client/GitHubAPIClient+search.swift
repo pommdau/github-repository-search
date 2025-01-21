@@ -72,7 +72,7 @@ extension GitHubAPIClient {
         return searchResponse
     }
     
-    func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> (Data, HTTPResponse) where Request: NewGitHubAPIRequestProtocol {
+    func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> Request.Response where Request: NewGitHubAPIRequestProtocol {
         // リクエストの作成と送信
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
@@ -110,6 +110,14 @@ extension GitHubAPIClient {
         //        print(responseString)
         #endif
         
-        return (data, httpResponse)
+        // レスポンスのデータをDTOへデコード
+        var response: Request.Response
+        do {
+            response = try JSONDecoder().decode(Request.Response.self, from: data)
+        } catch {
+            throw GitHubAPIClientError.responseParseError(error)
+        }
+        
+        return response
     }
 }
