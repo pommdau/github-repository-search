@@ -26,7 +26,7 @@ enum GitHubAPIClientError: Error {
     case responseParseError(Error)
 
     // APIからエラーレスポンスを受け取った
-    case apiError(GitHubAPIError)
+    case apiError(Error)
 }
 
 extension GitHubAPIClientError: LocalizedError {
@@ -43,7 +43,7 @@ extension GitHubAPIClientError: LocalizedError {
         case .responseParseError:
             return "データの取得に失敗しました";
         case .apiError(let gitHubAPIError):
-            return "APIでエラーが発生しました: \(gitHubAPIError.message)"
+            return "APIでエラーが発生しました: \(gitHubAPIError.localizedDescription)"
         }
     }
 }

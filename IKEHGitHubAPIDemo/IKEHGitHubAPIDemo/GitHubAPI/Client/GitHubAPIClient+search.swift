@@ -39,13 +39,13 @@ extension GitHubAPIClient {
             //            let errorString = String(data: data, encoding: .utf8) ?? ""
             //            print(errorString)
 #endif
-            let gitHubAPIError: GitHubAPIError
+            let errorResponse: Request.ErrorResponse
             do {
-                gitHubAPIError = try JSONDecoder().decode(GitHubAPIError.self, from: data)
+                errorResponse = try JSONDecoder().decode(Request.ErrorResponse.self, from: data)
             } catch {
                 throw GitHubAPIClientError.responseParseError(error)
             }
-            throw GitHubAPIClientError.apiError(gitHubAPIError)
+            throw GitHubAPIClientError.apiError(errorResponse)
         }
                 
         // レスポンスが成功のとき
@@ -125,6 +125,8 @@ extension GitHubAPIClient {
         #endif
         
         // レスポンスのデータをDTOへデコード
+        print(httpResponse.status.code)
+        print(type(of: Request.ErrorResponse))
         var response: Request.Response
         do {
             response = try JSONDecoder().decode(Request.Response.self, from: data)

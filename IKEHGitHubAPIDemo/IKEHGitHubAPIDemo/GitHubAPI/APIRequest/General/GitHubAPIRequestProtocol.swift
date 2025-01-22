@@ -12,6 +12,7 @@ import HTTPTypes
 
 protocol GitHubAPIRequestProtocol {
     associatedtype Response: Decodable
+    associatedtype ErrorResponse: Decodable & Error
     var method: HTTPRequest.Method { get }
     
     var baseURL: URL? { get }
@@ -24,7 +25,8 @@ protocol GitHubAPIRequestProtocol {
 
 // MARK: - 共通処理
 
-extension GitHubAPIRequestProtocol {                
+extension GitHubAPIRequestProtocol {
+        
     /// クエリパラメータを含めたURL
     var url: URL? {
         guard

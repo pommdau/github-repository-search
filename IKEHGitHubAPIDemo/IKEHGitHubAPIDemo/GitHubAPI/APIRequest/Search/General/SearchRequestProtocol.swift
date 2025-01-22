@@ -19,6 +19,7 @@ protocol SearchRequestProtocol {
 extension GitHubAPIRequestProtocol where Self: SearchRequestProtocol {
     
     typealias Response = SearchResponse<Item>
+    typealias ErrorResponse = GitHubAPIError
     
     var method: HTTPTypes.HTTPRequest.Method {
         .get
@@ -30,13 +31,11 @@ extension GitHubAPIRequestProtocol where Self: SearchRequestProtocol {
     
     var header: HTTPTypes.HTTPFields {
         var headerFields = HTTPTypes.HTTPFields()
-        headerFields[.accept] = "application/vnd.github+json"
+        headerFields[.accept] = HTTPField.ConstantValue.applicationVndGitHubJSON
         if let accessToken {
             headerFields[.authorization] = "Bearer \(accessToken)"
         }
-        if let apiVersionKey = HTTPField.Name.init("X-GitHub-Api-Version") {
-            headerFields[apiVersionKey] = "2022-11-28"
-        }
+        headerFields[.xGithubAPIVersion] = HTTPField.ConstantValue.xGitHubAPIVersion
         return headerFields
     }
     

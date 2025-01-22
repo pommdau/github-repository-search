@@ -13,6 +13,7 @@ protocol OAuthRequestProtocol { }
 extension GitHubAPIRequestProtocol where Self: OAuthRequestProtocol {
     
     typealias Response = RequestTokenResponse
+    typealias ErrorResponse = AuthError
     
     var method: HTTPTypes.HTTPRequest.Method {
         .post
@@ -33,8 +34,8 @@ extension GitHubAPIRequestProtocol where Self: OAuthRequestProtocol {
     
     var header: HTTPTypes.HTTPFields {
         var headerFields = HTTPTypes.HTTPFields()
-        headerFields[.contentType] = "application/json"
-        headerFields[.accept] = "application/json"
+        headerFields[.contentType] = HTTPField.ConstantValue.applicationJSON
+        headerFields[.accept] = HTTPField.ConstantValue.applicationJSON
         return headerFields
     }
 }

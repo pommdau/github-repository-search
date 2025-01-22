@@ -20,7 +20,9 @@ extension GitHubAPIRequest.OAuth {
 
 
 extension GitHubAPIRequest.OAuth.DeleteAppAuthorization: GitHubAPIRequestProtocol {
-    typealias Response = String
+
+    typealias Response = String // 実際には不使用
+    typealias ErrorResponse = GitHubAPIError
     
     var method: HTTPTypes.HTTPRequest.Method {
         .delete
@@ -43,9 +45,9 @@ extension GitHubAPIRequest.OAuth.DeleteAppAuthorization: GitHubAPIRequestProtoco
         if let authorizationValue = "\(clientID):\(clientSecret)".data(using: .utf8)?.base64EncodedString() {
             headerFields[.authorization] = "Basic \(authorizationValue)"
         }
-        headerFields[.contentType] = "application/json"
-        headerFields[.accept] = "application/vnd.github+json"
-        headerFields[.xGithubAPIVersion] = "2022-11-28"
+        headerFields[.contentType] = HTTPField.ConstantValue.applicationJSON
+        headerFields[.accept] = HTTPField.ConstantValue.applicationVndGitHubJSON
+        headerFields[.xGithubAPIVersion] = HTTPField.ConstantValue.xGitHubAPIVersion
         return headerFields
     }
     

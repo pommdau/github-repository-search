@@ -26,11 +26,9 @@ extension GitHubAPIRequestProtocol where Self: StarRequestProtocol {
     
     var header: HTTPTypes.HTTPFields {
         var headerFields = HTTPTypes.HTTPFields()
-        headerFields[.accept] = "application/vnd.github+json"
+        headerFields[.accept] = HTTPField.ConstantValue.applicationVndGitHubJSON
         headerFields[.authorization] = "Bearer \(accessToken)"
-        if let apiVersionKey = HTTPField.Name.init("X-GitHub-Api-Version") {
-            headerFields[apiVersionKey] = "2022-11-28"
-        }
+        headerFields[.xGithubAPIVersion] = HTTPField.ConstantValue.xGitHubAPIVersion
         return headerFields
     }
     
