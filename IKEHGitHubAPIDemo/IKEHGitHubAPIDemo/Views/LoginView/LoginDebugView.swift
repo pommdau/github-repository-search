@@ -14,14 +14,20 @@ struct LoginDebugView: View {
     @State private var accessTokenExpiresAt = "(nil)"
     @State private var refreshToken = "(nil)"
     @State private var refreshTokenExpiresAt = "(nil)"
-                
+    
+    private let gitHubAPIClient: GitHubAPIClient
+    
+    init(gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared) {
+        self.gitHubAPIClient = gitHubAPIClient
+    }
+            
     var body: some View {
         Form {
             Section("Action") {
                 Button("Log in") {
                     Task {
                         do {
-                            try await GitHubAPIClient.shared.openLoginPage()
+                            try await gitHubAPIClient.openLoginPage()
                         } catch {
                             print(error.localizedDescription)
                         }
@@ -32,7 +38,7 @@ struct LoginDebugView: View {
                 Button("Update Access Token") {
                     Task {
                         do {
-                            try await GitHubAPIClient.shared.updateAccessTokenIfNeeded(forceUpdate: true)
+                            try await gitHubAPIClient.updateAccessTokenIfNeeded(forceUpdate: true)
                             await loadTokens()
                         } catch {
                             print(error.localizedDescription)
@@ -44,7 +50,7 @@ struct LoginDebugView: View {
                 Button("Log out", role: .destructive) {
                     Task {
                         do {
-                            try await GitHubAPIClient.shared.logout()
+                            try await gitHubAPIClient.logout()
                             await loadTokens()
                         } catch {
                             print(error.localizedDescription)
@@ -56,7 +62,7 @@ struct LoginDebugView: View {
                 Button("Search Repos") {
                     Task {
                         do {
-                            let response = try await GitHubAPIClient.shared.searchRepos(searchText: "swiftui")
+                            let response = try await gitHubAPIClient.searchRepos(searchText: "swiftui")
                             let repos = response.items
                             print(repos.count)
                             await loadTokens()
@@ -80,9 +86,9 @@ struct LoginDebugView: View {
         }
         .onOpenURL { (url) in
             Task {
-                let sessionCode = try GitHubAPIClient.shared.handleLoginCallbackURL(url)
+                let sessionCode = try gitHubAPIClient.handleLoginCallbackURL(url)
                 do {
-                    try await GitHubAPIClient.shared.fetchFirstToken(sessionCode: sessionCode)
+                    try await gitHubAPIClient.fetchFirstToken(sessionCode: sessionCode)
                     await loadTokens()
                 } catch {
                     print(error.localizedDescription)
@@ -90,22 +96,19 @@ struct LoginDebugView: View {
             }
         }
         .onAppear() {
-            Task {
-                await loadTokens()
-            }
         }
     }
     
     private func loadTokens() async {
-        accessToken = await GitHubAPIClient.shared.tokenStore.accessToken ?? "(nil)"
-        if let accessTokenExpiresAtDate = await GitHubAPIClient.shared.tokenStore.accessTokenExpiresAt {
-            accessTokenExpiresAt = DateFormatter.forTokenCheck.string(from: accessTokenExpiresAtDate)
+        accessToken = await gitHubAPIClient.tokenStore.accessToken ?? "(nil)"
+        if let accessTokenExpiresAtDate = await gitHubAPIClient.tokenStore.accessTokenExpiresAt {
+            accessTokenExpiresAt = DateFormatter.forTokenExpiresIn.string(from: accessTokenExpiresAtDate)
         } else {
             accessTokenExpiresAt = "(nil)"
         }
-        refreshToken = await GitHubAPIClient.shared.tokenStore.refreshToken ?? "(nil)"
-        if let refreshTokenExpiresAtDate = await GitHubAPIClient.shared.tokenStore.refreshTokenExpiresAt {
-            refreshTokenExpiresAt = DateFormatter.forTokenCheck.string(from: refreshTokenExpiresAtDate)
+        refreshToken = await gitHubAPIClient.tokenStore.refreshToken ?? "(nil)"
+        if let refreshTokenExpiresAtDate = await gitHubAPIClient.tokenStore.refreshTokenExpiresAt {
+            refreshTokenExpiresAt = DateFormatter.forTokenExpiresIn.string(from: refreshTokenExpiresAtDate)
         } else {
             refreshTokenExpiresAt = "(nil)"
         }

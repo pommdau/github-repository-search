@@ -30,6 +30,14 @@ extension GitHubAPIClient {
         let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
         return response
     }
+    
+    func searchRequest<Request, Item>(with request: Request) async throws
+    -> SearchResponse<Item> where Request: GitHubAPIRequestProtocol, Item: Decodable & Sendable {
+        let (data, httpResponse) = try await sendRequest(with: request)
+        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
+        let response: SearchResponse<Item> = try decodeResponse(data: data, httpResponse: httpResponse)
+        return response
+    }
 }
 
 // MARK: - Helpers
@@ -101,14 +109,28 @@ extension GitHubAPIClient {
     
     /// レスポンスのデータをDTOへデコード
     private func decodeResponse<Response: Decodable>(data: Data, httpResponse: HTTPResponse) throws -> Response {
-        
-        print(String(data: data, encoding: .utf8)!)
-        
         var response: Response
         do {
             response = try JSONDecoder().decode(Response.self, from: data)
         } catch {
             throw GitHubAPIClientError.responseParseError(error)
+        }
+        
+        return response
+    }
+    
+    /// レスポンスのデータをDTOへデコード(検索用)
+    private func decodeResponse<Item: Decodable>(data: Data, httpResponse: HTTPResponse) throws -> SearchResponse<Item> {
+        var response: SearchResponse<Item>
+        do {
+            response = try JSONDecoder().decode(SearchResponse<Item>.self, from: data)
+        } catch {
+            throw GitHubAPIClientError.responseParseError(error)
+        }
+        
+        // ヘッダにページング情報があれば返り値に追加
+        if let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
+            response.relationLink = RelationLink.create(rawValue: link.value)
         }
         
         return response

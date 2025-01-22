@@ -8,7 +8,7 @@
 import Foundation
 
 extension DateFormatter {
-    static let forTokenCheck: DateFormatter = {
+    static let forTokenExpiresIn: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .medium

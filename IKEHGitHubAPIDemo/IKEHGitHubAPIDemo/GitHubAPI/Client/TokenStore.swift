@@ -15,7 +15,6 @@ final actor TokenStore {
     // MARK: - Properties
     // TODO: keychainへの登録
     // TODO: Tokenクラスの定義
-    
     @AppStorage("ikehgithubapi-access-token")
     var accessToken: String?
     
