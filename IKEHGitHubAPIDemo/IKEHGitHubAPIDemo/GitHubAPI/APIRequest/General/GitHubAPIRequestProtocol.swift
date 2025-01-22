@@ -11,13 +11,23 @@ import HTTPTypes
 // MARK: - GitHubAPIRequestProtocol
 
 protocol GitHubAPIRequestProtocol {
+    
+    // MARK: Types
+    
     associatedtype Response: Decodable
     associatedtype ErrorResponse: Decodable & Error
+    
+    // MARK: General
+    
     var method: HTTPRequest.Method { get }
+    
+    // MARK: URL
     
     var baseURL: URL? { get }
     var path: String { get } // e.g. "/search/repositories"
     var queryItems: [URLQueryItem] { get }
+    
+    // MARK: Data
     
     var header: HTTPTypes.HTTPFields { get }
     var body: Data? { get }
@@ -31,10 +41,14 @@ extension GitHubAPIRequestProtocol {
     var url: URL? {
         guard
             let baseURL,
-            var components = URLComponents(url: baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: true)
+            var components = URLComponents(
+                url: baseURL.appendingPathComponent(path),
+                resolvingAgainstBaseURL: true
+            )
         else {
             return nil
         }
+        // 0個の場合末尾に?がついてしまうのを防止
         if queryItems.count > 0 {
             components.queryItems = queryItems            
         }
@@ -42,17 +56,12 @@ extension GitHubAPIRequestProtocol {
         return components.url
     }
     
-    // MARK: - Methods
     
+    /// プロパティの値からHTTPRequestを作成
     func buildHTTPRequest() -> HTTPRequest? {
         guard let url else {
             return nil
         }
-        
-        print(method)
-        print(url)
-        print(header)
-        
         return HTTPRequest(
             method: method,
             url: url,
