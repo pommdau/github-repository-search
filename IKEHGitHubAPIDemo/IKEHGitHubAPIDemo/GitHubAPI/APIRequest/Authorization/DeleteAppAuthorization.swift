@@ -9,7 +9,7 @@
 import Foundation
 import HTTPTypes
 
-extension GitHubAPIRequest.OAuth {
+extension GitHubAPIRequest {
     struct DeleteAppAuthorization {
         var clientID: String
         var clientSecret: String
@@ -17,7 +17,7 @@ extension GitHubAPIRequest.OAuth {
     }
 }
 
-extension GitHubAPIRequest.OAuth.DeleteAppAuthorization: GitHubAPIRequestProtocol {
+extension GitHubAPIRequest.DeleteAppAuthorization: GitHubAPIRequestProtocol {
 
     typealias Response = String // 実際には不使用
     

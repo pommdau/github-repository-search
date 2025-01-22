@@ -8,7 +8,7 @@
 import Foundation
 import HTTPTypes
 
-extension GitHubAPIRequest.OAuth {
+extension GitHubAPIRequest {
     struct UpdateAccessToken {
         var clientID: String
         var clientSecret: String
@@ -16,7 +16,7 @@ extension GitHubAPIRequest.OAuth {
     }
 }
 
-extension GitHubAPIRequest.OAuth.UpdateAccessToken : GitHubAPIRequestProtocol {
+extension GitHubAPIRequest.UpdateAccessToken : GitHubAPIRequestProtocol {
 
     typealias Response = RequestTokenResponse
     

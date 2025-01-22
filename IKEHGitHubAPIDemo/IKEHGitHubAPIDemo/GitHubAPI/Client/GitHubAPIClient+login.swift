@@ -71,7 +71,7 @@ extension GitHubAPIClient {
         guard let accessToken = await tokenStore.accessToken else {
             return
         }
-        let request = GitHubAPIRequest.OAuth.DeleteAppAuthorization(
+        let request = GitHubAPIRequest.DeleteAppAuthorization(
             clientID: GitHubAPIClient.PrivateConstants.clientID,
             clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
             accessToken: accessToken
@@ -88,10 +88,10 @@ extension GitHubAPIClient {
 extension GitHubAPIClient {
     
     func fetchFirstToken(sessionCode: String) async throws {
-        let request = GitHubAPIRequest.OAuth.FetchInitialToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
-                                                       clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
-                                                       sessionCode: sessionCode)
-                                                                                      
+        let request = GitHubAPIRequest.FetchInitialToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
+                                                         clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
+                                                         sessionCode: sessionCode)
+        
         let response = try await self.oauthRequest(with: request)
 
         await tokenStore.set(
@@ -119,9 +119,9 @@ extension GitHubAPIClient {
         }
         
         // 更新処理
-        let request = GitHubAPIRequest.OAuth.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
-                                                               clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
-                                                               refreshToken: refreshToken)
+        let request = GitHubAPIRequest.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
+                                                         clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
+                                                         refreshToken: refreshToken)
         let response = try await self.oauthRequest(with: request)
         
         // プロパティに結果を保存
