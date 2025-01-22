@@ -10,9 +10,9 @@ import HTTPTypes
 
 extension GitHubAPIRequest.OAuth {
     struct FetchInitialToken {
-        let clientID: String
-        let clientSecret: String
-        let sessionCode: String
+        var clientID: String
+        var clientSecret: String
+        var sessionCode: String
     }
 }
 

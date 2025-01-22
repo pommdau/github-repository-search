@@ -15,43 +15,49 @@ final actor TokenStore {
     // TODO: keychainへの登録
     // TODO: Tokenクラスの定義
     
-    @AppStorage("githubapi-access-token")
+    @AppStorage("ikehgithubapi-access-token")
     var accessToken: String?
     
-    @AppStorage("githubapi-access-token-expired-at")
-    var accessTokenExpiredAt: Date?
+    @AppStorage("ikehgithubapi-access-token-expires-at")
+    var accessTokenExpiresAt: Date?
     
-    @AppStorage("githubapi-refresh-token")
+    @AppStorage("ikehgithubapi-refresh-token")
     var refreshToken: String?
     
-    @AppStorage("githubapi-refresh-token-expired-at")
-    var refreshTokenExpiredAt: Date?
+    @AppStorage("ikehgithubapi-refresh-token-expires-at")
+    var refreshTokenExpiresAt: Date?
+    
+    // MARK: - Validation
     
     var isAccessTokenValid: Bool {
         guard let _ = accessToken,
-              let accessTokenExpiredAt else {
+              let accessTokenExpiresAt else {
             return false
         }
         // トークンが有効期限内か
-        return accessTokenExpiredAt.compare(.now) == .orderedDescending
+        return accessTokenExpiresAt.compare(.now) == .orderedDescending
     }
     
     var isRefreshTokenValid: Bool {
         guard let _ = refreshToken,
-              let refreshTokenExpiredAt else {
+              let refreshTokenExpiresAt else {
             return false
         }
         // トークンが有効期限内か
-        return refreshTokenExpiredAt.compare(.now) == .orderedDescending
+        return refreshTokenExpiresAt.compare(.now) == .orderedDescending
     }
-    
-    // CRUD
+}
+
+// MARK: - CRUD
+
+extension TokenStore {
+    // MARK: Update
     
     func set(
         accessToken: String? = nil,
         refreshToken: String? = nil,
-        accessTokenExpiredAt: Date? = nil,
-        refreshTokenExpiredAt: Date? = nil
+        accessTokenExpiresAt: Date? = nil,
+        refreshTokenExpiresAt: Date? = nil
     ) {
         if let accessToken = accessToken {
             self.accessToken = accessToken
@@ -59,18 +65,20 @@ final actor TokenStore {
         if let refreshToken = refreshToken {
             self.refreshToken = refreshToken
         }
-        if let accessTokenExpiredAt = accessTokenExpiredAt {
-            self.accessTokenExpiredAt = accessTokenExpiredAt
+        if let accessTokenExpiresAt = accessTokenExpiresAt {
+            self.accessTokenExpiresAt = accessTokenExpiresAt
         }
-        if let refreshTokenExpiredAt = refreshTokenExpiredAt {
-            self.refreshTokenExpiredAt = refreshTokenExpiredAt
+        if let refreshTokenExpiresAt = refreshTokenExpiresAt {
+            self.refreshTokenExpiresAt = refreshTokenExpiresAt
         }
     }
     
+    // MARK: - Delete
+    
     func removeAll() {
         accessToken = nil
-        accessTokenExpiredAt = nil
+        accessTokenExpiresAt = nil
         refreshToken = nil
-        refreshTokenExpiredAt = nil
+        refreshTokenExpiresAt = nil
     }
 }

@@ -10,6 +10,7 @@ import HTTPTypes
 
 protocol SearchRequestProtocol {
     associatedtype Item: Decodable & Sendable
+    var accessToken: String? { get }
     var query: String { get } // 検索語句
     var page: Int? { get } // ページング番号
     var perPage: Int? { get } // 1リクエストあたりの上限数(範囲: 1~100 デフォルト: 30)
@@ -29,8 +30,13 @@ extension NewGitHubAPIRequestProtocol where Self: SearchRequestProtocol {
     
     var header: HTTPTypes.HTTPFields {
         var headerFields = HTTPTypes.HTTPFields()
-//        headerFields[.contentType] = "application/json"
         headerFields[.accept] = "application/vnd.github+json"
+        if let accessToken {
+            headerFields[.authorization] = "Bearer \(accessToken)"
+        }
+        if let apiVersionKey = HTTPField.Name.init("X-GitHub-Api-Version") {
+            headerFields[apiVersionKey] = "2022-11-28"
+        }
         return headerFields
     }
     

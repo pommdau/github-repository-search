@@ -10,9 +10,9 @@ import HTTPTypes
 
 extension GitHubAPIRequest.OAuth {
     struct UpdateAccessToken {
-        let clientID: String
-        let clientSecret: String
-        let refreshToken: String
+        var clientID: String
+        var clientSecret: String
+        var refreshToken: String
     }
 }
 

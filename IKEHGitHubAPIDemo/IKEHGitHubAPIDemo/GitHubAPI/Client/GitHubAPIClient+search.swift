@@ -51,8 +51,9 @@ extension GitHubAPIClient {
                 
         // レスポンスが成功のとき
         #if DEBUG
-        //        let responseString = String(data: data, encoding: .utf8) ?? ""
-        //        print(responseString)
+        let responseString = String(data: data, encoding: .utf8) ?? ""
+//        print(responseString)
+        print(httpResponse.headerFields)
         #endif
         
         return (data, httpResponse)

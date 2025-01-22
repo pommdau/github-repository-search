@@ -55,25 +55,35 @@ extension GitHubAPIClient {
         // https://docs.github.com/ja/apps/creating-github-apps/authenticating-with-a-github-app/refreshing-user-access-tokens
         await tokenManager.removeAll()
     }
-    
-   
-    func updateAccessToken() async throws {
         
-        guard let refreshToken = await tokenManager.refreshToken else {
-            // TODO
-            throw MessageError(description: "error")
+    /// アクセストークンの更新
+    /// - Parameter forceUpdate: 更新を強制する
+    func updateAccessTokenIfNeeded(forceUpdate: Bool = false) async throws {
+        // 有効なアクセストークンがあれば何もしない
+        if !forceUpdate, await tokenManager.isAccessTokenValid {
+            return
+        }
+
+        // リフレッシュトークンが有効かどうか確認
+        guard
+            await tokenManager.isRefreshTokenValid,
+            let refreshToken = await tokenManager.refreshToken
+        else {
+            throw GitHubAPIClientError.oauthError("有効な認証情報がありません。再度ログインを行ってください。")
         }
         
+        // 更新処理
         let request = GitHubAPIRequest.OAuth.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
-                                                         clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
-                                                         refreshToken: refreshToken)
-        
+                                                               clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
+                                                               refreshToken: refreshToken)
         let response = try await self.request(with: request)
+        
+        // プロパティに結果を保存
         await tokenManager.set(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
-            accessTokenExpiredAt: calculateExpirationDate(expiresIn: response.accessTokenExpiresIn),
-            refreshTokenExpiredAt: calculateExpirationDate(expiresIn: response.refreshTokenExpiresIn)
+            accessTokenExpiresAt: calculateExpirationDate(expiresIn: response.accessTokenExpiresIn),
+            refreshTokenExpiresAt: calculateExpirationDate(expiresIn: response.refreshTokenExpiresIn)
         )
     }
     
@@ -88,8 +98,8 @@ extension GitHubAPIClient {
         await tokenManager.set(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
-            accessTokenExpiredAt: calculateExpirationDate(expiresIn: response.accessTokenExpiresIn),
-            refreshTokenExpiredAt: calculateExpirationDate(expiresIn: response.refreshTokenExpiresIn)
+            accessTokenExpiresAt: calculateExpirationDate(expiresIn: response.accessTokenExpiresIn),
+            refreshTokenExpiresAt: calculateExpirationDate(expiresIn: response.refreshTokenExpiresIn)
         )
     }
 }

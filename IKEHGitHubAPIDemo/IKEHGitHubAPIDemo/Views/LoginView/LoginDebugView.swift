@@ -32,7 +32,7 @@ struct LoginDebugView: View {
                 Button("Update Access Token") {
                     Task {
                         do {
-                            try await GitHubAPIClient.shared.updateAccessToken()
+                            try await GitHubAPIClient.shared.updateAccessTokenIfNeeded(forceUpdate: true)
                             await loadTokens()
                         } catch {
                             print(error.localizedDescription)
@@ -94,14 +94,14 @@ struct LoginDebugView: View {
     
     private func loadTokens() async {
         accessToken = await GitHubAPIClient.shared.tokenManager.accessToken ?? "(nil)"
-        if let accessTokenExpiresAtDate = await GitHubAPIClient.shared.tokenManager.accessTokenExpiredAt {
+        if let accessTokenExpiresAtDate = await GitHubAPIClient.shared.tokenManager.accessTokenExpiresAt {
             accessTokenExpiresAt = DateFormatter.forTokenCheck.string(from: accessTokenExpiresAtDate)
         } else {
             accessTokenExpiresAt = "(nil)"
         }
         refreshToken = await GitHubAPIClient.shared.tokenManager.refreshToken ?? "(nil)"
-        if let refreshTokenExpiredAtDate = await GitHubAPIClient.shared.tokenManager.refreshTokenExpiredAt {
-            refreshTokenExpiresAt = DateFormatter.forTokenCheck.string(from: refreshTokenExpiredAtDate)
+        if let refreshTokenExpiresAtDate = await GitHubAPIClient.shared.tokenManager.refreshTokenExpiresAt {
+            refreshTokenExpiresAt = DateFormatter.forTokenCheck.string(from: refreshTokenExpiresAtDate)
         } else {
             refreshTokenExpiresAt = "(nil)"
         }

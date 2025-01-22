@@ -10,9 +10,10 @@ import HTTPTypes
 
 extension GitHubAPIRequest.Search {
     struct Users {
-        let query: String
-        let page: Int?
-        let perPage: Int?
+        var accessToken: String?
+        var query: String
+        var page: Int?
+        var perPage: Int? = 10
     }
 }
 
