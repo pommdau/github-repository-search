@@ -20,7 +20,7 @@ struct OAuthError: Sendable, Decodable, Error, LocalizedError {
     // MARK: - LocalizedError
     
     var errorDescription: String? {
-        return errorDescription
+        return errorDescriptionPrivate
     }
 }
 
