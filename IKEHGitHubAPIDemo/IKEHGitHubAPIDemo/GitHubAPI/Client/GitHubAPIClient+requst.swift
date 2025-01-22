@@ -8,9 +8,35 @@
 import Foundation
 import HTTPTypes
 
-// MARK: - OAuth用
+// MARK: - Public
 
 extension GitHubAPIClient {
+                
+    func noResponseRequest<Request>(with request: Request) async throws where Request: GitHubAPIRequestProtocol {
+        let (data, httpResponse) = try await sendRequest(with: request)
+        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
+    }
+    
+    func defaultRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
+        let (data, httpResponse) = try await sendRequest(with: request)
+        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
+        let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
+        return response
+    }
+    
+    func oauthRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
+        let (data, httpResponse) = try await sendRequest(with: request)
+        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
+        let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
+        return response
+    }
+}
+
+// MARK: - Helpers
+
+extension GitHubAPIClient {
+    
+    // MARK: Send Request
     
     private func sendRequest<Request: GitHubAPIRequestProtocol>(with request: Request) async throws -> (Data, HTTPResponse) {
         // リクエストの作成
@@ -32,6 +58,8 @@ extension GitHubAPIClient {
         
         return (data, httpResponse)
     }
+    
+    // MARK: Check Response Success/Fail
     
     private func checkResponseDefault(data: Data, httpResponse: HTTPResponse) throws {
         // 200番台であれば成功
@@ -69,6 +97,8 @@ extension GitHubAPIClient {
         throw GitHubAPIClientError.apiError(oAuthError)
     }
     
+    // MARK: Decode Response
+    
     /// レスポンスのデータをDTOへデコード
     private func decodeResponse<Response: Decodable>(data: Data, httpResponse: HTTPResponse) throws -> Response {
         
@@ -81,25 +111,6 @@ extension GitHubAPIClient {
             throw GitHubAPIClientError.responseParseError(error)
         }
         
-        return response
-    }
-    
-    func noResponseRequest<Request>(with request: Request) async throws where Request: GitHubAPIRequestProtocol {
-        let (data, httpResponse) = try await sendRequest(with: request)
-        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
-    }
-    
-    func defaultRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
-        let (data, httpResponse) = try await sendRequest(with: request)
-        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
-        let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
-        return response
-    }
-    
-    func oauthRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
-        let (data, httpResponse) = try await sendRequest(with: request)
-        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
-        let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
         return response
     }
 }
