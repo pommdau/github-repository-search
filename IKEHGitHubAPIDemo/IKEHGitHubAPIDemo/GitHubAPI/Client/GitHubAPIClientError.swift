@@ -29,6 +29,8 @@ enum GitHubAPIClientError: Error {
     case apiError(Error)
 }
 
+// MARK: - LocalizedError
+
 extension GitHubAPIClientError: LocalizedError {
     var errorDescription: String? {
         switch self {

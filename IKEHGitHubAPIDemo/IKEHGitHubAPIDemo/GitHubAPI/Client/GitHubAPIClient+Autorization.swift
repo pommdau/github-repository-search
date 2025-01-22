@@ -79,7 +79,6 @@ extension GitHubAPIClient {
         
         await tokenStore.removeAll()
         try await self.noResponseRequest(with: request)
-        print("削除成功")
     }
 }
 
@@ -92,13 +91,14 @@ extension GitHubAPIClient {
                                                          clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
                                                          sessionCode: sessionCode)
         
+        let currentTime = Date()
         let response = try await self.oauthRequest(with: request)
 
         await tokenStore.set(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
-            accessTokenExpiresAt: calculateExpirationDate(expiresIn: response.accessTokenExpiresIn),
-            refreshTokenExpiresAt: calculateExpirationDate(expiresIn: response.refreshTokenExpiresIn)
+            accessTokenExpiresAt: currentTime.addingExpirationInterval(response.accessTokenExpiresIn),
+            refreshTokenExpiresAt: currentTime.addingExpirationInterval(response.refreshTokenExpiresIn)
         )
     }
     
@@ -122,19 +122,16 @@ extension GitHubAPIClient {
         let request = GitHubAPIRequest.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
                                                          clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
                                                          refreshToken: refreshToken)
+        
+        let currentTime = Date()
         let response = try await self.oauthRequest(with: request)
         
         // プロパティに結果を保存
         await tokenStore.set(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
-            accessTokenExpiresAt: calculateExpirationDate(expiresIn: response.accessTokenExpiresIn),
-            refreshTokenExpiresAt: calculateExpirationDate(expiresIn: response.refreshTokenExpiresIn)
+            accessTokenExpiresAt: currentTime.addingExpirationInterval(response.accessTokenExpiresIn),
+            refreshTokenExpiresAt: currentTime.addingExpirationInterval(response.refreshTokenExpiresIn)
         )
     }
-}
-
-// リフレッシュトークンの発行日時と有効期限（秒）を元に期限切れの時刻を計算
-fileprivate func calculateExpirationDate(startedAt: Date = .now, expiresIn: Int) -> Date {
-    return startedAt.addingTimeInterval(TimeInterval(expiresIn))
 }
