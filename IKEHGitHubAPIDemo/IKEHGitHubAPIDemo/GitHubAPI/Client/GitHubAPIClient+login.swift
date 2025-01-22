@@ -68,7 +68,6 @@ extension GitHubAPIClient {
     func logout() async throws  {
         // アクセストークンの更新
         try await updateAccessTokenIfNeeded()
-        
         guard let accessToken = await tokenStore.accessToken else {
             return
         }
@@ -77,9 +76,10 @@ extension GitHubAPIClient {
             clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
             accessToken: accessToken
         )
-        let response = try await self.oauthRequest(with: request)
-        print("stop")        
+        
         await tokenStore.removeAll()
+        try await self.noResponseRequest(with: request)
+        print("削除成功")
     }
 }
 
