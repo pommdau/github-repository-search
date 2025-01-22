@@ -19,7 +19,6 @@ protocol SearchRequestProtocol {
 extension GitHubAPIRequestProtocol where Self: SearchRequestProtocol {
     
     typealias Response = SearchResponse<Item>
-    typealias ErrorResponse = GitHubAPIError
     
     var method: HTTPTypes.HTTPRequest.Method {
         .get

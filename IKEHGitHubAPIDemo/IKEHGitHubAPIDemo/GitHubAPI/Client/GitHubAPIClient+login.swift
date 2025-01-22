@@ -13,32 +13,42 @@ import HTTPTypesFoundation
 // MARK: - Login
 
 extension GitHubAPIClient {
-    @MainActor
-    func openLoginPage() throws {
+    
+    private static func createLoginPageURL(clientID: String, lastLoginStateID: String) async -> URL? {
         // ログインURLの作成
         guard var components = URLComponents(string: "https://github.com/login/oauth/authorize") else {
-            throw GitHubAPIClientError.loginError("予期せぬエラーが発生しました")
+            return nil
         }
-        lastLoginStateID = UUID().uuidString // 多重ログイン防止のためログインセッションのIDを記録
         components.queryItems = [
-            URLQueryItem(name: "client_id", value: PrivateConstants.clientID),
+            URLQueryItem(name: "client_id", value: clientID),
             URLQueryItem(name: "redirect_uri", value: "ikehgithubapi://callback"), // Callback URL
             URLQueryItem(name: "state", value: lastLoginStateID)
         ]
         guard let loginURL = components.url else {
+            return nil
+        }
+        
+        return loginURL
+    }
+    
+    @MainActor
+    func openLoginPage() async throws {
+        lastLoginStateID = UUID().uuidString // 多重ログイン防止のためログインセッションのIDを記録
+        guard let url = await Self.createLoginPageURL(clientID: GitHubAPIClient.PrivateConstants.clientID,
+                                                      lastLoginStateID: lastLoginStateID) else {
             throw GitHubAPIClientError.loginError("予期せぬエラーが発生しました")
         }
-
-        UIApplication.shared.open(loginURL)
+        await UIApplication.shared.open(url)
     }
     
     @MainActor
     func handleLoginCallbackURL(_ url: URL) throws -> String {
+        // コールバックURLから情報を取得
         guard
             let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
             let queryItems = components.queryItems,
-            let sessionCode = queryItems.first(where: { $0.name == "code" })?.value,
-            let state = queryItems.first(where: { $0.name == "state" })?.value
+            let state = queryItems.first(where: { $0.name == "state" })?.value,
+            let sessionCode = queryItems.first(where: { $0.name == "code" })?.value
         else {
             throw GitHubAPIClientError.loginError("予期せぬエラーが発生しました")
         }
@@ -67,7 +77,7 @@ extension GitHubAPIClient {
             clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
             accessToken: accessToken
         )
-        let response = try await self.request(with: request)
+        let response = try await self.oauthRequest(with: request)
         print("stop")        
         await tokenStore.removeAll()
     }
@@ -81,9 +91,8 @@ extension GitHubAPIClient {
         let request = GitHubAPIRequest.OAuth.FetchInitialToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
                                                        clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
                                                        sessionCode: sessionCode)
-                                       
-                                               
-        let response = try await self.request(with: request)
+                                                                                      
+        let response = try await self.oauthRequest(with: request)
 
         await tokenStore.set(
             accessToken: response.accessToken,
@@ -113,7 +122,7 @@ extension GitHubAPIClient {
         let request = GitHubAPIRequest.OAuth.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
                                                                clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
                                                                refreshToken: refreshToken)
-        let response = try await self.request(with: request)
+        let response = try await self.oauthRequest(with: request)
         
         // プロパティに結果を保存
         await tokenStore.set(

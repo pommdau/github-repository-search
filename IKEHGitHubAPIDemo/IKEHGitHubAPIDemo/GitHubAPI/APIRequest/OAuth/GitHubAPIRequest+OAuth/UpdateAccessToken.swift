@@ -16,7 +16,34 @@ extension GitHubAPIRequest.OAuth {
     }
 }
 
-extension GitHubAPIRequest.OAuth.UpdateAccessToken : GitHubAPIRequestProtocol, OAuthRequestProtocol {
+extension GitHubAPIRequest.OAuth.UpdateAccessToken : GitHubAPIRequestProtocol {
+
+    typealias Response = RequestTokenResponse
+    
+    var method: HTTPTypes.HTTPRequest.Method {
+        .post
+    }
+    
+    var baseURL: URL? {
+        URL(string: "https://github.com")
+    }
+    
+    var path: String {
+        "/login/oauth/access_token"
+    }
+        
+    var queryItems: [URLQueryItem] {
+        []
+    }
+    
+    var header: HTTPTypes.HTTPFields {
+        var headerFields = HTTPTypes.HTTPFields()
+        headerFields[.contentType] = HTTPField.ConstantValue.applicationJSON
+        headerFields[.accept] = HTTPField.ConstantValue.applicationJSON
+        
+        return headerFields
+    }
+    
     var body: Data? {
         let body: [String: String] = [
             "client_id": clientID,
@@ -24,6 +51,12 @@ extension GitHubAPIRequest.OAuth.UpdateAccessToken : GitHubAPIRequestProtocol, O
             "grant_type": "refresh_token",
             "refresh_token": refreshToken
         ]
-        return try? JSONSerialization.data(withJSONObject: body, options: [])
+        
+        do {
+            return try JSONSerialization.data(withJSONObject: body, options: [])
+        } catch {
+            print("Failed to serialize JSON: \(error)")
+            return nil
+        }
     }
 }

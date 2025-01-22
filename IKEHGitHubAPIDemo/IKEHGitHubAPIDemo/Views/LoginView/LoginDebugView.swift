@@ -21,7 +21,7 @@ struct LoginDebugView: View {
                 Button("Log in") {
                     Task {
                         do {
-                            try GitHubAPIClient.shared.openLoginPage()
+                            try await GitHubAPIClient.shared.openLoginPage()
                         } catch {
                             print(error.localizedDescription)
                         }

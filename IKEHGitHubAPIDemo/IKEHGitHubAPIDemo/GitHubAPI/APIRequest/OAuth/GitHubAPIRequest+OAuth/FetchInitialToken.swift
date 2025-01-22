@@ -16,13 +16,46 @@ extension GitHubAPIRequest.OAuth {
     }
 }
 
-extension GitHubAPIRequest.OAuth.FetchInitialToken: GitHubAPIRequestProtocol, OAuthRequestProtocol {
+extension GitHubAPIRequest.OAuth.FetchInitialToken: GitHubAPIRequestProtocol {
+    
+    typealias Response = RequestTokenResponse
+    
+    var method: HTTPTypes.HTTPRequest.Method {
+        .post
+    }
+    
+    var baseURL: URL? {
+        URL(string: "https://github.com")
+    }
+    
+    var path: String {
+        "/login/oauth/access_token"
+    }
+        
+    var queryItems: [URLQueryItem] {
+        []
+    }
+    
+    var header: HTTPTypes.HTTPFields {
+        var headerFields = HTTPTypes.HTTPFields()
+        headerFields[.contentType] = HTTPField.ConstantValue.applicationJSON
+        headerFields[.accept] = HTTPField.ConstantValue.applicationJSON
+        
+        return headerFields
+    }
+    
     var body: Data? {
         let body: [String: String] = [
             "client_id": clientID,
             "client_secret": clientSecret,
             "code": sessionCode
         ]
-        return try? JSONSerialization.data(withJSONObject: body, options: [])
+        
+        do {
+            return try JSONSerialization.data(withJSONObject: body, options: [])
+        } catch {
+            print("Failed to serialize JSON: \(error)")
+            return nil
+        }
     }
 }

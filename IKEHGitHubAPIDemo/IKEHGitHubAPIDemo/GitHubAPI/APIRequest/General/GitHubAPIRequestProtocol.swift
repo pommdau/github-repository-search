@@ -15,7 +15,6 @@ protocol GitHubAPIRequestProtocol {
     // MARK: Types
     
     associatedtype Response: Decodable
-    associatedtype ErrorResponse: Decodable & Error
     
     // MARK: General
     

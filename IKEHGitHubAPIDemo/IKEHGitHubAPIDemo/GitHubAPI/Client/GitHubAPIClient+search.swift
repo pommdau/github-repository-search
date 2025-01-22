@@ -39,9 +39,9 @@ extension GitHubAPIClient {
             //            let errorString = String(data: data, encoding: .utf8) ?? ""
             //            print(errorString)
 #endif
-            let errorResponse: Request.ErrorResponse
+            let errorResponse: GitHubAPIError
             do {
-                errorResponse = try JSONDecoder().decode(Request.ErrorResponse.self, from: data)
+                errorResponse = try JSONDecoder().decode(GitHubAPIError.self, from: data)
             } catch {
                 throw GitHubAPIClientError.responseParseError(error)
             }
@@ -82,19 +82,17 @@ extension GitHubAPIClient {
 // MARK: - OAuth用
 
 extension GitHubAPIClient {
-    func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> Request.Response
-    where Request: GitHubAPIRequestProtocol {
-        
-        print(request.url)
-        
-        // リクエストの作成と送信
+    
+    private func sendRequest<Request: GitHubAPIRequestProtocol>(with request: Request) async throws -> (Data, HTTPResponse) {
+        // リクエストの作成
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
         }
         
+        // リクエストの送信
         let (data, httpResponse): (Data, HTTPResponse)
         do {
-            if let body = request.body, body.count > 0 {
+            if let body = request.body {
                 (data, httpResponse) = try await urlSession.upload(for: httpRequest, from: body)
             } else {
                 (data, httpResponse) = try await urlSession.data(for: httpRequest)
@@ -103,37 +101,64 @@ extension GitHubAPIClient {
             throw GitHubAPIClientError.connectionError(error)
         }
         
-        // レスポンスが失敗のとき
-        if !(200..<300).contains(httpResponse.status.code) {
-#if DEBUG
-            let errorString = String(data: data, encoding: .utf8) ?? ""
-            print(errorString)
-#endif
-            let gitHubAPIError: GitHubAPIError
-            do {
-                gitHubAPIError = try JSONDecoder().decode(GitHubAPIError.self, from: data)
-            } catch {
-                throw GitHubAPIClientError.responseParseError(error)
-            }
-            throw GitHubAPIClientError.apiError(gitHubAPIError)
+        return (data, httpResponse)
+    }
+    
+    private func checkResponseDefault(data: Data, httpResponse: HTTPResponse) throws {
+        // 200番台であれば成功
+        if (200..<300).contains(httpResponse.status.code) {
+            return
         }
-                
-        // レスポンスが成功のとき
-        #if DEBUG
-        let responseString = String(data: data, encoding: .utf8) ?? ""
-        print(responseString)
-        #endif
         
-        // レスポンスのデータをDTOへデコード
-        print(httpResponse.status.code)
-        print(type(of: Request.ErrorResponse))
-        var response: Request.Response
+        let errorResponse: GitHubAPIError
         do {
-            response = try JSONDecoder().decode(Request.Response.self, from: data)
+            errorResponse = try JSONDecoder().decode(GitHubAPIError.self, from: data)
+        } catch {
+            // 未対応のエラーレスポンス(通常通らない)
+            print(String(data: data, encoding: .utf8)!)
+            throw GitHubAPIClientError.responseParseError(error)
+        }
+        throw GitHubAPIClientError.apiError(errorResponse)
+    }
+    
+    private func checkResponseForOAuth(data: Data, httpResponse: HTTPResponse) throws {
+        /**
+         OAuthの仕様で失敗時にも200番が返ってくる
+         /そのためレスポンスがエラーの形式かどうかで確認する
+         */
+        
+        print(String(data: data, encoding: .utf8)!)
+        print(httpResponse.status.code)
+        
+        let oAuthError: OAuthError
+        do {
+            oAuthError = try JSONDecoder().decode(OAuthError.self, from: data)
+        } catch {
+            // エラーの形式でないなら成功レスポンス
+            return
+        }
+        throw GitHubAPIClientError.apiError(oAuthError)
+    }
+    
+    /// レスポンスのデータをDTOへデコード
+    private func decodeResponse<Response: Decodable>(data: Data, httpResponse: HTTPResponse) throws -> Response {
+        
+        print(String(data: data, encoding: .utf8)!)
+        
+        var response: Response
+        do {
+            response = try JSONDecoder().decode(Response.self, from: data)
         } catch {
             throw GitHubAPIClientError.responseParseError(error)
         }
         
+        return response
+    }
+    
+    func oauthRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
+        let (data, httpResponse) = try await sendRequest(with: request)
+        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
+        let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
         return response
     }
 }

@@ -15,7 +15,7 @@ struct SearchScreen: View {
         NavigationStack {
             Button("Debug") {
                 Task {
-                    try? GitHubAPIClient.shared.openLoginPage()
+                    try? await GitHubAPIClient.shared.openLoginPage()
                 }
             }
             searchTypePicker()

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AuthError: Sendable, Decodable, Error, LocalizedError {
+struct OAuthError: Sendable, Decodable, Error, LocalizedError {
     enum CodingKeys: String, CodingKey {
         case error
         case errorDescriptionPrivate = "error_description"
@@ -15,7 +15,7 @@ struct AuthError: Sendable, Decodable, Error, LocalizedError {
     }
     let error: String
     let errorDescriptionPrivate: String
-    let errorURI: String
+    let errorURI: String?
     
     // MARK: - LocalizedError
     
