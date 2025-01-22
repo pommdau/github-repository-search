@@ -60,7 +60,7 @@ extension GitHubAPIClient {
     }
     
     func search<Request, Item>(with request: Request) async throws -> SearchResponse<Item>
-    where Request: NewGitHubAPIRequestProtocol & SearchRequestProtocol, Item: Decodable & Sendable {
+    where Request: NewGitHubAPIRequestProtocol & SearchRequestProtocol, Item: Decodable & Sendable {        
         // リクエストの作成と送信
         let (data, httpResponse): (Data, HTTPResponse) = try await self.request(with: request)
         

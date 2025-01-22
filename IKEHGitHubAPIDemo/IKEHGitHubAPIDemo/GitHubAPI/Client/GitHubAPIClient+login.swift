@@ -53,21 +53,21 @@ extension GitHubAPIClient {
     func logout() async {
         // TODO: delete処理
         // https://docs.github.com/ja/apps/creating-github-apps/authenticating-with-a-github-app/refreshing-user-access-tokens
-        await tokenManager.removeAll()
+        await tokenStore.removeAll()
     }
         
     /// アクセストークンの更新
     /// - Parameter forceUpdate: 更新を強制する
     func updateAccessTokenIfNeeded(forceUpdate: Bool = false) async throws {
         // 有効なアクセストークンがあれば何もしない
-        if !forceUpdate, await tokenManager.isAccessTokenValid {
+        if !forceUpdate, await tokenStore.isAccessTokenValid {
             return
         }
 
         // リフレッシュトークンが有効かどうか確認
         guard
-            await tokenManager.isRefreshTokenValid,
-            let refreshToken = await tokenManager.refreshToken
+            await tokenStore.isRefreshTokenValid,
+            let refreshToken = await tokenStore.refreshToken
         else {
             throw GitHubAPIClientError.oauthError("有効な認証情報がありません。再度ログインを行ってください。")
         }
@@ -79,7 +79,7 @@ extension GitHubAPIClient {
         let response = try await self.request(with: request)
         
         // プロパティに結果を保存
-        await tokenManager.set(
+        await tokenStore.set(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
             accessTokenExpiresAt: calculateExpirationDate(expiresIn: response.accessTokenExpiresIn),
@@ -95,7 +95,7 @@ extension GitHubAPIClient {
                                                
         let response = try await self.request(with: request)
 
-        await tokenManager.set(
+        await tokenStore.set(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
             accessTokenExpiresAt: calculateExpirationDate(expiresIn: response.accessTokenExpiresIn),

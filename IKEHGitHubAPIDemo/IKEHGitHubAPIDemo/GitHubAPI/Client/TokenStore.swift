@@ -11,7 +11,8 @@ import SwiftUI
 final actor TokenStore {
     
     static let shared: TokenStore = .init()
-    
+
+    // MARK: - Properties
     // TODO: keychainへの登録
     // TODO: Tokenクラスの定義
     
@@ -26,6 +27,14 @@ final actor TokenStore {
     
     @AppStorage("ikehgithubapi-refresh-token-expires-at")
     var refreshTokenExpiresAt: Date?
+    
+    var isLoggedIn: Bool {
+        return refreshToken != nil // リフレッシュトークンの有無でログイン状態を判断する
+    }
+    
+    // MARK: - LifeCycle
+    
+    private init() {}
     
     // MARK: - Validation
     
@@ -51,6 +60,7 @@ final actor TokenStore {
 // MARK: - CRUD
 
 extension TokenStore {
+    
     // MARK: Update
     
     func set(
