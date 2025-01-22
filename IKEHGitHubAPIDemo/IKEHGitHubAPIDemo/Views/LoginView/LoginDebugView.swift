@@ -72,6 +72,18 @@ struct LoginDebugView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
+                
+                Button("Fetch LoginUser") {
+                    Task {
+                        do {
+                            let loginUser = try await gitHubAPIClient.fetchLoginUser()
+                            print("stop")
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
             }
             
             Section("Access Token") {

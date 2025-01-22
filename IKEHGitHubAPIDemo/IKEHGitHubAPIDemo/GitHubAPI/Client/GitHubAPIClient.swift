@@ -22,7 +22,9 @@ final actor GitHubAPIClient {
         self.urlSession = urlSession
         self.tokenStore = tokenManager
     }
+}
 
+extension GitHubAPIClient {
     func searchRepos(searchText: String, page: Int? = nil) async throws -> SearchResponse<Repo> {
 //        try? await Task.sleep(nanoseconds: 3_000_000_000)
         try await updateAccessTokenIfNeeded()
@@ -33,13 +35,14 @@ final actor GitHubAPIClient {
         return response
     }
     
-//    func searchRepos(query: String, page: Int? = nil) async throws -> SearchResponse<Repo> {
-//        let response = try await search(with: GitHubAPIRequest.Search.Repos(query: query, page: page))
-//        return response
-//    }
-//    
-//    func searchUsers(searchText: String, page: Int? = nil) async throws -> SearchResponse<User> {
-//        let response = try await search(with: GitHubAPIRequest.SearchUsers(searchText: searchText, page: page))
-//        return response
-//    }
+    func fetchLoginUser() async throws -> LoginUser {
+//        try? await Task.sleep(nanoseconds: 3_000_000_000)
+        try await updateAccessTokenIfNeeded()
+        guard let accessToken = await tokenStore.accessToken else {
+            throw GitHubAPIClientError.oauthError("有効なトークンが見つかりませんでした")
+        }
+        let request = GitHubAPIRequest.FetchLoginUser(accessToken: accessToken)
+        let response = try await defaultRequest(with: request)
+        return response
+    }
 }

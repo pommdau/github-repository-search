@@ -64,6 +64,8 @@ extension GitHubAPIClient {
             throw GitHubAPIClientError.connectionError(error)
         }
         
+        print(String(data: data, encoding: .utf8)!)
+        
         return (data, httpResponse)
     }
     

@@ -51,7 +51,6 @@ struct SearchResultView: View {
                 }
             }
         }
-        .ignoresSafeArea(edges: .bottom)
         .onChange(of: isSearching) {
             if !isSearching {
                 // 検索がキャンセルされた場合
