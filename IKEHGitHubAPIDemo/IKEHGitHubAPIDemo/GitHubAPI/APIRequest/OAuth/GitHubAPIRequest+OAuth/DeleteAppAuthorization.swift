@@ -17,8 +17,6 @@ extension GitHubAPIRequest.OAuth {
     }
 }
 
-
-
 extension GitHubAPIRequest.OAuth.DeleteAppAuthorization: GitHubAPIRequestProtocol {
 
     typealias Response = String // 実際には不使用

@@ -11,7 +11,7 @@ import Foundation
 enum GitHubAPIClientError: Error {
     
     // ログインに失敗
-    case loginError
+    case loginError(String)
     
     // 認証関係のエラー
     case oauthError(String)
@@ -32,8 +32,8 @@ enum GitHubAPIClientError: Error {
 extension GitHubAPIClientError: LocalizedError {
     var errorDescription: String? {
         switch self {
-        case .loginError:
-            return "ログインに失敗しました";
+        case .loginError(let message):
+            return "ログインに失敗しました: \(message)";
         case .oauthError(let message):
             return "APIの認証でエラーが発生しました: \(message)"
         case .invalidRequest:
