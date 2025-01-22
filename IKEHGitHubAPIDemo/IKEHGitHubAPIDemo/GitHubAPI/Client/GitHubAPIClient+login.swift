@@ -10,6 +10,29 @@ import SwiftUI
 import HTTPTypes
 import HTTPTypesFoundation
 
+// MARK: - Logout
+
+extension GitHubAPIClient {
+    func logout() async throws  {
+        // アクセストークンの更新
+        try await updateAccessTokenIfNeeded()
+        
+        guard let accessToken = await tokenStore.accessToken else {
+            return
+        }
+        let request = GitHubAPIRequest.OAuth.DeleteAppAuthorization(
+            clientID: GitHubAPIClient.PrivateConstants.clientID,
+            clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
+            accessToken: accessToken
+        )
+        let response = try await self.request(with: request)
+        print("stop")        
+        await tokenStore.removeAll()
+    }
+}
+
+// MARK: - Hoge
+
 extension GitHubAPIClient {
             
     @MainActor
@@ -48,12 +71,6 @@ extension GitHubAPIClient {
         }
         
         return sessionCode // 初回認証時にのみ利用する一時的なcode
-    }
-    
-    func logout() async {
-        // TODO: delete処理
-        // https://docs.github.com/ja/apps/creating-github-apps/authenticating-with-a-github-app/refreshing-user-access-tokens
-        await tokenStore.removeAll()
     }
         
     /// アクセストークンの更新
@@ -102,6 +119,8 @@ extension GitHubAPIClient {
             refreshTokenExpiresAt: calculateExpirationDate(expiresIn: response.refreshTokenExpiresIn)
         )
     }
+    
+    
 }
 
 // リフレッシュトークンの発行日時と有効期限（秒）を元に期限切れの時刻を計算

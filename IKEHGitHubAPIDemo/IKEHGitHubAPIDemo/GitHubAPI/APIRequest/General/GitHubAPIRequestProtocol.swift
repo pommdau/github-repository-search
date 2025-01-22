@@ -33,7 +33,9 @@ extension GitHubAPIRequestProtocol {
         else {
             return nil
         }
-        components.queryItems = queryItems
+        if queryItems.count > 0 {
+            components.queryItems = queryItems            
+        }
         
         return components.url
     }

@@ -43,8 +43,12 @@ struct LoginDebugView: View {
                 
                 Button("Log out", role: .destructive) {
                     Task {
-                        await GitHubAPIClient.shared.logout()
-                        await loadTokens()
+                        do {
+                            try await GitHubAPIClient.shared.logout()
+                            await loadTokens()
+                        } catch {
+                            print(error.localizedDescription)
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)

@@ -16,7 +16,6 @@ extension GitHubAPIClient {
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
         }
-        print(httpRequest.url?.absoluteString)
         
         let (data, httpResponse): (Data, HTTPResponse)
         do {
@@ -85,6 +84,9 @@ extension GitHubAPIClient {
 extension GitHubAPIClient {
     func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> Request.Response
     where Request: GitHubAPIRequestProtocol {
+        
+        print(request.url)
+        
         // リクエストの作成と送信
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
@@ -92,7 +94,7 @@ extension GitHubAPIClient {
         
         let (data, httpResponse): (Data, HTTPResponse)
         do {
-            if let body = request.body {
+            if let body = request.body, body.count > 0 {
                 (data, httpResponse) = try await urlSession.upload(for: httpRequest, from: body)
             } else {
                 (data, httpResponse) = try await urlSession.data(for: httpRequest)
@@ -104,8 +106,8 @@ extension GitHubAPIClient {
         // レスポンスが失敗のとき
         if !(200..<300).contains(httpResponse.status.code) {
 #if DEBUG
-            //            let errorString = String(data: data, encoding: .utf8) ?? ""
-            //            print(errorString)
+            let errorString = String(data: data, encoding: .utf8) ?? ""
+            print(errorString)
 #endif
             let gitHubAPIError: GitHubAPIError
             do {
@@ -118,8 +120,8 @@ extension GitHubAPIClient {
                 
         // レスポンスが成功のとき
         #if DEBUG
-        //        let responseString = String(data: data, encoding: .utf8) ?? ""
-        //        print(responseString)
+        let responseString = String(data: data, encoding: .utf8) ?? ""
+        print(responseString)
         #endif
         
         // レスポンスのデータをDTOへデコード
