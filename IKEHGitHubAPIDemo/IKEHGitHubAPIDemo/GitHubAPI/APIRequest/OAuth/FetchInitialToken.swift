@@ -8,6 +8,8 @@
 import Foundation
 import HTTPTypes
 
+enum GitHubAPIRequest {}
+
 extension GitHubAPIRequest.OAuth {
     struct FetchInitialToken {
         var clientID: String
