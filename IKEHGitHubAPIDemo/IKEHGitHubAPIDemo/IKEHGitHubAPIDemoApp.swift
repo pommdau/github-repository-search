@@ -11,7 +11,8 @@ import SwiftUI
 struct IKEHGitHubAPIDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            SearchScreen()
+//            SearchScreen()
+            LoginDebugView()
         }
     }
 }
