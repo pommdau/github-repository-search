@@ -11,7 +11,7 @@ import HTTPTypes
 
 extension GitHubAPIClient {
     
-    private func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> (Data, HTTPResponse) where Request: NewGitHubAPIRequestProtocol {
+    private func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> (Data, HTTPResponse) where Request: GitHubAPIRequestProtocol {
         // リクエストの作成と送信
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
@@ -60,7 +60,7 @@ extension GitHubAPIClient {
     }
     
     func search<Request, Item>(with request: Request) async throws -> SearchResponse<Item>
-    where Request: NewGitHubAPIRequestProtocol & SearchRequestProtocol, Item: Decodable & Sendable {        
+    where Request: GitHubAPIRequestProtocol & SearchRequestProtocol, Item: Decodable & Sendable {        
         // リクエストの作成と送信
         let (data, httpResponse): (Data, HTTPResponse) = try await self.request(with: request)
         
@@ -84,7 +84,7 @@ extension GitHubAPIClient {
 
 extension GitHubAPIClient {
     func request<Request>(with request: Request) async throws(GitHubAPIClientError) -> Request.Response
-    where Request: NewGitHubAPIRequestProtocol {
+    where Request: GitHubAPIRequestProtocol {
         // リクエストの作成と送信
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest

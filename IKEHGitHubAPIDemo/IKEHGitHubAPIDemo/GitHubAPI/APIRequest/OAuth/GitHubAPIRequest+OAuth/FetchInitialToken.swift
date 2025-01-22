@@ -1,5 +1,5 @@
 //
-//  GitHubAPIRequest+OAuth+UpdateAccessToken.swift
+//  FetchFirstToken.swift
 //  IKEHGitHubAPIDemo
 //
 //  Created by HIROKI IKEUCHI on 2025/01/21.
@@ -9,20 +9,19 @@ import Foundation
 import HTTPTypes
 
 extension GitHubAPIRequest.OAuth {
-    struct UpdateAccessToken {
+    struct FetchInitialToken {
         var clientID: String
         var clientSecret: String
-        var refreshToken: String
+        var sessionCode: String
     }
 }
 
-extension GitHubAPIRequest.OAuth.UpdateAccessToken : NewGitHubAPIRequestProtocol, OAuthRequestProtocol {
+extension GitHubAPIRequest.OAuth.FetchInitialToken: GitHubAPIRequestProtocol, OAuthRequestProtocol {
     var body: Data? {
         let body: [String: String] = [
             "client_id": clientID,
             "client_secret": clientSecret,
-            "grant_type": "refresh_token",
-            "refresh_token": refreshToken
+            "code": sessionCode
         ]
         return try? JSONSerialization.data(withJSONObject: body, options: [])
     }

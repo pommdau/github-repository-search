@@ -16,7 +16,7 @@ protocol SearchRequestProtocol {
     var perPage: Int? { get } // 1リクエストあたりの上限数(範囲: 1~100 デフォルト: 30)
 }
 
-extension NewGitHubAPIRequestProtocol where Self: SearchRequestProtocol {
+extension GitHubAPIRequestProtocol where Self: SearchRequestProtocol {
     
     typealias Response = SearchResponse<Item>
     

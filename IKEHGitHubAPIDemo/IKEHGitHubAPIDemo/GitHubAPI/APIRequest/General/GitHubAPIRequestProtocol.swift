@@ -10,7 +10,7 @@ import HTTPTypes
 
 // MARK: - GitHubAPIRequestProtocol
 
-protocol NewGitHubAPIRequestProtocol {
+protocol GitHubAPIRequestProtocol {
     associatedtype Response: Decodable
     var method: HTTPRequest.Method { get }
     
@@ -22,9 +22,9 @@ protocol NewGitHubAPIRequestProtocol {
     var body: Data? { get }
 }
 
-// MARK: - 共通のパラメータ/処理
+// MARK: - 共通処理
 
-extension NewGitHubAPIRequestProtocol {                
+extension GitHubAPIRequestProtocol {                
     /// クエリパラメータを含めたURL
     var url: URL? {
         guard

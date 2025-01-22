@@ -10,9 +10,9 @@ import HTTPTypes
 
 protocol OAuthRequestProtocol { }
 
-extension NewGitHubAPIRequestProtocol where Self: OAuthRequestProtocol {
+extension GitHubAPIRequestProtocol where Self: OAuthRequestProtocol {
     
-    typealias Response = FetchTokenResponse
+    typealias Response = RequestTokenResponse
     
     var method: HTTPTypes.HTTPRequest.Method {
         .post

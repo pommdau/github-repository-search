@@ -1,5 +1,5 @@
 //
-//  SearchRepo.swift
+//  SearchUsers.swift
 //  IKEHGitHubAPIDemo
 //
 //  Created by HIROKI IKEUCHI on 2025/01/21.
@@ -9,7 +9,7 @@ import Foundation
 import HTTPTypes
 
 extension GitHubAPIRequest.Search {
-    struct Repos {
+    struct Users {
         var accessToken: String?
         var query: String
         var page: Int?
@@ -17,9 +17,9 @@ extension GitHubAPIRequest.Search {
     }
 }
 
-extension GitHubAPIRequest.Search.Repos: NewGitHubAPIRequestProtocol, SearchRequestProtocol {
-    typealias Item = Repo
+extension GitHubAPIRequest.Search.Users: GitHubAPIRequestProtocol, SearchRequestProtocol {
+    typealias Item = User
     var path: String {
-        "/repositories"
+        "/users"
     }
 }

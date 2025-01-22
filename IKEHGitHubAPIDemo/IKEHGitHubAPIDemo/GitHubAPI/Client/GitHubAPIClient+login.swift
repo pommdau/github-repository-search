@@ -109,20 +109,3 @@ func calculateExpirationDate(startedAt: Date = .now, expiresIn: Int) -> Date {
     return startedAt.addingTimeInterval(TimeInterval(expiresIn))
 }
 
-struct FetchTokenResponse: Codable, Sendable {
-    let accessToken: String
-    let accessTokenExpiresIn: Int
-    let refreshToken: String
-    let refreshTokenExpiresIn: Int
-    let tokenType: String
-    let scope: String
-
-    enum CodingKeys: String, CodingKey {
-        case accessToken = "access_token"
-        case accessTokenExpiresIn = "expires_in"
-        case refreshToken = "refresh_token"
-        case refreshTokenExpiresIn = "refresh_token_expires_in"
-        case tokenType = "token_type"
-        case scope
-    }
-}
