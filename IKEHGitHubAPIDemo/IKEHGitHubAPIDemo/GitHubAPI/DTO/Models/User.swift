@@ -18,9 +18,13 @@ struct User: Identifiable, Equatable, Sendable & Decodable {
     }
     
     let id: Int
-    let name: String
-    let avatarImagePath: String
-    let htmlPath: String  // e.g. https://github.com/apple
+    var name: String
+    var avatarImagePath: String
+    var htmlPath: String  // e.g. https://github.com/apple
+    
+    var avatarImageURL: URL? {
+        URL(string: avatarImagePath)
+    }
     
     var htmlURL: URL? {
         URL(string: htmlPath)
