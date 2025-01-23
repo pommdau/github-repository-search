@@ -12,7 +12,10 @@ import SwiftUI
 @Observable
 final class SearchScreenViewState {
     var searchText: String = "Swift"
-    var searchType: SearchType = .user
+//    var searchType: SearchType = .user
+    
+    var sortedBy: GitHubAPIRequest.NewSearchRequest.SortBy = .bestMatch
+    
     private(set) var asyncRepos: AsyncValues<Repo, Error> = .initial
     private var relationLink: RelationLink?
     private(set) var searchTask: Task<(), Never>?
@@ -34,7 +37,7 @@ final class SearchScreenViewState {
 
         searchTask = Task {
             do {
-                let response = try await GitHubAPIClient.shared.searchRepos(searchText: searchText)
+                let response = try await GitHubAPIClient.shared.searchRepos(searchText: searchText, sortedBy: sortedBy)
                 withAnimation {
                     asyncRepos = .loaded(response.items)
                 }

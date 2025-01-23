@@ -46,19 +46,19 @@ final actor GitHubAPIClient {
 }
 
 extension GitHubAPIClient {
-    func searchRepos(searchText: String, page: Int? = nil) async throws -> SearchResponse<Repo> {
+    func searchRepos(searchText: String, page: Int? = nil, sortedBy: GitHubAPIRequest.NewSearchRequest.SortBy = .bestMatch) async throws -> SearchResponse<Repo> {
 //        try? await Task.sleep(nanoseconds: 3_000_000_000)
         // ログイン状態であればトークンの更新
         if await tokenStore.isLoggedIn {
             try await updateAccessTokenIfNeeded()
         }
         
-        let request = await GitHubAPIRequest.NewSearchRequest<Repo>(
-            searchType: .repo,
+        let request = await GitHubAPIRequest.NewSearchRequest(
             accessToken: tokenStore.accessToken,
             query: searchText,
             page: page,
-            perPage: 10
+            perPage: 10,
+            sortedBy: sortedBy
         )
         let response: SearchResponse<Repo> = try await searchRequest(with: request)
         return response

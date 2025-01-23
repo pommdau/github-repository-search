@@ -10,7 +10,6 @@ import SwiftUI
 struct SearchScreen: View {
     
     @State private var viewState = SearchScreenViewState()
-    
     @State private var selectionColor: Color = .red
 
     var body: some View {
@@ -28,8 +27,8 @@ struct SearchScreen: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
-                        Picker("SearchType", selection: $viewState.searchType) {
-                            ForEach(SearchType.allCases) { type in
+                        Picker("Sorted By", selection: $viewState.sortedBy) {
+                            ForEach(GitHubAPIRequest.NewSearchRequest.SortBy.allCases) { type in
                                 /// 選択項目の一覧
                                 Text(type.title).tag(type)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -54,13 +53,13 @@ struct SearchScreen: View {
         HStack(spacing: 0) {
             Text("Sort by:")
                 .padding()
-            Picker("SearchType", selection: $viewState.searchType) {
-                ForEach(SearchType.allCases) { type in
-                    /// 選択項目の一覧
-                    Text(type.title).tag(type)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
+//            Picker("SearchType", selection: $viewState.searchType) {
+//                ForEach(GitHubAPIRequest.NewSearchRequest.SortBy.allCases) { sortedBy in
+//                    /// 選択項目の一覧
+//                    Text(sortedBy.title).tag(sortedBy)
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+//                }
+//            }
             .accentColor(.primary)
             .pickerStyle(.menu)
         }

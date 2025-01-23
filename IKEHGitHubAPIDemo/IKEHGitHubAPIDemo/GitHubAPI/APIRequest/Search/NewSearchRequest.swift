@@ -10,35 +10,81 @@ import HTTPTypes
 
 // MARK: - 検索タイプ
 
-extension GitHubAPIRequest {
-    enum SearchType {
-        case repo
-        case user
+extension GitHubAPIRequest.NewSearchRequest {
+    // Webの検索を参考に
+    // https://github.com/search?q=Swift&type=repositories
+    enum SortBy: String, CaseIterable, Identifiable {
+        case bestMatch
+        case mostStars
+        case fewestStars
+        case mostForks
+        case fewestForks
+        case recentryUpdated
+        case leastRecentlyUpdated
         
-        var apiPath: String {
+        var id: String { rawValue }
+        
+        var title: String {
             switch self {
-            case .repo:
-                return "/repositories"
-            case .user:
-                return "/users"
+            case .bestMatch:
+                return "Best match"
+            case .mostStars:
+                return "Most stars"
+            case .fewestStars:
+                return "Fewest stars"
+            case .mostForks:
+                return "Most forks"
+            case .fewestForks:
+                return "Fewest forks"
+            case .recentryUpdated:
+                return "Recently updated"
+            case .leastRecentlyUpdated:
+                return "Least recently updated"
+            }
+        }
+        
+        // MARK: - Query Parameter
+        
+        var sort: String? {
+            switch self {
+            case .bestMatch:
+                return nil
+            case .mostStars, .fewestStars:
+                return "stars"
+            case .mostForks, .fewestForks:
+                return "forks"
+            case .recentryUpdated, .leastRecentlyUpdated:
+                return "updated"
+            }
+        }
+        
+        var order: String? {
+            switch self {
+            case .bestMatch:
+                return nil
+            case .mostStars, .mostForks, .recentryUpdated:
+                return "desc"
+            case .fewestStars, .fewestForks, .leastRecentlyUpdated:
+                return "asc"
             }
         }
     }
 }
 
 extension GitHubAPIRequest {
-    struct NewSearchRequest<Item: Decodable & Sendable> {
-        var searchType: GitHubAPIRequest.SearchType
+    struct NewSearchRequest {
+        // これをProtocolに切り出しても良い
         var accessToken: String?
         var query: String
         var page: Int?
         var perPage: Int? = 10
+        var sortedBy: SortBy = .bestMatch
     }
 }
 
 extension GitHubAPIRequest.NewSearchRequest : GitHubAPIRequestProtocol {
 
-    typealias Response = SearchResponse<Item>
+    typealias Response = SearchResponse<Repo>
     
     var method: HTTPTypes.HTTPRequest.Method {
         .get
@@ -49,12 +95,21 @@ extension GitHubAPIRequest.NewSearchRequest : GitHubAPIRequestProtocol {
     }
     
     var path: String {
-        searchType.apiPath
+        "/repositories"
     }
     
     var queryItems: [URLQueryItem] {
         var queryItems: [URLQueryItem] = []
         queryItems.append(URLQueryItem(name: "q", value: query))
+        
+        if let sort = sortedBy.sort {
+            queryItems.append(URLQueryItem(name: "sort", value: sort))
+        }
+        
+        if let order = sortedBy.order {
+            queryItems.append(URLQueryItem(name: "order", value: order))
+        }
+        
         if let page {
             queryItems.append(URLQueryItem(name: "page", value: "\(page)"))
         }
