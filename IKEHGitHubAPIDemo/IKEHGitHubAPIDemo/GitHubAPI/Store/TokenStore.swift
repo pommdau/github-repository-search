@@ -52,8 +52,9 @@ final actor TokenStore {
         return refreshTokenExpiresAt.compare(.now) == .orderedDescending
     }
     
+    /// ログインしているかどうか(リフレッシュトークンの有無で判断)
     var isLoggedIn: Bool {
-        return refreshToken != nil // リフレッシュトークンの有無でログイン状態を判断する
+        return refreshToken != nil
     }
     
     // MARK: - LifeCycle

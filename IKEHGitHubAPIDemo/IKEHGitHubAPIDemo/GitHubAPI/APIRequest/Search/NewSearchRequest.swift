@@ -8,6 +8,8 @@
 import Foundation
 import HTTPTypes
 
+// MARK: - 検索タイプ
+
 extension GitHubAPIRequest {
     enum SearchType {
         case repo
@@ -39,7 +41,7 @@ extension GitHubAPIRequest.NewSearchRequest : GitHubAPIRequestProtocol {
     typealias Response = SearchResponse<Item>
     
     var method: HTTPTypes.HTTPRequest.Method {
-        .post
+        .get
     }
     
     var baseURL: URL? {

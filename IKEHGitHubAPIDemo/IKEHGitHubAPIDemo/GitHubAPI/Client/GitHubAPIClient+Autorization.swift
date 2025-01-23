@@ -12,7 +12,7 @@ import HTTPTypesFoundation
 
 // MARK: - Token
 
-extension GitHubAPIClient {    
+extension GitHubAPIClient {
     /// アクセストークンの更新
     /// - Parameter forceUpdate: 更新を強制する
     func updateAccessTokenIfNeeded(forceUpdate: Bool = false) async throws {
@@ -30,11 +30,10 @@ extension GitHubAPIClient {
         }
         
         // 更新処理
+        let currentTime = Date()
         let request = GitHubAPIRequest.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstant.clientID,
                                                          clientSecret: GitHubAPIClient.PrivateConstant.clientSecret,
                                                          refreshToken: refreshToken)
-        
-        let currentTime = Date()
         let response = try await self.oauthRequest(with: request)
         
         // プロパティに結果を保存
