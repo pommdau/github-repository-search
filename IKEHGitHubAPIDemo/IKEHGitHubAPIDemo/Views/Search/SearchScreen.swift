@@ -45,7 +45,7 @@ struct SearchScreen: View {
         }
         .searchable(text: $viewState.searchText, prompt: "Enter Keyword")
         .onSubmit(of: .search) {
-            viewState.handleSearchText()
+            viewState.handleSearch()
         }
         .onAppear() {
         }

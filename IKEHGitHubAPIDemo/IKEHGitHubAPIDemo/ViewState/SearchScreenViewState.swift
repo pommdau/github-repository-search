@@ -17,8 +17,12 @@ final class SearchScreenViewState {
     private(set) var asyncRepos: AsyncValues<Repo, Error> = .initial
     private var relationLink: RelationLink?
     private(set) var searchTask: Task<(), Never>?
-        
-    func handleSearchText() {
+}
+
+extension SearchScreenViewState {
+    
+    /// 通常の語句検索
+    func handleSearch() {
         
         // すでに検索中であれば何もしない
         if case .loading = asyncRepos {
@@ -32,7 +36,7 @@ final class SearchScreenViewState {
         
         asyncRepos = .loading(asyncRepos.values)
         relationLink = nil
-
+        
         searchTask = Task {
             do {
                 let response = try await GitHubAPIClient.shared.searchRepos(searchText: searchText, sortedBy: sortedBy)
@@ -54,7 +58,8 @@ final class SearchScreenViewState {
             }
         }
     }
-
+    
+    /// 検索結果の続きの読み込み
     func handleSearchMore() {
         
         // 他でダウンロード処理中であればキャンセル
@@ -90,11 +95,13 @@ final class SearchScreenViewState {
         }
     }
     
+    /// 現在の検索の中断
     func cancelSearching() {
         searchTask?.cancel()
         searchTask = nil
     }
     
+    /// ソート順が変更された際の再検索
     func handleSortedByChanged() {
         
         // 検索済み以外は何もしない
@@ -106,7 +113,7 @@ final class SearchScreenViewState {
         else {
             return
         }
-
+        
         asyncRepos = .loading(asyncRepos.values)
         searchTask = Task {
             do {
