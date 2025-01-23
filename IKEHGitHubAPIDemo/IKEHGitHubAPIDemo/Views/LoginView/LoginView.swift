@@ -31,7 +31,6 @@ struct LoginView: View {
                 .padding(.bottom, 60)
             
             loginButton()
-            debugButton()
             
             Text("When you log in to GitHub, you can star repositories and browse a list of repositories you’ve starred.")
                 .foregroundStyle(.secondary)
@@ -66,30 +65,6 @@ extension LoginView {
             }
         }
         .buttonStyle(LogInButtonStyle())
-        .padding(.bottom, 8)
-    }
-    
-    @ViewBuilder
-    private func debugButton() -> some View {
-        Button {
-            Task {
-                do {
-                    try await gitHubAPIClient.fetchLoginUser()
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        } label: {
-            Text("Debugging")
-                .padding()
-                .fontWeight(.semibold)
-                .frame(width: 240, height: 40)
-                .foregroundStyle(.white)
-                .background(
-                    Color.init(red: 46/255, green: 164/255, blue: 79/255)
-                )
-                .cornerRadius(8)
-        }
         .padding(.bottom, 8)
     }
 }
