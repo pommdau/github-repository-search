@@ -9,54 +9,30 @@ import SwiftUI
 
 struct LoginUserView: View {
     
+    let loginUser: LoginUser
     let gitHubAPIClient: GitHubAPIClient
     let loginUserStore: LoginUserStore
     
-    init(gitHubAPIClient: GitHubAPIClient = .shared,
+    init(loginUser: LoginUser,
+         gitHubAPIClient: GitHubAPIClient = .shared,
          loginUserStore: LoginUserStore = .shared) {
+        self.loginUser = loginUser
         self.gitHubAPIClient = gitHubAPIClient
         self.loginUserStore = loginUserStore
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
+            userLabel()
+            locationAndTwitterLabel()
+            followLabel()
+                .padding(.bottom, 60)
+            
             logoutButton()
         }
         .padding(.vertical, 20)
     }
     
-    @ViewBuilder
-    private func logoutButton() -> some View {
-        Button("Log out") {
-            Task {
-                do {
-                    try await gitHubAPIClient.logout()
-                } catch {
-                    print(error.localizedDescription)
-                }
-                do {
-//                    await loginUserStore.logOutUser()
-                }
-            }
-        }
-        .buttonStyle(LogOutButtonStyle())
-    }
-}
-
-struct LoginUserSection: View {
-    
-    let loginUser: LoginUser
-        
-    var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            userLabel()
-            locationAndTwitterLabel()
-            followLabel()
-                .padding(.bottom, 60)
-        }
-
-    }
-        
     @ViewBuilder
     private func userImage() -> some View {
         AsyncImage(url: URL(string: loginUser.avatarURL),
@@ -143,12 +119,23 @@ struct LoginUserSection: View {
                 .foregroundStyle(.secondary)
         }
     }
+    
+    @ViewBuilder
+    private func logoutButton() -> some View {
+        Button("Log out") {
+            Task {
+                do {
+                    try await gitHubAPIClient.logout()
+                } catch {
+                    print(error.localizedDescription)
+                }
+                loginUserStore.delete()
+            }
+        }
+        .buttonStyle(LogOutButtonStyle())
+    }
 }
 
 #Preview {
-    LoginUserSection(loginUser: LoginUser.sampleData())
+    LoginUserView(loginUser: LoginUser.sampleData())
 }
-
-//#Preview {
-//    LoginUserView(loginUser: LoginUser.sampleData())
-//}

@@ -46,7 +46,7 @@ struct LoginView: View {
                     try await gitHubAPIClient.fetchInitialToken(sessionCode: sessionCode)
                     print("ログイン成功！")
                     let loginUser = try await gitHubAPIClient.fetchLoginUser()
-                    loginUserStore.loginUser = loginUser
+                    loginUserStore.save(loginUser)
                 } catch {
                     print(error.localizedDescription)
                 }

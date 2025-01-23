@@ -14,7 +14,7 @@ final class LoginUserStore {
     static let shared: LoginUserStore = .init()
 
     // パラメータが増えたらLoginUserContextへ分離すると良さそう
-    var loginUser: LoginUser? {
+    private(set) var loginUser: LoginUser? {
         didSet {
             UserDefaults.standard.setCodableItem(loginUser, forKey: "ikehgithubapi-login-user")
         }
@@ -22,5 +22,13 @@ final class LoginUserStore {
     
     init() {
         self.loginUser = UserDefaults.standard.codableItem(forKey: "ikehgithubapi-login-user") // 保存されているログインユーザ情報が有れば読み込み
+    }
+    
+    func save(_ loginUser: LoginUser) {
+        self.loginUser = loginUser
+    }
+    
+    func delete() {
+        self.loginUser = nil
     }
 }

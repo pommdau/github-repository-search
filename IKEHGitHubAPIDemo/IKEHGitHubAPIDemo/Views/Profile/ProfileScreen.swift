@@ -26,9 +26,8 @@ struct ProfileScreen: View {
     @State private var viewState: ProfileScreenViewState = .init()
     
     var body: some View {
-        LoginView()
-        if viewState.loginUser != nil {
-            LoginUserView()
+        if let loginUser = viewState.loginUser {
+            LoginUserView(loginUser: loginUser)
         } else {
             LoginView()
         }
