@@ -15,7 +15,7 @@ struct RootTabView: View {
     var body: some View {
         TabView(selection: $selectedTab) {
             Tab("Profile", systemImage: "person.crop.circle.fill", value: 0) {
-                ProfileScreen()
+                ProfileView()
             }
 
             Tab("Search", systemImage: "magnifyingglass", value: 1) {
