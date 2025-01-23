@@ -7,18 +7,43 @@
 
 import SwiftUI
 
-struct LoginUserView: View {
-    
+@MainActor @Observable
+final class LoginUserViewState {
+
     let loginUser: LoginUser
     let gitHubAPIClient: GitHubAPIClient
     let loginUserStore: LoginUserStore
     
-    init(loginUser: LoginUser,
-         gitHubAPIClient: GitHubAPIClient = .shared,
-         loginUserStore: LoginUserStore = .shared) {
-        self.loginUser = loginUser
-        self.gitHubAPIClient = gitHubAPIClient
-        self.loginUserStore = loginUserStore
+    init(
+        loginUser: LoginUser,
+        gitHubAPIClient: GitHubAPIClient = .shared,
+        loginUserStore: LoginUserStore = .shared) {
+            self.loginUser = loginUser
+            self.gitHubAPIClient = gitHubAPIClient
+            self.loginUserStore = loginUserStore
+    }
+    
+    // MARK: - Actions
+    
+    func handleLogOutButtonTapped() {
+        Task {
+            do {
+                try await gitHubAPIClient.logout()
+            } catch {
+                print(error.localizedDescription)
+            }
+            loginUserStore.delete()
+        }
+    }
+    
+}
+
+struct LoginUserView: View {
+    
+    @State private var viewState: LoginUserViewState
+    
+    init(loginUser: LoginUser) {
+        _viewState = .init(wrappedValue: LoginUserViewState(loginUser: loginUser))
     }
     
     var body: some View {
@@ -33,9 +58,11 @@ struct LoginUserView: View {
         .padding(.vertical, 20)
     }
     
+    // MARK: - View Parts
+    
     @ViewBuilder
     private func userImage() -> some View {
-        AsyncImage(url: URL(string: loginUser.avatarURL),
+        AsyncImage(url: URL(string: viewState.loginUser.avatarURL),
                    content: { image in
             image.resizable()
         }, placeholder: {
@@ -57,21 +84,20 @@ struct LoginUserView: View {
         HStack {
             userImage()
             VStack(alignment: .leading) {
-                Text(loginUser.name ?? "")
+                Text(viewState.loginUser.name ?? "")
                     .font(.title)
                     .bold()
-                Text(loginUser.login)
+                Text(viewState.loginUser.login)
                     .font(.title2)
                     .foregroundStyle(.secondary)
             }
         }
     }
     
-    
     @ViewBuilder
     private func locationAndTwitterLabel() -> some View {
         HStack {
-            if let location = loginUser.location {
+            if let location = viewState.loginUser.location {
                 HStack(spacing: 0) {
                     Image(systemName: "mappin")
                         .scaledToFit()
@@ -82,8 +108,8 @@ struct LoginUserView: View {
                 .padding(.trailing, 10)
             }
             
-            if let twitterUsername = loginUser.twitterUsername,
-               let twitterURL = loginUser.twitterURL {
+            if let twitterUsername = viewState.loginUser.twitterUsername,
+               let twitterURL = viewState.loginUser.twitterURL {
                 HStack(spacing: 2) {
                     Text("X(Twitter)")
                         .foregroundStyle(.secondary)
@@ -107,13 +133,13 @@ struct LoginUserView: View {
                 .scaledToFit()
                 .frame(width: 20)
                 .foregroundStyle(.secondary)
-            Text("\(loginUser.followers)")
+            Text("\(viewState.loginUser.followers)")
                 .bold()
             Text("followers")
                 .foregroundStyle(.secondary)
             Text("・")
                 .foregroundStyle(.secondary)
-            Text("\(loginUser.following)")
+            Text("\(viewState.loginUser.following)")
                 .bold()
             Text("following")
                 .foregroundStyle(.secondary)
@@ -123,14 +149,7 @@ struct LoginUserView: View {
     @ViewBuilder
     private func logoutButton() -> some View {
         Button("Log out") {
-            Task {
-                do {
-                    try await gitHubAPIClient.logout()
-                } catch {
-                    print(error.localizedDescription)
-                }
-                loginUserStore.delete()
-            }
+            viewState.handleLogOutButtonTapped()
         }
         .buttonStyle(LogOutButtonStyle())
     }
