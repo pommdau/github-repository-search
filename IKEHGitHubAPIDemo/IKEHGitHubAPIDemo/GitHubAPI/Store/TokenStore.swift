@@ -88,8 +88,8 @@ extension TokenStore {
     }
     
     @MainActor
-    func setLastLoginStateID(_ lastLoginStateID: String) {
-        self.lastLoginStateID = lastLoginStateID
+    func setLastLoginStateID(_ setLastLoginStateID: String) {
+        self.lastLoginStateID = setLastLoginStateID
     }
     
     // MARK: - Delete

@@ -11,6 +11,7 @@ import SwiftUI
 final actor GitHubAPIClient {
 
     static let shared: GitHubAPIClient = .init()
+    
     private(set) var urlSession: URLSession
     private(set) var tokenStore: TokenStore
             
@@ -24,7 +25,11 @@ final actor GitHubAPIClient {
 extension GitHubAPIClient {
     func searchRepos(searchText: String, page: Int? = nil) async throws -> SearchResponse<Repo> {
 //        try? await Task.sleep(nanoseconds: 3_000_000_000)
-        try await updateAccessTokenIfNeeded()
+        // ログイン状態であればトークンの更新
+        if await tokenStore.isLoggedIn {
+            try await updateAccessTokenIfNeeded()
+        }
+        
         let request = await GitHubAPIRequest.NewSearchRequest<Repo>(
             searchType: .repo,
             accessToken: tokenStore.accessToken,

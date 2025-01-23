@@ -51,7 +51,7 @@ extension GitHubAPIClient {
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
         }
-        
+        print(httpRequest)
         // リクエストの送信
         let (data, httpResponse): (Data, HTTPResponse)
         do {

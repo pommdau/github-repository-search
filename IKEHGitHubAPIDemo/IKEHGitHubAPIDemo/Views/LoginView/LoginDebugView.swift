@@ -27,7 +27,7 @@ struct LoginDebugView: View {
                 Button("Log in") {
                     Task {
                         do {
-                            try await gitHubAPIClient.openLoginPage()
+                            try await gitHubAPIClient.openLoginPageInBrowser()
                         } catch {
                             print(error.localizedDescription)
                         }
@@ -98,9 +98,9 @@ struct LoginDebugView: View {
         }
         .onOpenURL { (url) in
             Task {
-                let sessionCode = try await gitHubAPIClient.handleLoginCallbackURL(url)
+                let sessionCode = try await gitHubAPIClient.extactSessionCodeFromCallbackURL(url)
                 do {
-                    try await gitHubAPIClient.fetchFirstToken(sessionCode: sessionCode)
+                    try await gitHubAPIClient.fetchInitialToken(sessionCode: sessionCode)
                     await loadTokens()
                 } catch {
                     print(error.localizedDescription)

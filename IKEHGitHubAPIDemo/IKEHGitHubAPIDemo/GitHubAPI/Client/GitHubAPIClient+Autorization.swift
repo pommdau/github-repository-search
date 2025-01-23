@@ -10,99 +10,9 @@ import SwiftUI
 import HTTPTypes
 import HTTPTypesFoundation
 
-// MARK: - Login
-
-extension GitHubAPIClient {
-    
-    private static func createLoginPageURL(clientID: String, lastLoginStateID: String) async -> URL? {
-        // ログインURLの作成
-        guard var components = URLComponents(string: "https://github.com/login/oauth/authorize") else {
-            return nil
-        }
-        components.queryItems = [
-            URLQueryItem(name: "client_id", value: clientID),
-            URLQueryItem(name: "redirect_uri", value: "ikehgithubapi://callback"), // Callback URL
-            URLQueryItem(name: "state", value: lastLoginStateID)
-        ]
-        guard let loginURL = components.url else {
-            return nil
-        }
-        
-        return loginURL
-    }
-    
-    @MainActor
-    func openLoginPage() async throws {
-        await tokenStore.setLastLoginStateID(UUID().uuidString) // 多重ログイン防止のためログインセッションのIDを記録
-        guard let url = await Self.createLoginPageURL(clientID: GitHubAPIClient.PrivateConstants.clientID,
-                                                      lastLoginStateID: tokenStore.lastLoginStateID) else {
-            throw GitHubAPIClientError.loginError("予期せぬエラーが発生しました")
-        }
-        await UIApplication.shared.open(url)
-    }
-    
-    @MainActor
-    func handleLoginCallbackURL(_ url: URL) async throws -> String {
-        // コールバックURLから情報を取得
-        guard
-            let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-            let queryItems = components.queryItems,
-            let state = queryItems.first(where: { $0.name == "state" })?.value,
-            let sessionCode = queryItems.first(where: { $0.name == "code" })?.value
-        else {
-            throw GitHubAPIClientError.loginError("予期せぬエラーが発生しました")
-        }
-        
-        let lastLoginStateID = await tokenStore.lastLoginStateID
-        if  state != lastLoginStateID {
-            // 最後に開いたログインページのコールバックではない場合
-            throw GitHubAPIClientError.loginError("無効なログインセッションです")
-        }
-        
-        return sessionCode // 初回認証時にのみ利用する一時的なcode
-    }
-}
-
-// MARK: - Logout
-
-extension GitHubAPIClient {
-    func logout() async throws  {
-        // アクセストークンの更新
-        try await updateAccessTokenIfNeeded()
-        guard let accessToken = await tokenStore.accessToken else {
-            return
-        }
-        let request = GitHubAPIRequest.DeleteAppAuthorization(
-            clientID: GitHubAPIClient.PrivateConstants.clientID,
-            clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
-            accessToken: accessToken
-        )
-        
-        await tokenStore.removeAll()
-        try await self.noResponseRequest(with: request)
-    }
-}
-
 // MARK: - Token
 
-extension GitHubAPIClient {
-    
-    func fetchFirstToken(sessionCode: String) async throws {
-        let request = GitHubAPIRequest.FetchInitialToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
-                                                         clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
-                                                         sessionCode: sessionCode)
-        
-        let currentTime = Date()
-        let response = try await self.oauthRequest(with: request)
-
-        await tokenStore.set(
-            accessToken: response.accessToken,
-            refreshToken: response.refreshToken,
-            accessTokenExpiresAt: currentTime.addingExpirationInterval(response.accessTokenExpiresIn),
-            refreshTokenExpiresAt: currentTime.addingExpirationInterval(response.refreshTokenExpiresIn)
-        )
-    }
-    
+extension GitHubAPIClient {    
     /// アクセストークンの更新
     /// - Parameter forceUpdate: 更新を強制する
     func updateAccessTokenIfNeeded(forceUpdate: Bool = false) async throws {
@@ -120,8 +30,8 @@ extension GitHubAPIClient {
         }
         
         // 更新処理
-        let request = GitHubAPIRequest.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstants.clientID,
-                                                         clientSecret: GitHubAPIClient.PrivateConstants.clientSecret,
+        let request = GitHubAPIRequest.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstant.clientID,
+                                                         clientSecret: GitHubAPIClient.PrivateConstant.clientSecret,
                                                          refreshToken: refreshToken)
         
         let currentTime = Date()
@@ -134,5 +44,30 @@ extension GitHubAPIClient {
             accessTokenExpiresAt: currentTime.addingExpirationInterval(response.accessTokenExpiresIn),
             refreshTokenExpiresAt: currentTime.addingExpirationInterval(response.refreshTokenExpiresIn)
         )
+    }
+}
+
+// MARK: - Logout
+
+extension GitHubAPIClient {
+    
+    /// ログアウト処理
+    func logout() async throws  {
+        // アクセストークンの更新
+        try await updateAccessTokenIfNeeded()
+        
+        // ローカル上の認証情報の削除
+        await tokenStore.removeAll()
+        
+        // サーバ上の認証情報の削除
+        guard let accessToken = await tokenStore.accessToken else {
+            return
+        }
+        let request = GitHubAPIRequest.DeleteAppAuthorization(
+            clientID: GitHubAPIClient.PrivateConstant.clientID,
+            clientSecret: GitHubAPIClient.PrivateConstant.clientSecret,
+            accessToken: accessToken
+        )
+        try await self.noResponseRequest(with: request)
     }
 }
