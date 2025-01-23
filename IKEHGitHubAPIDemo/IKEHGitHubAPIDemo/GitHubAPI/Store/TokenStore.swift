@@ -7,35 +7,40 @@
 
 import Foundation
 import SwiftUI
+import KeychainAccess
 
 final actor TokenStore {
     
     static let shared: TokenStore = .init()
+    
+    // MARK: - Property
+    
+    let keychain = Keychain(service: "com.ikehgithubapi.oauth")
+    
+    // 最新のログインセッションID
+    @MainActor
+    @AppStorage("ikehgithubapi-last-login-state-id")
+    var lastLoginStateID: String = ""
 
-    // MARK: - Properties
-    // TODO: keychainへの登録
-    // TODO: Tokenクラスの定義
-    @AppStorage("ikehgithubapi-access-token")
-    var accessToken: String?
+    var accessToken: String? {
+        didSet {
+            keychain["ikehgithubapi-access-token"] = accessToken
+        }
+    }
+    
+    var refreshToken: String? {
+        didSet {
+            keychain["ikehgithubapi-refresh-token"] = accessToken
+        }
+    }
     
     @AppStorage("ikehgithubapi-access-token-expires-at")
-    var accessTokenExpiresAt: Date?
-    
-    @AppStorage("ikehgithubapi-refresh-token")
-    var refreshToken: String?
-    
+    var accessTokenExpiresAt: Date? 
+        
     @AppStorage("ikehgithubapi-refresh-token-expires-at")
     var refreshTokenExpiresAt: Date?
     
-    var isLoggedIn: Bool {
-        return refreshToken != nil // リフレッシュトークンの有無でログイン状態を判断する
-    }
-    
-    // MARK: - LifeCycle
-    
-    private init() {}
-    
-    // MARK: - Validation
+    // MARK: - Computed Properry
     
     var isAccessTokenValid: Bool {
         guard let _ = accessToken,
@@ -53,6 +58,19 @@ final actor TokenStore {
         }
         // トークンが有効期限内か
         return refreshTokenExpiresAt.compare(.now) == .orderedDescending
+    }
+    
+    /// ログインしているかどうか(リフレッシュトークンの有無で判断)
+    var isLoggedIn: Bool {
+        return refreshToken != nil
+    }
+    
+    // MARK: - LifeCycle
+    
+    private init() {
+        // 保存されている値の読込
+        self.accessToken = keychain["ikehgithubapi-access-token"]
+        self.refreshToken = keychain["ikehgithubapi-refresh-token"]
     }
 }
 
@@ -80,6 +98,11 @@ extension TokenStore {
         if let refreshTokenExpiresAt = refreshTokenExpiresAt {
             self.refreshTokenExpiresAt = refreshTokenExpiresAt
         }
+    }
+    
+    @MainActor
+    func setLastLoginStateID(_ setLastLoginStateID: String) {
+        self.lastLoginStateID = setLastLoginStateID
     }
     
     // MARK: - Delete

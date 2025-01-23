@@ -43,15 +43,25 @@ struct SearchResultView: View {
                 searchProgressView()
             case .loaded, .loadingMore, .error:
                 if showNoResultLabel {
-                    Text("No Result")
-                        .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    VStack {
+                        Image(systemName: "magnifyingglass")
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(.secondary)
+                            .frame(width: 36)
+                        Text("No Results")
+                            .font(.title)
+                            .bold()
+                        Text("Check the spelling or try a new search")
+                            .foregroundStyle(.secondary)
+                    }
+                    .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 } else {
                     reposList(asyncRepos: asyncRepos)
                 }
             }
         }
-        .ignoresSafeArea(edges: .bottom)
         .onChange(of: isSearching) {
             if !isSearching {
                 // 検索がキャンセルされた場合

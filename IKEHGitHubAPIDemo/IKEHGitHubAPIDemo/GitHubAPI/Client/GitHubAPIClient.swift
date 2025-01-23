@@ -8,38 +8,70 @@
 import Foundation
 import SwiftUI
 
+func printUserDefaultsPath() {
+    if let bundleID = Bundle.main.bundleIdentifier {
+        let preferencesPath = FileManager.default.urls(
+            for: .libraryDirectory,
+            in: .userDomainMask
+        )
+        .first?
+        .appendingPathComponent("Preferences")
+        .appendingPathComponent("\(bundleID).plist")
+        
+        if let path = preferencesPath?.path {
+            print("UserDefaults file path: \(path)")
+        } else {
+            print("Could not determine the UserDefaults file path.")
+        }
+    } else {
+        print("Bundle identifier not found.")
+    }
+}
+
 final actor GitHubAPIClient {
 
     static let shared: GitHubAPIClient = .init()
+    
     private(set) var urlSession: URLSession
     private(set) var tokenStore: TokenStore
-
-    // ログインのセッションID(最新のセッションのみ受け付ける)
-    @MainActor
-    var lastLoginStateID = ""
             
-    init(urlSession: URLSession = URLSession.shared, tokenManager: TokenStore = TokenStore.shared) {
+    init(urlSession: URLSession = URLSession.shared,
+         tokenManager: TokenStore = TokenStore.shared) {
+        
+        printUserDefaultsPath()
+        
         self.urlSession = urlSession
         self.tokenStore = tokenManager
     }
+}
 
-    func searchRepos(searchText: String, page: Int? = nil) async throws -> SearchResponse<Repo> {
+extension GitHubAPIClient {
+    func searchRepos(searchText: String, page: Int? = nil, sortedBy: GitHubAPIRequest.NewSearchRequest.SortBy = .bestMatch) async throws -> SearchResponse<Repo> {
 //        try? await Task.sleep(nanoseconds: 3_000_000_000)
-        try await updateAccessTokenIfNeeded()
-        let request = await GitHubAPIRequest.Search.Repos(accessToken: tokenStore.accessToken,
-                                                          query: searchText,
-                                                          page: page)
+        // ログイン状態であればトークンの更新
+        if await tokenStore.isLoggedIn {
+            try await updateAccessTokenIfNeeded()
+        }
+        
+        let request = await GitHubAPIRequest.NewSearchRequest(
+            accessToken: tokenStore.accessToken,
+            query: searchText,
+            page: page,
+            perPage: 10,
+            sortedBy: sortedBy
+        )
         let response: SearchResponse<Repo> = try await searchRequest(with: request)
         return response
     }
     
-//    func searchRepos(query: String, page: Int? = nil) async throws -> SearchResponse<Repo> {
-//        let response = try await search(with: GitHubAPIRequest.Search.Repos(query: query, page: page))
-//        return response
-//    }
-//    
-//    func searchUsers(searchText: String, page: Int? = nil) async throws -> SearchResponse<User> {
-//        let response = try await search(with: GitHubAPIRequest.SearchUsers(searchText: searchText, page: page))
-//        return response
-//    }
+    func fetchLoginUser() async throws -> LoginUser {
+//        try? await Task.sleep(nanoseconds: 3_000_000_000)
+        try await updateAccessTokenIfNeeded()
+        guard let accessToken = await tokenStore.accessToken else {
+            throw GitHubAPIClientError.oauthError("有効なトークンが見つかりませんでした")
+        }
+        let request = GitHubAPIRequest.FetchLoginUser(accessToken: accessToken)
+        let response = try await defaultRequest(with: request)
+        return response
+    }
 }

@@ -51,7 +51,7 @@ extension GitHubAPIClient {
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
         }
-        
+        print(httpRequest)
         // リクエストの送信
         let (data, httpResponse): (Data, HTTPResponse)
         do {
@@ -63,6 +63,8 @@ extension GitHubAPIClient {
         } catch {
             throw GitHubAPIClientError.connectionError(error)
         }
+        
+        print(String(data: data, encoding: .utf8)!)
         
         return (data, httpResponse)
     }
@@ -125,6 +127,7 @@ extension GitHubAPIClient {
         do {
             response = try JSONDecoder().decode(SearchResponse<Item>.self, from: data)
         } catch {
+            print(String(data: data, encoding: .utf8)!)
             throw GitHubAPIClientError.responseParseError(error)
         }
         
