@@ -1,12 +1,3 @@
-//
-//  RepoCell 2.swift
-//  IKEHGitHubAPIDemo
-//
-//  Created by HIROKI IKEUCHI on 2025/01/15.
-//
-
-
-//
 //  RepoCell.swift
 //  IKEHGitHubAPIDemo
 //
