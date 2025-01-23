@@ -13,12 +13,9 @@ final actor GitHubAPIClient {
     static let shared: GitHubAPIClient = .init()
     private(set) var urlSession: URLSession
     private(set) var tokenStore: TokenStore
-
-    // ログインのセッションID(最新のセッションのみ受け付ける)
-    @MainActor
-    var lastLoginStateID = ""
             
-    init(urlSession: URLSession = URLSession.shared, tokenManager: TokenStore = TokenStore.shared) {
+    init(urlSession: URLSession = URLSession.shared,
+         tokenManager: TokenStore = TokenStore.shared) {
         self.urlSession = urlSession
         self.tokenStore = tokenManager
     }

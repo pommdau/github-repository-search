@@ -33,16 +33,16 @@ extension GitHubAPIClient {
     
     @MainActor
     func openLoginPage() async throws {
-        lastLoginStateID = UUID().uuidString // 多重ログイン防止のためログインセッションのIDを記録
+        await tokenStore.setLastLoginStateID(UUID().uuidString) // 多重ログイン防止のためログインセッションのIDを記録
         guard let url = await Self.createLoginPageURL(clientID: GitHubAPIClient.PrivateConstants.clientID,
-                                                      lastLoginStateID: lastLoginStateID) else {
+                                                      lastLoginStateID: tokenStore.lastLoginStateID) else {
             throw GitHubAPIClientError.loginError("予期せぬエラーが発生しました")
         }
         await UIApplication.shared.open(url)
     }
     
     @MainActor
-    func handleLoginCallbackURL(_ url: URL) throws -> String {
+    func handleLoginCallbackURL(_ url: URL) async throws -> String {
         // コールバックURLから情報を取得
         guard
             let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
@@ -53,7 +53,8 @@ extension GitHubAPIClient {
             throw GitHubAPIClientError.loginError("予期せぬエラーが発生しました")
         }
         
-        if state != self.lastLoginStateID {
+        let lastLoginStateID = await tokenStore.lastLoginStateID
+        if  state != lastLoginStateID {
             // 最後に開いたログインページのコールバックではない場合
             throw GitHubAPIClientError.loginError("無効なログインセッションです")
         }

@@ -40,7 +40,7 @@ struct LoginView: View {
         .frame(maxWidth: .infinity)
         .onOpenURL { (url) in
             Task {
-                let sessionCode = try gitHubAPIClient.handleLoginCallbackURL(url)
+                let sessionCode = try await gitHubAPIClient.handleLoginCallbackURL(url)
                 do {
                     try await gitHubAPIClient.fetchFirstToken(sessionCode: sessionCode)
                     print("ログイン成功！")

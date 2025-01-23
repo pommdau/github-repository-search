@@ -11,10 +11,15 @@ import SwiftUI
 final actor TokenStore {
     
     static let shared: TokenStore = .init()
+    
+    // MARK: - Property
+    
+    // 最新のログインセッションID
+    @MainActor
+    @AppStorage("ikehgithubapi-last-login-state-id")
+    var lastLoginStateID: String = ""
 
-    // MARK: - Properties
     // TODO: keychainへの登録
-    // TODO: Tokenクラスの定義
     @AppStorage("ikehgithubapi-access-token")
     var accessToken: String?
     
@@ -27,15 +32,7 @@ final actor TokenStore {
     @AppStorage("ikehgithubapi-refresh-token-expires-at")
     var refreshTokenExpiresAt: Date?
     
-    var isLoggedIn: Bool {
-        return refreshToken != nil // リフレッシュトークンの有無でログイン状態を判断する
-    }
-    
-    // MARK: - LifeCycle
-    
-    private init() {}
-    
-    // MARK: - Validation
+    // MARK: - Computed Properry
     
     var isAccessTokenValid: Bool {
         guard let _ = accessToken,
@@ -54,6 +51,14 @@ final actor TokenStore {
         // トークンが有効期限内か
         return refreshTokenExpiresAt.compare(.now) == .orderedDescending
     }
+    
+    var isLoggedIn: Bool {
+        return refreshToken != nil // リフレッシュトークンの有無でログイン状態を判断する
+    }
+    
+    // MARK: - LifeCycle
+    
+    private init() {}
 }
 
 // MARK: - CRUD
@@ -80,6 +85,11 @@ extension TokenStore {
         if let refreshTokenExpiresAt = refreshTokenExpiresAt {
             self.refreshTokenExpiresAt = refreshTokenExpiresAt
         }
+    }
+    
+    @MainActor
+    func setLastLoginStateID(_ lastLoginStateID: String) {
+        self.lastLoginStateID = lastLoginStateID
     }
     
     // MARK: - Delete
