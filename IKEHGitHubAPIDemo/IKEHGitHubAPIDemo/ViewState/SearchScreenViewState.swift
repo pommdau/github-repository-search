@@ -10,15 +10,31 @@ import SwiftUI
 
 @MainActor @Observable
 final class SearchScreenViewState {
+    
+    // MARK: - Property
+    
+    // MARK: 検索条件
+    
     var searchText: String = "Swift"
     var sortedBy: GitHubAPIRequest.SearchReposRequest.SortBy = .bestMatch
-
+    
+    // MARK: 検索結果
+    
     private(set) var asyncRepos: AsyncValues<Repo, Error> = .initial
     private var relationLink: RelationLink?
-    private(set) var searchTask: Task<(), Never>?
     
+    // エラー表示
+    var alertError: Error?
+    var showAlert = false
+    
+    // MARK: その他
+    
+    private(set) var searchTask: Task<(), Never>?
+        
     let gitHubAPIClient: GitHubAPIClient
     let loginUserStore: LoginUserStore
+    
+    // MARK: - LifeCycle
     
     init(gitHubAPIClient: GitHubAPIClient = .shared,
          loginUserStore: LoginUserStore = .shared) {
@@ -66,6 +82,8 @@ extension SearchScreenViewState {
                 } else {
                     asyncRepos = .error(error, asyncRepos.values)
                     print(error.localizedDescription)
+                    alertError = error
+                    showAlert = true
                 }
             }
         }
@@ -104,6 +122,8 @@ extension SearchScreenViewState {
                 } else {
                     asyncRepos = .error(error, asyncRepos.values)
                     print(error.localizedDescription)
+                    alertError = error
+                    showAlert = true
                 }
             }
         }
@@ -140,6 +160,8 @@ extension SearchScreenViewState {
                 } else {
                     asyncRepos = .error(error, asyncRepos.values)
                     print(error.localizedDescription)
+                    alertError = error
+                    showAlert = true
                 }
             }
         }

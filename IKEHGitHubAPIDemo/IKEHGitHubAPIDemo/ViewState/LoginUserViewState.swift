@@ -34,8 +34,8 @@ final class LoginUserViewState {
             do {
                 try await gitHubAPIClient.logout()
             } catch {
-                showAlert = true
                 alertError = error
+                showAlert = true
             }
             loginUserStore.delete()
         }

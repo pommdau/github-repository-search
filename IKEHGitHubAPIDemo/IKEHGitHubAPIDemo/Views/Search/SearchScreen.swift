@@ -48,6 +48,11 @@ struct SearchScreen: View {
         }
         .onAppear() {
         }
+        .alert("エラー", isPresented: $viewState.showAlert) {
+            Button("OK") { }
+        } message: {
+            Text(viewState.alertError?.localizedDescription ?? "(不明なエラー)")
+        }
     }
     
     @ViewBuilder

@@ -15,6 +15,10 @@ struct LoginDebugView: View {
     @State private var refreshToken = "(nil)"
     @State private var refreshTokenExpiresAt = "(nil)"
     
+    var realAccessToken: String? {
+        gitHubAPIClient.tokenStore.accessToken
+    }
+    
     private let gitHubAPIClient: GitHubAPIClient
     
     init(gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared) {
