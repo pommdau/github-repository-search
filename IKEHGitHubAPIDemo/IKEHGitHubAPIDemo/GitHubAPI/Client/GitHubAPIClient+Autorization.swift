@@ -69,7 +69,7 @@ extension GitHubAPIClient {
 extension GitHubAPIClient {
     
     /// ログアウト処理
-    func logout() async throws  {
+    func logout() async throws  {            
         do {
             // アクセストークンの更新
             try await updateAccessTokenIfNeeded()

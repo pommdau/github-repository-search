@@ -14,6 +14,10 @@ final class LoginUserViewState {
     let gitHubAPIClient: GitHubAPIClient
     let loginUserStore: LoginUserStore
     
+    // Error
+    var showAlert = false
+    var alertError: Error?
+    
     init(
         loginUser: LoginUser,
         gitHubAPIClient: GitHubAPIClient = .shared,
@@ -30,7 +34,8 @@ final class LoginUserViewState {
             do {
                 try await gitHubAPIClient.logout()
             } catch {
-                print(error.localizedDescription)
+                showAlert = true
+                alertError = error
             }
             loginUserStore.delete()
         }
@@ -56,6 +61,12 @@ struct LoginUserView: View {
             logoutButton()
         }
         .padding(.vertical, 20)
+        .alert("エラー", isPresented: $viewState.showAlert) {
+            Button("OK") { }
+        } message: {
+            Text(viewState.alertError?.localizedDescription ?? "(不明なエラー)")
+        }
+
     }
     
     // MARK: - View Parts
