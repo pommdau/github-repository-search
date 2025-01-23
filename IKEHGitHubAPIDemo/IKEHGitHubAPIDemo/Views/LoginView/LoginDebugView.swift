@@ -108,6 +108,9 @@ struct LoginDebugView: View {
             }
         }
         .onAppear() {
+            Task {
+                await loadTokens()
+            }
         }
     }
     

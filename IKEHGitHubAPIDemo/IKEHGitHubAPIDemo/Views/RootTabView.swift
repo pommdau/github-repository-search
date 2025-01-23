@@ -14,23 +14,21 @@ struct RootTabView: View {
         
     var body: some View {
         TabView(selection: $selectedTab) {
-            AccountView()
-                .tabItem {
-                    Label("Account", systemImage: "person.crop.circle.fill")
-                }
-                .tag(0)
+            Tab("Profile", systemImage: "person.crop.circle.fill", value: 0) {
+                ProfileScreen()
+            }
             
-            SearchScreen()
-                .tabItem {
-                    Label("Search", systemImage: "magnifyingglass")
-                }
-                .tag(1)
+            Tab("Search", systemImage: "magnifyingglass", value: 1) {
+                SearchScreen()
+            }
             
-            Text("hoge")
-                .tabItem {
-                    Label("Starred", systemImage: "star.fill")
-                }
-                .tag(2)
+            Tab("Starred", systemImage: "star.fill", value: 2) {
+                Text("Starred Screen")
+            }
+            
+            Tab("Debug", systemImage: "ladybug.fill", value: 3) {
+                LoginDebugView()
+            }
         }
     }
 }

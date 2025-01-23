@@ -1,6 +1,15 @@
 {
-  "originHash" : "b0f28ed5d5636aced827af039e54a054af152de7353a46e810eba3fe878f9b0f",
+  "originHash" : "88540dc69f2cee5afef9a4b25f93edcee7a0791518bee40205c369bd8348277b",
   "pins" : [
+    {
+      "identity" : "keychainaccess",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kishikawakatsumi/KeychainAccess",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e0c7eebc5a4465a3c4680764f26b7a61f567cdaf"
+      }
+    },
     {
       "identity" : "swift-http-types",
       "kind" : "remoteSourceControl",

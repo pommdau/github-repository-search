@@ -8,6 +8,26 @@
 import Foundation
 import SwiftUI
 
+func printUserDefaultsPath() {
+    if let bundleID = Bundle.main.bundleIdentifier {
+        let preferencesPath = FileManager.default.urls(
+            for: .libraryDirectory,
+            in: .userDomainMask
+        )
+        .first?
+        .appendingPathComponent("Preferences")
+        .appendingPathComponent("\(bundleID).plist")
+        
+        if let path = preferencesPath?.path {
+            print("UserDefaults file path: \(path)")
+        } else {
+            print("Could not determine the UserDefaults file path.")
+        }
+    } else {
+        print("Bundle identifier not found.")
+    }
+}
+
 final actor GitHubAPIClient {
 
     static let shared: GitHubAPIClient = .init()
@@ -17,6 +37,9 @@ final actor GitHubAPIClient {
             
     init(urlSession: URLSession = URLSession.shared,
          tokenManager: TokenStore = TokenStore.shared) {
+        
+        printUserDefaultsPath()
+        
         self.urlSession = urlSession
         self.tokenStore = tokenManager
     }

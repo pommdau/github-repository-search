@@ -74,6 +74,7 @@ extension LoginUserView {
             VStack(alignment: .leading) {
                 Text(loginUser.name ?? "")
                     .font(.title)
+                    .bold()
                 Text(loginUser.login)
                     .font(.title2)
                     .foregroundStyle(.secondary)
@@ -105,7 +106,7 @@ extension LoginUserView {
                         UIApplication.shared.open(twitterURL)
                     } label: {
                         Text("@\(twitterUsername)")
-                            .fontWeight(.heavy)
+                            .bold()
                     }
                     .buttonStyle(.plain)
                 }

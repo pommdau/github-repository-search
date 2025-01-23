@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import KeychainAccess
 
 final actor TokenStore {
     
@@ -14,21 +15,28 @@ final actor TokenStore {
     
     // MARK: - Property
     
+    let keychain = Keychain(service: "com.ikehgithubapi.oauth")
+    
     // 最新のログインセッションID
     @MainActor
     @AppStorage("ikehgithubapi-last-login-state-id")
     var lastLoginStateID: String = ""
 
-    // TODO: keychainへの登録
-    @AppStorage("ikehgithubapi-access-token")
-    var accessToken: String?
+    var accessToken: String? {
+        didSet {
+            keychain["ikehgithubapi-access-token"] = accessToken
+        }
+    }
+    
+    var refreshToken: String? {
+        didSet {
+            keychain["ikehgithubapi-refresh-token"] = accessToken
+        }
+    }
     
     @AppStorage("ikehgithubapi-access-token-expires-at")
-    var accessTokenExpiresAt: Date?
-    
-    @AppStorage("ikehgithubapi-refresh-token")
-    var refreshToken: String?
-    
+    var accessTokenExpiresAt: Date? 
+        
     @AppStorage("ikehgithubapi-refresh-token-expires-at")
     var refreshTokenExpiresAt: Date?
     
@@ -59,7 +67,11 @@ final actor TokenStore {
     
     // MARK: - LifeCycle
     
-    private init() {}
+    private init() {
+        // 保存されている値の読込
+        self.accessToken = keychain["ikehgithubapi-access-token"]
+        self.refreshToken = keychain["ikehgithubapi-refresh-token"]
+    }
 }
 
 // MARK: - CRUD

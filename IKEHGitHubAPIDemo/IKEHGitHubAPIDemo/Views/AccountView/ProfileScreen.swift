@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AccountView: View {
+struct ProfileScreen: View {
     
     let loginUserStore: LoginUserStore
     
@@ -25,5 +25,5 @@ struct AccountView: View {
 }
 
 #Preview {
-    AccountView()
+    ProfileScreen()
 }
