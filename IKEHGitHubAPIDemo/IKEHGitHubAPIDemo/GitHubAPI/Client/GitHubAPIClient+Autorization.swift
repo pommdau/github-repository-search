@@ -13,6 +13,24 @@ import HTTPTypesFoundation
 // MARK: - Token
 
 extension GitHubAPIClient {
+    
+    /// 初回ログイン時のトークン取得
+    func fetchInitialToken(sessionCode: String) async throws {
+        let request = GitHubAPIRequest.FetchInitialToken(clientID: GitHubAPIClient.PrivateConstant.clientID,
+                                                         clientSecret: GitHubAPIClient.PrivateConstant.clientSecret,
+                                                         sessionCode: sessionCode)
+        
+        let currentTime = Date()
+        let response = try await self.oauthRequest(with: request)
+
+        await tokenStore.set(
+            accessToken: response.accessToken,
+            refreshToken: response.refreshToken,
+            accessTokenExpiresAt: currentTime.addingExpirationInterval(response.accessTokenExpiresIn),
+            refreshTokenExpiresAt: currentTime.addingExpirationInterval(response.refreshTokenExpiresIn)
+        )
+    }
+    
     /// アクセストークンの更新
     /// - Parameter forceUpdate: 更新を強制する
     func updateAccessTokenIfNeeded(forceUpdate: Bool = false) async throws {

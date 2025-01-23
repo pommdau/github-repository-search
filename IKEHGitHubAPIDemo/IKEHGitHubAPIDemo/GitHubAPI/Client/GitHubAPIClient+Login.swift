@@ -59,22 +59,5 @@ extension GitHubAPIClient {
         }
         
         return sessionCode // 初回認証時にのみ利用する一時的なcode
-    }
-    
-    /// 初回ログイン時のトークン取得
-    func fetchInitialToken(sessionCode: String) async throws {
-        let request = GitHubAPIRequest.FetchInitialToken(clientID: GitHubAPIClient.PrivateConstant.clientID,
-                                                         clientSecret: GitHubAPIClient.PrivateConstant.clientSecret,
-                                                         sessionCode: sessionCode)
-        
-        let currentTime = Date()
-        let response = try await self.oauthRequest(with: request)
-
-        await tokenStore.set(
-            accessToken: response.accessToken,
-            refreshToken: response.refreshToken,
-            accessTokenExpiresAt: currentTime.addingExpirationInterval(response.accessTokenExpiresIn),
-            refreshTokenExpiresAt: currentTime.addingExpirationInterval(response.refreshTokenExpiresIn)
-        )
-    }
+    }    
 }

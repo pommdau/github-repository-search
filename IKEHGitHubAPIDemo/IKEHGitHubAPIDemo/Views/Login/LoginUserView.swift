@@ -9,44 +9,53 @@ import SwiftUI
 
 struct LoginUserView: View {
     
-    let loginUser: LoginUser
+    let gitHubAPIClient: GitHubAPIClient
     let loginUserStore: LoginUserStore
     
-    let gitHubAPIClient: GitHubAPIClient
-    
-    init(gitHubAPIClient: GitHubAPIClient = .shared, loginUser: LoginUser, loginUserStore: LoginUserStore = .shared) {
+    init(gitHubAPIClient: GitHubAPIClient = .shared,
+         loginUserStore: LoginUserStore = .shared) {
         self.gitHubAPIClient = gitHubAPIClient
-        self.loginUser = loginUser
         self.loginUserStore = loginUserStore
     }
     
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            logoutButton()
+        }
+        .padding(.vertical, 20)
+    }
+    
+    @ViewBuilder
+    private func logoutButton() -> some View {
+        Button("Log out") {
+            Task {
+                do {
+                    try await gitHubAPIClient.logout()
+                } catch {
+                    print(error.localizedDescription)
+                }
+                do {
+//                    await loginUserStore.logOutUser()
+                }
+            }
+        }
+        .buttonStyle(LogOutButtonStyle())
+    }
+}
+
+struct LoginUserSection: View {
+    
+    let loginUser: LoginUser
+        
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             userLabel()
             locationAndTwitterLabel()
             followLabel()
                 .padding(.bottom, 60)
-
-            Button("Log out") {
-                Task {
-                    do {
-                        try await gitHubAPIClient.logout()
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                    
-                    do {
-                        await loginUserStore.logOutUser()
-                    }
-                }
-            }
-            .buttonStyle(LogOutButtonStyle())
         }
-        .padding(.vertical, 20)
-    }
-}
 
-extension LoginUserView {
+    }
         
     @ViewBuilder
     private func userImage() -> some View {
@@ -133,10 +142,13 @@ extension LoginUserView {
             Text("following")
                 .foregroundStyle(.secondary)
         }
-        
     }
 }
 
 #Preview {
-    LoginUserView(loginUser: LoginUser.sampleData())
+    LoginUserSection(loginUser: LoginUser.sampleData())
 }
+
+//#Preview {
+//    LoginUserView(loginUser: LoginUser.sampleData())
+//}

@@ -10,7 +10,7 @@ import HTTPTypes
 
 // MARK: - 検索タイプ
 
-extension GitHubAPIRequest.NewSearchRequest {
+extension GitHubAPIRequest.SearchReposRequest {
     // Webの検索を参考に
     // https://github.com/search?q=Swift&type=repositories
     enum SortBy: String, CaseIterable, Identifiable, Equatable {
@@ -72,8 +72,8 @@ extension GitHubAPIRequest.NewSearchRequest {
 }
 
 extension GitHubAPIRequest {
-    struct NewSearchRequest {
-        // これをProtocolに切り出しても良い
+    struct SearchReposRequest {
+        // TODO: Protocolに切り出しても良いかも
         var accessToken: String?
         var query: String
         var page: Int?
@@ -82,7 +82,7 @@ extension GitHubAPIRequest {
     }
 }
 
-extension GitHubAPIRequest.NewSearchRequest : GitHubAPIRequestProtocol {
+extension GitHubAPIRequest.SearchReposRequest : GitHubAPIRequestProtocol {
 
     typealias Response = SearchResponse<Repo>
     

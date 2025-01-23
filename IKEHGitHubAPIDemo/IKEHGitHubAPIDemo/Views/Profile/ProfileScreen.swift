@@ -7,17 +7,28 @@
 
 import SwiftUI
 
-struct ProfileScreen: View {
-    
+@MainActor @Observable
+final class ProfileScreenViewState {
+
     let loginUserStore: LoginUserStore
+    
+    var loginUser: LoginUser? {
+        loginUserStore.loginUser
+    }
     
     init(loginUserStore: LoginUserStore = .shared) {
         self.loginUserStore = loginUserStore
     }
+}
+
+struct ProfileScreen: View {
+    
+    @State private var viewState: ProfileScreenViewState = .init()
     
     var body: some View {
-        if let loginUser = loginUserStore.loginUser {
-            LoginUserView(loginUser: loginUser)
+        LoginView()
+        if viewState.loginUser != nil {
+            LoginUserView()
         } else {
             LoginView()
         }

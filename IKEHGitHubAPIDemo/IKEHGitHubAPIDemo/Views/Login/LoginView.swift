@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+
+
 struct LoginView: View {
     
     private let gitHubAPIClient: GitHubAPIClient
@@ -43,7 +45,8 @@ struct LoginView: View {
                 do {
                     try await gitHubAPIClient.fetchInitialToken(sessionCode: sessionCode)
                     print("ログイン成功！")
-                    try await loginUserStore.fetchLoginUser()
+                    let loginUser = try await gitHubAPIClient.fetchLoginUser()
+                    loginUserStore.loginUser = loginUser
                 } catch {
                     print(error.localizedDescription)
                 }
