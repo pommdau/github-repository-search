@@ -9,12 +9,15 @@ import SwiftUI
 
 struct LoginUserView: View {
     
-    let user = LoginUser.sampleData()
+    let loginUser: LoginUser
+    let loginUserStore: LoginUserStore
     
     let gitHubAPIClient: GitHubAPIClient
     
-    init(gitHubAPIClient: GitHubAPIClient = .shared) {
+    init(gitHubAPIClient: GitHubAPIClient = .shared, loginUser: LoginUser, loginUserStore: LoginUserStore = .shared) {
         self.gitHubAPIClient = gitHubAPIClient
+        self.loginUser = loginUser
+        self.loginUserStore = loginUserStore
     }
     
     var body: some View {
@@ -31,6 +34,10 @@ struct LoginUserView: View {
                     } catch {
                         print(error.localizedDescription)
                     }
+                    
+                    do {
+                        await loginUserStore.logOutUser()
+                    }
                 }
             }
             .buttonStyle(LogOutButtonStyle())
@@ -43,7 +50,7 @@ extension LoginUserView {
         
     @ViewBuilder
     private func userImage() -> some View {
-        AsyncImage(url: URL(string: user.avatarURL),
+        AsyncImage(url: URL(string: loginUser.avatarURL),
                    content: { image in
             image.resizable()
         }, placeholder: {
@@ -65,9 +72,9 @@ extension LoginUserView {
         HStack {
             userImage()
             VStack(alignment: .leading) {
-                Text(user.name ?? "")
+                Text(loginUser.name ?? "")
                     .font(.title)
-                Text(user.login)
+                Text(loginUser.login)
                     .font(.title2)
                     .foregroundStyle(.secondary)
             }
@@ -78,7 +85,7 @@ extension LoginUserView {
     @ViewBuilder
     private func locationAndTwitterLabel() -> some View {
         HStack {
-            if let location = user.location {
+            if let location = loginUser.location {
                 HStack(spacing: 0) {
                     Image(systemName: "mappin")
                         .scaledToFit()
@@ -89,8 +96,8 @@ extension LoginUserView {
                 .padding(.trailing, 10)
             }
             
-            if let twitterUsername = user.twitterUsername,
-               let twitterURL = user.twitterURL {
+            if let twitterUsername = loginUser.twitterUsername,
+               let twitterURL = loginUser.twitterURL {
                 HStack(spacing: 2) {
                     Text("X(Twitter)")
                         .foregroundStyle(.secondary)
@@ -114,13 +121,13 @@ extension LoginUserView {
                 .scaledToFit()
                 .frame(width: 20)
                 .foregroundStyle(.secondary)
-            Text("\(user.followers)")
+            Text("\(loginUser.followers)")
                 .bold()
             Text("followers")
                 .foregroundStyle(.secondary)
             Text("・")
                 .foregroundStyle(.secondary)
-            Text("\(user.following)")
+            Text("\(loginUser.following)")
                 .bold()
             Text("following")
                 .foregroundStyle(.secondary)
@@ -130,5 +137,5 @@ extension LoginUserView {
 }
 
 #Preview {
-    LoginUserView()
+    LoginUserView(loginUser: LoginUser.sampleData())
 }

@@ -10,9 +10,14 @@ import SwiftUI
 struct LoginView: View {
     
     private let gitHubAPIClient: GitHubAPIClient
+    private let loginUserStore: LoginUserStore
     
-    init(gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared) {
+    init(
+        gitHubAPIClient: GitHubAPIClient = .shared,
+        loginUserStore: LoginUserStore = .shared
+    ) {
         self.gitHubAPIClient = gitHubAPIClient
+        self.loginUserStore = loginUserStore
     }
     
     var body: some View {
@@ -39,6 +44,7 @@ struct LoginView: View {
                 do {
                     try await gitHubAPIClient.fetchFirstToken(sessionCode: sessionCode)
                     print("ログイン成功！")
+                    try await loginUserStore.fetchLoginUser()
                 } catch {
                     print(error.localizedDescription)
                 }
@@ -58,7 +64,7 @@ extension LoginView {
                     print(error.localizedDescription)
                 }
             }
-        }       
+        }
         .buttonStyle(LogInButtonStyle())
         .padding(.bottom, 8)
     }

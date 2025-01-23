@@ -12,8 +12,8 @@ struct IKEHGitHubAPIDemoApp: App {
     var body: some Scene {
         WindowGroup {
 //            SearchScreen()
-            LoginDebugView()
-//            RootTabView()
+//            LoginDebugView()
+            RootTabView()
 //            LoginUserView()
         }
     }

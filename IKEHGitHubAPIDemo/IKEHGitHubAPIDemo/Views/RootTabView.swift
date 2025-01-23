@@ -14,7 +14,7 @@ struct RootTabView: View {
         
     var body: some View {
         TabView(selection: $selectedTab) {
-            LoginView()
+            AccountView()
                 .tabItem {
                     Label("Account", systemImage: "person.crop.circle.fill")
                 }
