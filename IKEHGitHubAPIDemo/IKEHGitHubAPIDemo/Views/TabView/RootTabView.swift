@@ -17,7 +17,7 @@ struct RootTabView: View {
             Tab("Profile", systemImage: "person.crop.circle.fill", value: 0) {
                 ProfileScreen()
             }
-            
+
             Tab("Search", systemImage: "magnifyingglass", value: 1) {
                 SearchScreen()
             }

@@ -12,8 +12,6 @@ import SwiftUI
 @Observable
 final class SearchScreenViewState {
     var searchText: String = "Swift"
-//    var searchType: SearchType = .user
-    
     var sortedBy: GitHubAPIRequest.NewSearchRequest.SortBy = .bestMatch
     
     private(set) var asyncRepos: AsyncValues<Repo, Error> = .initial
@@ -56,15 +54,7 @@ final class SearchScreenViewState {
             }
         }
     }
-    
-    func searchRepos() {
-        
-    }
-    
-    func searchUsers() {
-        
-    }
-    
+
     func handleSearchMore() {
         
         // 他でダウンロード処理中であればキャンセル
@@ -103,5 +93,40 @@ final class SearchScreenViewState {
     func cancelSearching() {
         searchTask?.cancel()
         searchTask = nil
+    }
+    
+    func handleSortedByChanged() {
+        
+        // 検索済み以外は何もしない
+        // 有効な検索結果がなければ何もしない
+        // リンク情報がなければ何もしない(TODO: 見直せるかも)
+        guard case .loaded = asyncRepos,
+              !asyncRepos.values.isEmpty,
+              let nextLink = relationLink?.next
+        else {
+            return
+        }
+
+        asyncRepos = .loading(asyncRepos.values)
+        searchTask = Task {
+            do {
+                let response = try await GitHubAPIClient.shared.searchRepos(searchText: nextLink.searchText, sortedBy: sortedBy)
+                withAnimation {
+                    asyncRepos = .loaded(response.items)
+                }
+                relationLink = response.relationLink
+            } catch {
+                if Task.isCancelled {
+                    if asyncRepos.values.isEmpty {
+                        asyncRepos = .initial
+                    } else {
+                        asyncRepos = .loaded(asyncRepos.values)
+                    }
+                } else {
+                    asyncRepos = .error(error, asyncRepos.values)
+                    print(error.localizedDescription)
+                }
+            }
+        }
     }
 }

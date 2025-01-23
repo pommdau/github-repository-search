@@ -34,6 +34,9 @@ struct SearchScreen: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
+                        .onChange(of: viewState.sortedBy) { _, _ in
+                            viewState.handleSortedByChanged()
+                        }
                     } label: {
                         Image(systemName: "arrow.up.arrow.down")
                     }

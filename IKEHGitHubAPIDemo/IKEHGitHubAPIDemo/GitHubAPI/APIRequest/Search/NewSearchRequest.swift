@@ -13,7 +13,7 @@ import HTTPTypes
 extension GitHubAPIRequest.NewSearchRequest {
     // Webの検索を参考に
     // https://github.com/search?q=Swift&type=repositories
-    enum SortBy: String, CaseIterable, Identifiable {
+    enum SortBy: String, CaseIterable, Identifiable, Equatable {
         case bestMatch
         case mostStars
         case fewestStars
