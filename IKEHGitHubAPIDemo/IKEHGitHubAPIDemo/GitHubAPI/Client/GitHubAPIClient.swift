@@ -28,9 +28,13 @@ extension GitHubAPIClient {
     func searchRepos(searchText: String, page: Int? = nil) async throws -> SearchResponse<Repo> {
 //        try? await Task.sleep(nanoseconds: 3_000_000_000)
         try await updateAccessTokenIfNeeded()
-        let request = await GitHubAPIRequest.Search.Repos(accessToken: tokenStore.accessToken,
-                                                          query: searchText,
-                                                          page: page)
+        let request = await GitHubAPIRequest.NewSearchRequest<Repo>(
+            searchType: .repo,
+            accessToken: tokenStore.accessToken,
+            query: searchText,
+            page: page,
+            perPage: 10
+        )
         let response: SearchResponse<Repo> = try await searchRequest(with: request)
         return response
     }
