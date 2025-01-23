@@ -10,7 +10,6 @@ import SwiftUI
 struct SearchScreen: View {
     
     @State private var viewState = SearchScreenViewState()
-    @State private var selectionColor: Color = .red
 
     var body: some View {
         NavigationStack {
@@ -18,7 +17,7 @@ struct SearchScreen: View {
             SearchResultView(
                 asyncRepos: viewState.asyncRepos,
                 cancelSearching: {
-                    viewState.cancelSearching()
+                    viewState.cancelSearch()
                 },
                 bottomCellOnAppear: { _ in
                     // 一番下のセルが表示された場合
@@ -48,6 +47,11 @@ struct SearchScreen: View {
             viewState.handleSearch()
         }
         .onAppear() {
+        }
+        .alert("エラー", isPresented: $viewState.showAlert) {
+            Button("OK") { }
+        } message: {
+            Text(viewState.alertError?.localizedDescription ?? "(不明なエラー)")
         }
     }
     

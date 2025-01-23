@@ -8,16 +8,42 @@
 import Foundation
 import SwiftUI
 
-@MainActor
-@Observable
+@MainActor @Observable
 final class SearchScreenViewState {
+    
+    // MARK: - Property
+    
+    // MARK: 検索条件
+    
     var searchText: String = "Swift"
     var sortedBy: GitHubAPIRequest.SearchReposRequest.SortBy = .bestMatch
     
+    // MARK: 検索結果
+    
     private(set) var asyncRepos: AsyncValues<Repo, Error> = .initial
     private var relationLink: RelationLink?
+    
+    // エラー表示
+    var alertError: Error?
+    var showAlert = false
+    
+    // MARK: その他
+    
     private(set) var searchTask: Task<(), Never>?
+        
+    let gitHubAPIClient: GitHubAPIClient
+    let loginUserStore: LoginUserStore
+    
+    // MARK: - LifeCycle
+    
+    init(gitHubAPIClient: GitHubAPIClient = .shared,
+         loginUserStore: LoginUserStore = .shared) {
+        self.gitHubAPIClient = gitHubAPIClient
+        self.loginUserStore = loginUserStore
+    }
 }
+
+// MARK: - Search
 
 extension SearchScreenViewState {
     
@@ -39,12 +65,14 @@ extension SearchScreenViewState {
         
         searchTask = Task {
             do {
-                let response = try await GitHubAPIClient.shared.searchRepos(searchText: searchText, sortedBy: sortedBy)
+                // 検索に成功
+                let response = try await gitHubAPIClient.searchRepos(searchText: searchText, sortedBy: sortedBy)
                 withAnimation {
                     asyncRepos = .loaded(response.items)
                 }
                 relationLink = response.relationLink
             } catch {
+                // 検索に失敗
                 if Task.isCancelled {
                     if asyncRepos.values.isEmpty {
                         asyncRepos = .initial
@@ -54,6 +82,8 @@ extension SearchScreenViewState {
                 } else {
                     asyncRepos = .error(error, asyncRepos.values)
                     print(error.localizedDescription)
+                    alertError = error
+                    showAlert = true
                 }
             }
         }
@@ -79,28 +109,26 @@ extension SearchScreenViewState {
         asyncRepos = .loadingMore(asyncRepos.values)
         searchTask = Task {
             do {
-                let response = try await GitHubAPIClient.shared.searchRepos(searchText: nextLink.searchText, page: nextLink.page)
+                // 検索に成功
+                let response = try await gitHubAPIClient.searchRepos(searchText: nextLink.searchText, page: nextLink.page)
                 withAnimation {
                     asyncRepos = .loaded(asyncRepos.values + response.items)
                 }
                 relationLink = response.relationLink
             } catch {
+                // 検索に失敗
                 if Task.isCancelled {
                     asyncRepos = .loaded(asyncRepos.values)
                 } else {
                     asyncRepos = .error(error, asyncRepos.values)
                     print(error.localizedDescription)
+                    alertError = error
+                    showAlert = true
                 }
             }
         }
     }
-    
-    /// 現在の検索の中断
-    func cancelSearching() {
-        searchTask?.cancel()
-        searchTask = nil
-    }
-    
+        
     /// ソート順が変更された際の再検索
     func handleSortedByChanged() {
         
@@ -117,7 +145,7 @@ extension SearchScreenViewState {
         asyncRepos = .loading(asyncRepos.values)
         searchTask = Task {
             do {
-                let response = try await GitHubAPIClient.shared.searchRepos(searchText: nextLink.searchText, sortedBy: sortedBy)
+                let response = try await gitHubAPIClient.searchRepos(searchText: nextLink.searchText, sortedBy: sortedBy)
                 withAnimation {
                     asyncRepos = .loaded(response.items)
                 }
@@ -132,8 +160,20 @@ extension SearchScreenViewState {
                 } else {
                     asyncRepos = .error(error, asyncRepos.values)
                     print(error.localizedDescription)
+                    alertError = error
+                    showAlert = true
                 }
             }
         }
+    }
+}
+
+// MARK: - Cancel Search
+
+extension SearchScreenViewState {
+    /// 現在の検索の中断
+    func cancelSearch() {
+        searchTask?.cancel()
+        searchTask = nil
     }
 }

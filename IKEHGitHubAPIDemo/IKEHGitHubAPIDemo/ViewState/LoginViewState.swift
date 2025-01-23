@@ -13,7 +13,7 @@ final class LoginViewState {
     let gitHubAPIClient: GitHubAPIClient
     let loginUserStore: LoginUserStore
     
-    // Error
+    // エラー表示
     var showAlert = false
     var alertError: Error?
     
@@ -31,8 +31,8 @@ final class LoginViewState {
                 try await gitHubAPIClient.openLoginPageInBrowser()
             } catch {
                 print(error.localizedDescription)
-                showAlert = true
                 alertError = error
+                showAlert = true
             }
         }
     }
@@ -47,9 +47,8 @@ final class LoginViewState {
                 loginUserStore.save(loginUser)
             } catch {
                 print(error.localizedDescription)
-                showAlert = true
                 alertError = error
-                
+                showAlert = true                
             }
         }
     }
