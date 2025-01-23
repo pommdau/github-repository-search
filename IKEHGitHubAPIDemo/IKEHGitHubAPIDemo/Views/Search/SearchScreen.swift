@@ -28,7 +28,7 @@ struct SearchScreen: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
                         Picker("Sorted By", selection: $viewState.sortedBy) {
-                            ForEach(GitHubAPIRequest.NewSearchRequest.SortBy.allCases) { type in
+                            ForEach(GitHubAPIRequest.SearchReposRequest.SortBy.allCases) { type in
                                 /// 選択項目の一覧
                                 Text(type.title).tag(type)
                                     .frame(maxWidth: .infinity, alignment: .leading)

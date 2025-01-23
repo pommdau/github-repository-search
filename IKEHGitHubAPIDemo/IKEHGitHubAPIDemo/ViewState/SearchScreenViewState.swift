@@ -12,7 +12,7 @@ import SwiftUI
 @Observable
 final class SearchScreenViewState {
     var searchText: String = "Swift"
-    var sortedBy: GitHubAPIRequest.NewSearchRequest.SortBy = .bestMatch
+    var sortedBy: GitHubAPIRequest.SearchReposRequest.SortBy = .bestMatch
     
     private(set) var asyncRepos: AsyncValues<Repo, Error> = .initial
     private var relationLink: RelationLink?

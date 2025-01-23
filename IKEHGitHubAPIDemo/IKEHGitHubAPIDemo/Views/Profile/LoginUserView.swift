@@ -9,15 +9,10 @@ import SwiftUI
 
 struct LoginUserView: View {
     
-    let loginUser: LoginUser
-    let loginUserStore: LoginUserStore
+    @State private var viewState: LoginUserViewState
     
-    let gitHubAPIClient: GitHubAPIClient
-    
-    init(gitHubAPIClient: GitHubAPIClient = .shared, loginUser: LoginUser, loginUserStore: LoginUserStore = .shared) {
-        self.gitHubAPIClient = gitHubAPIClient
-        self.loginUser = loginUser
-        self.loginUserStore = loginUserStore
+    init(loginUser: LoginUser) {
+        _viewState = .init(wrappedValue: LoginUserViewState(loginUser: loginUser))
     }
     
     var body: some View {
@@ -26,31 +21,23 @@ struct LoginUserView: View {
             locationAndTwitterLabel()
             followLabel()
                 .padding(.bottom, 60)
-
-            Button("Log out") {
-                Task {
-                    do {
-                        try await gitHubAPIClient.logout()
-                    } catch {
-                        print(error.localizedDescription)
-                    }
-                    
-                    do {
-                        await loginUserStore.logOutUser()
-                    }
-                }
-            }
-            .buttonStyle(LogOutButtonStyle())
+            
+            logoutButton()
         }
         .padding(.vertical, 20)
-    }
-}
+        .alert("エラー", isPresented: $viewState.showAlert) {
+            Button("OK") { }
+        } message: {
+            Text(viewState.alertError?.localizedDescription ?? "(不明なエラー)")
+        }
 
-extension LoginUserView {
-        
+    }
+    
+    // MARK: - View Parts
+    
     @ViewBuilder
     private func userImage() -> some View {
-        AsyncImage(url: URL(string: loginUser.avatarURL),
+        AsyncImage(url: URL(string: viewState.loginUser.avatarURL),
                    content: { image in
             image.resizable()
         }, placeholder: {
@@ -72,21 +59,20 @@ extension LoginUserView {
         HStack {
             userImage()
             VStack(alignment: .leading) {
-                Text(loginUser.name ?? "")
+                Text(viewState.loginUser.name ?? "")
                     .font(.title)
                     .bold()
-                Text(loginUser.login)
+                Text(viewState.loginUser.login)
                     .font(.title2)
                     .foregroundStyle(.secondary)
             }
         }
     }
     
-    
     @ViewBuilder
     private func locationAndTwitterLabel() -> some View {
         HStack {
-            if let location = loginUser.location {
+            if let location = viewState.loginUser.location {
                 HStack(spacing: 0) {
                     Image(systemName: "mappin")
                         .scaledToFit()
@@ -97,8 +83,8 @@ extension LoginUserView {
                 .padding(.trailing, 10)
             }
             
-            if let twitterUsername = loginUser.twitterUsername,
-               let twitterURL = loginUser.twitterURL {
+            if let twitterUsername = viewState.loginUser.twitterUsername,
+               let twitterURL = viewState.loginUser.twitterURL {
                 HStack(spacing: 2) {
                     Text("X(Twitter)")
                         .foregroundStyle(.secondary)
@@ -122,20 +108,29 @@ extension LoginUserView {
                 .scaledToFit()
                 .frame(width: 20)
                 .foregroundStyle(.secondary)
-            Text("\(loginUser.followers)")
+            Text("\(viewState.loginUser.followers)")
                 .bold()
             Text("followers")
                 .foregroundStyle(.secondary)
             Text("・")
                 .foregroundStyle(.secondary)
-            Text("\(loginUser.following)")
+            Text("\(viewState.loginUser.following)")
                 .bold()
             Text("following")
                 .foregroundStyle(.secondary)
         }
-        
+    }
+    
+    @ViewBuilder
+    private func logoutButton() -> some View {
+        Button("Log out") {
+            viewState.handleLogOutButtonTapped()
+        }
+        .buttonStyle(LogOutButtonStyle())
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     LoginUserView(loginUser: LoginUser.sampleData())
