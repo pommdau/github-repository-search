@@ -9,7 +9,7 @@
 import Foundation
 
 // アーキテクチャのRepositoryと区別するためRepoの名称を使う
-struct Repo: Sendable, Identifiable, Decodable, Equatable {
+struct Repo: Sendable, Identifiable, Codable, Equatable {
     
     private enum CodingKeys: String, CodingKey {
         case id
