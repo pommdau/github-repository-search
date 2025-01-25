@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct User: Identifiable, Equatable, Sendable & Decodable {
+struct User: Identifiable, Equatable, Sendable, Codable {
     
     private enum CodingKeys: String, CodingKey {
         case id
