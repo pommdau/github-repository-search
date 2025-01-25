@@ -53,17 +53,23 @@ struct StarredRepoView: View {
     @State private var viewState: StarredRepoViewState = .init()
     
     var body: some View {
-        List {
-            Button("Add") {
-                viewState.handleAddButtonTapped()
-            }
-            
-            Button("Delete All") {
-                viewState.handleDeleteButtonTapped()
-            }
-            
-            ForEach(viewState.repos) { repo in
-                Text(repo.fullName)
+        NavigationStack {
+            List {
+                Button("Add") {
+                    viewState.handleAddButtonTapped()
+                }
+                
+                Button("Delete All") {
+                    viewState.handleDeleteButtonTapped()
+                }
+                
+                ForEach(viewState.repos) { repo in
+                    NavigationLink {
+                        RepoDetailsView(repo: repo)
+                    } label: {
+                        RepoCell(repo: repo)
+                    }
+                }
             }
         }
     }

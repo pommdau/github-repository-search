@@ -9,13 +9,25 @@ import Foundation
 import SwiftUI
 import KeychainAccess
 
+enum KeychainConstant {
+    
+    enum Service {
+        static let oauth = "com.ikehgithubapi.oauth"
+    }
+    
+    enum Key {
+        static let accessToken = "ikehgithubapi-access-token"
+        static let refreshToken = "ikehgithubapi-refresh-token"
+    }
+}
+
 final actor TokenStore {
     
     static let shared: TokenStore = .init()
     
     // MARK: - Property
     
-    let keychain = Keychain(service: "com.ikehgithubapi.oauth")
+    let keychain = Keychain(service: KeychainConstant.Service.oauth)
     
     // 最新のログインセッションID
     @MainActor
@@ -24,13 +36,13 @@ final actor TokenStore {
 
     var accessToken: String? {
         didSet {
-            keychain["ikehgithubapi-access-token"] = accessToken
+            keychain[KeychainConstant.Key.accessToken] = accessToken
         }
     }
     
     var refreshToken: String? {
         didSet {
-            keychain["ikehgithubapi-refresh-token"] = accessToken
+            keychain[KeychainConstant.Key.refreshToken] = refreshToken
         }
     }
     
@@ -69,8 +81,10 @@ final actor TokenStore {
     
     private init() {
         // 保存されている値の読込
-        self.accessToken = keychain["ikehgithubapi-access-token"]
-        self.refreshToken = keychain["ikehgithubapi-refresh-token"]
+        self.accessToken = keychain[KeychainConstant.Key.accessToken]
+        self.refreshToken = keychain[KeychainConstant.Key.refreshToken]
+        print(accessToken, refreshToken)
+        print("stop")
     }
 }
 

@@ -1,16 +1,17 @@
 //
-//  NewSearchRequest.swift
+//  GitHubAPIRequest+Star.swift
 //  IKEHGitHubAPIDemo
 //
-//  Created by HIROKI IKEUCHI on 2025/01/23.
+//  Created by HIROKI IKEUCHI on 2025/01/22.
 //
 
 import Foundation
 import HTTPTypes
 
 extension GitHubAPIRequest {
-    struct SearchReposRequest {
+    struct StarredReposRequest {
         // TODO: Protocolに切り出しても良いかも
+        var userName: String
         var accessToken: String?
         var query: String
         var page: Int?
@@ -21,7 +22,7 @@ extension GitHubAPIRequest {
 
 // MARK: - 検索タイプ
 
-extension GitHubAPIRequest.SearchReposRequest {
+extension GitHubAPIRequest.StarredReposRequest {
     // Webの検索を参考に
     // https://github.com/search?q=Swift&type=repositories
     enum SortBy: String, CaseIterable, Identifiable, Equatable {
@@ -82,7 +83,7 @@ extension GitHubAPIRequest.SearchReposRequest {
     }
 }
 
-extension GitHubAPIRequest.SearchReposRequest : GitHubAPIRequestProtocol {
+extension GitHubAPIRequest.StarredReposRequest : GitHubAPIRequestProtocol {
 
     typealias Response = SearchResponse<Repo>
     
@@ -91,11 +92,11 @@ extension GitHubAPIRequest.SearchReposRequest : GitHubAPIRequestProtocol {
     }
     
     var baseURL: URL? {
-        URL(string: "https://api.github.com/search")
+        URL(string: "https://api.github.com")
     }
     
     var path: String {
-        "/repositories"
+        "/users/\(userName)/starred"
     }
     
     var queryItems: [URLQueryItem] {

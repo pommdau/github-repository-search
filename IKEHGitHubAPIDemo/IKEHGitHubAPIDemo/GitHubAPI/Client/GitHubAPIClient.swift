@@ -57,7 +57,7 @@ extension GitHubAPIClient {
             accessToken: tokenStore.accessToken,
             query: searchText,
             page: page,
-            perPage: 10,
+            perPage: 3,
             sortedBy: sortedBy
         )
         let response: SearchResponse<Repo> = try await searchRequest(with: request)

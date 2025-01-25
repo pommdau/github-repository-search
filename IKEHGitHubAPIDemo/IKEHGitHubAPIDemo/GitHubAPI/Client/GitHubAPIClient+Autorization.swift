@@ -53,8 +53,7 @@ extension GitHubAPIClient {
                                                          clientSecret: GitHubAPIClient.PrivateConstant.clientSecret,
                                                          refreshToken: refreshToken)
         let response = try await self.oauthRequest(with: request)
-        
-        // プロパティに結果を保存
+                
         await tokenStore.set(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
