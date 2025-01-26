@@ -52,6 +52,60 @@ extension GitHubAPIClient {
 
 extension GitHubAPIClient {
     
+    // MARK: - Debugging
+    
+    private func sendRequest<Request: GitHubAPIRequestProtocol>(with request: Request) async throws -> Request.Response {
+        // リクエストの作成
+        guard let httpRequest = request.buildHTTPRequest() else {
+            throw GitHubAPIClientError.invalidRequest
+        }
+        print(httpRequest)
+        // リクエストの送信
+        let (data, httpResponse): (Data, HTTPResponse)
+        do {
+            if let body = request.body {
+                (data, httpResponse) = try await urlSession.upload(for: httpRequest, from: body)
+            } else {
+                (data, httpResponse) = try await urlSession.data(for: httpRequest)
+            }
+        } catch {
+            throw GitHubAPIClientError.connectionError(error)
+        }
+        
+        try checkResponseDefault(data: data, httpResponse: httpResponse)
+        
+        var response: Request.Response
+        do {
+            response = try JSONDecoder().decode(Request.Response.self, from: data)
+        } catch {
+            print(String(data: data, encoding: .utf8)!)
+            throw GitHubAPIClientError.responseParseError(error)
+        }
+            
+        // ヘッダにページング情報があれば返り値に追加
+        if var response = response as? ResponseWithRelationLink,
+           let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
+            response.relationLink = RelationLink.create(rawValue: link.value)
+            return response as! Request.Response
+        } else {
+            return response
+        }
+    }
+    
+    private func attachRelationLink<Response>(to response: Response, from httpResponse: HTTPResponse) throws -> Response {
+        if var responseWithRelationLink = response as? ResponseWithRelationLink,
+           let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
+            // Responseにページング情報を付与
+            responseWithRelationLink.relationLink = RelationLink.create(rawValue: link.value)
+            guard let responseWithRelationLink = (responseWithRelationLink as? Response) else {
+                throw GitHubAPIClientError.responseParseError(MessageError(description: "ページング情報の取得に失敗しました"))
+            }
+            return responseWithRelationLink
+        } else {
+            return response
+        }
+    }
+    
     // MARK: Send Request
     
     private func sendRequest<Request: GitHubAPIRequestProtocol>(with request: Request) async throws -> (Data, HTTPResponse) {
@@ -71,6 +125,8 @@ extension GitHubAPIClient {
         } catch {
             throw GitHubAPIClientError.connectionError(error)
         }
+        
+        
                 
         return (data, httpResponse)
     }
@@ -123,7 +179,7 @@ extension GitHubAPIClient {
         } catch {
             throw GitHubAPIClientError.responseParseError(error)
         }
-        
+                
         return response
     }
     
@@ -136,7 +192,7 @@ extension GitHubAPIClient {
             print(String(data: data, encoding: .utf8)!)
             throw GitHubAPIClientError.responseParseError(error)
         }
-        
+            
         // ヘッダにページング情報があれば返り値に追加
         if let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
             response.relationLink = RelationLink.create(rawValue: link.value)
