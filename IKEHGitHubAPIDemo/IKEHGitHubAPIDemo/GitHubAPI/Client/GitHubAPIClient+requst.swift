@@ -38,6 +38,14 @@ extension GitHubAPIClient {
         let response: SearchResponse<Item> = try decodeResponse(data: data, httpResponse: httpResponse)
         return response
     }
+    
+    func starredRepoRequest<Request>(with request: Request) async throws
+    -> ListResponse<Repo> where Request: GitHubAPIRequestProtocol {
+        let (data, httpResponse) = try await sendRequest(with: request)
+        try checkResponseDefault(data: data, httpResponse: httpResponse)
+        let response: ListResponse<Repo> = try decodeResponse(data: data, httpResponse: httpResponse)
+        return response
+    }
 }
 
 // MARK: - Helpers
@@ -124,6 +132,25 @@ extension GitHubAPIClient {
         var response: SearchResponse<Item>
         do {
             response = try JSONDecoder().decode(SearchResponse<Item>.self, from: data)
+        } catch {
+            print(String(data: data, encoding: .utf8)!)
+            throw GitHubAPIClientError.responseParseError(error)
+        }
+        
+        // ヘッダにページング情報があれば返り値に追加
+        if let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
+            response.relationLink = RelationLink.create(rawValue: link.value)
+        }
+        
+        return response
+    }
+    
+    /// TODO: 結合
+    /// レスポンスのデータをDTOへデコード(スター用)
+    private func decodeResponse(data: Data, httpResponse: HTTPResponse) throws -> ListResponse<Repo> {
+        var response: ListResponse<Repo>
+        do {
+            response = try JSONDecoder().decode(ListResponse<Repo>.self, from: data)
         } catch {
             print(String(data: data, encoding: .utf8)!)
             throw GitHubAPIClientError.responseParseError(error)

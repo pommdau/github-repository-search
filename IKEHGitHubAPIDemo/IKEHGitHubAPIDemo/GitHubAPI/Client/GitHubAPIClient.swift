@@ -74,4 +74,19 @@ extension GitHubAPIClient {
         let response = try await defaultRequest(with: request)
         return response
     }
+    
+    func fetchStarredRepos(page: Int? = nil, sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy = .recentryStarred) async throws -> ListResponse<Repo> {
+        // ログイン状態であればトークンの更新
+        if await tokenStore.isLoggedIn {
+            try await updateAccessTokenIfNeeded()
+        }
+        
+        let request = await GitHubAPIRequest.StarredReposRequest(
+            userName: "pommdau",
+            accessToken: tokenStore.accessToken
+        )
+        
+        let response: ListResponse<Repo> = try await starredRepoRequest(with: request)
+        return response
+    }
 }

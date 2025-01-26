@@ -13,9 +13,8 @@ extension GitHubAPIRequest {
         // TODO: Protocolに切り出しても良いかも
         var userName: String
         var accessToken: String?
-        var query: String
         var page: Int?
-        var perPage: Int? = 10
+        var perPage: Int? = 1
         var sortedBy: SortBy = .recentryStarred
     }
 }
@@ -85,7 +84,6 @@ extension GitHubAPIRequest.StarredReposRequest : GitHubAPIRequestProtocol {
     
     var queryItems: [URLQueryItem] {
         var queryItems: [URLQueryItem] = []
-        queryItems.append(URLQueryItem(name: "q", value: query))
         
         if let sort = sortedBy.sort {
             queryItems.append(URLQueryItem(name: "sort", value: sort))

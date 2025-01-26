@@ -10,9 +10,11 @@ import SwiftUI
 @MainActor @Observable
 final class StarredRepoViewState {
     
+    let githubAPIClient: GitHubAPIClient
     let starredRepoStore: StarredRepoStore
     
-    init(starredRepoStore: StarredRepoStore) {
+    init(githubAPIClient: GitHubAPIClient = .shared, starredRepoStore: StarredRepoStore) {
+        self.githubAPIClient = githubAPIClient
         self.starredRepoStore = starredRepoStore
     }
     
@@ -22,6 +24,17 @@ final class StarredRepoViewState {
         
     var repos: [Repo] {
         starredRepoStore.values
+    }
+    
+    func handleFetchButtonTapped() {
+        Task {
+            do {
+                let response = try await githubAPIClient.fetchStarredRepos()
+                try await starredRepoStore.addValue(response.items.first!)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
     }
     
     func handleAddButtonTapped() {
@@ -55,6 +68,11 @@ struct StarredRepoView: View {
     var body: some View {
         NavigationStack {
             List {
+                
+                Button("Fetch") {
+                    viewState.handleFetchButtonTapped()
+                }
+                
                 Button("Add") {
                     viewState.handleAddButtonTapped()
                 }
