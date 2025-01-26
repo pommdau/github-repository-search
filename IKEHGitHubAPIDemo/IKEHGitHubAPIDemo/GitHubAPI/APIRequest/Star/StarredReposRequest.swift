@@ -15,43 +15,32 @@ extension GitHubAPIRequest {
         var accessToken: String?
         var query: String
         var page: Int?
-        var perPage: Int? = 3
-        var sortedBy: SortBy = .bestMatch
+        var perPage: Int? = 10
+        var sortedBy: SortBy = .recentryStarred
     }
 }
 
 // MARK: - 検索タイプ
 
 extension GitHubAPIRequest.StarredReposRequest {
-    // Webの検索を参考に
-    // https://github.com/search?q=Swift&type=repositories
     enum SortBy: String, CaseIterable, Identifiable, Equatable {
-        case bestMatch
-        case mostStars
-        case fewestStars
-        case mostForks
-        case fewestForks
-        case recentryUpdated
-        case leastRecentlyUpdated
+        case recentryStarred // クエリで指定しない場合のデフォルト
+        case recentryActive
+        case leastRecentlyStarred
+        case leastRecentlyActive
         
         var id: String { rawValue }
         
         var title: String {
             switch self {
-            case .bestMatch:
-                return "Best match"
-            case .mostStars:
-                return "Most stars"
-            case .fewestStars:
-                return "Fewest stars"
-            case .mostForks:
-                return "Most forks"
-            case .fewestForks:
-                return "Fewest forks"
-            case .recentryUpdated:
-                return "Recently updated"
-            case .leastRecentlyUpdated:
-                return "Least recently updated"
+            case .recentryStarred:
+                return "Recently starred"
+            case .recentryActive:
+                return "Recentrly active"
+            case .leastRecentlyStarred:
+                return "Least recently starred"
+            case .leastRecentlyActive:
+                return "Least recentrly active"
             }
         }
         
@@ -59,24 +48,19 @@ extension GitHubAPIRequest.StarredReposRequest {
         
         var sort: String? {
             switch self {
-            case .bestMatch:
-                return nil
-            case .mostStars, .fewestStars:
-                return "stars"
-            case .mostForks, .fewestForks:
-                return "forks"
-            case .recentryUpdated, .leastRecentlyUpdated:
+            case .recentryStarred, .leastRecentlyStarred: // リポジトリへのスター日時
+                return "created"
+            case .recentryActive, .leastRecentlyActive: // リポジトリへの最終Push日時
                 return "updated"
+                
             }
         }
         
-        var order: String? {
+        var direction: String? {
             switch self {
-            case .bestMatch:
-                return nil
-            case .mostStars, .mostForks, .recentryUpdated:
+            case .recentryStarred, .recentryActive:
                 return "desc"
-            case .fewestStars, .fewestForks, .leastRecentlyUpdated:
+            case .leastRecentlyStarred, .leastRecentlyActive:
                 return "asc"
             }
         }
@@ -85,7 +69,7 @@ extension GitHubAPIRequest.StarredReposRequest {
 
 extension GitHubAPIRequest.StarredReposRequest : GitHubAPIRequestProtocol {
 
-    typealias Response = SearchResponse<Repo>
+    typealias Response = [Repo]
     
     var method: HTTPTypes.HTTPRequest.Method {
         .get
@@ -107,10 +91,9 @@ extension GitHubAPIRequest.StarredReposRequest : GitHubAPIRequestProtocol {
             queryItems.append(URLQueryItem(name: "sort", value: sort))
         }
         
-        if let order = sortedBy.order {
-            queryItems.append(URLQueryItem(name: "order", value: order))
+        if let direction = sortedBy.direction {
+            queryItems.append(URLQueryItem(name: "direction", value: direction))
         }
-        
         if let page {
             queryItems.append(URLQueryItem(name: "page", value: "\(page)"))
         }

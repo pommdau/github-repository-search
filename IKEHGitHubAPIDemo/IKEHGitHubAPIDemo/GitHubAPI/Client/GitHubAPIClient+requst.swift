@@ -19,7 +19,7 @@ extension GitHubAPIClient {
     
     func defaultRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
         let (data, httpResponse) = try await sendRequest(with: request)
-        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
+        try checkResponseDefault(data: data, httpResponse: httpResponse)
         let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
         return response
     }
@@ -34,7 +34,7 @@ extension GitHubAPIClient {
     func searchRequest<Request, Item>(with request: Request) async throws
     -> SearchResponse<Item> where Request: GitHubAPIRequestProtocol, Item: Decodable & Sendable {
         let (data, httpResponse) = try await sendRequest(with: request)
-        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
+        try checkResponseDefault(data: data, httpResponse: httpResponse)
         let response: SearchResponse<Item> = try decodeResponse(data: data, httpResponse: httpResponse)
         return response
     }
@@ -63,9 +63,7 @@ extension GitHubAPIClient {
         } catch {
             throw GitHubAPIClientError.connectionError(error)
         }
-        
-        print(String(data: data, encoding: .utf8)!)
-        
+                
         return (data, httpResponse)
     }
     
