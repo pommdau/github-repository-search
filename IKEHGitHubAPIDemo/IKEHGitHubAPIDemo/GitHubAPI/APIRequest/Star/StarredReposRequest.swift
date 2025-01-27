@@ -68,7 +68,7 @@ extension GitHubAPIRequest.StarredReposRequest {
 
 extension GitHubAPIRequest.StarredReposRequest : GitHubAPIRequestProtocol {
 
-    typealias Response = [Repo]
+    typealias Response = ListResponse<Repo>
     
     var method: HTTPTypes.HTTPRequest.Method {
         .get

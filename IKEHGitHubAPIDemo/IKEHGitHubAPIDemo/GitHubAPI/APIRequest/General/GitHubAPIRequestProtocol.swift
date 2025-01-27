@@ -8,13 +8,22 @@
 import Foundation
 import HTTPTypes
 
+
+enum ResponseFailType {
+    case statusCode // ステータスコードが200番台でなければ失敗
+    case responseBody // レスポンスボディがエラー形式であれば失敗
+}
+
 // MARK: - GitHubAPIRequestProtocol
 
 protocol GitHubAPIRequestProtocol {
     
-    // MARK: Types
+    // MARK: Response
     
     associatedtype Response: Decodable
+    
+    var allowResponseBodyIsEmpty: Bool { get }
+    var responseFailType: ResponseFailType { get }
     
     // MARK: General
     
@@ -35,6 +44,14 @@ protocol GitHubAPIRequestProtocol {
 // MARK: - 共通処理
 
 extension GitHubAPIRequestProtocol {
+    
+    var allowResponseBodyIsEmpty: Bool {
+        false
+    }
+    
+    var responseFailType: ResponseFailType {
+        .statusCode
+    }
         
     /// クエリパラメータを含めたURL
     var url: URL? {

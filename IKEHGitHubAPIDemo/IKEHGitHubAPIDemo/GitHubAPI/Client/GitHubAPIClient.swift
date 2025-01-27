@@ -60,7 +60,7 @@ extension GitHubAPIClient {
             perPage: 3,
             sortedBy: sortedBy
         )
-        let response: SearchResponse<Repo> = try await searchRequest(with: request)
+        let response = try await defaultRequest(with: request)
         return response
     }
     
@@ -86,7 +86,7 @@ extension GitHubAPIClient {
             accessToken: tokenStore.accessToken
         )
         
-        let response: ListResponse<Repo> = try await starredRepoRequest(with: request)
+        let response = try await defaultRequest(with: request)
         return response
     }
 }
