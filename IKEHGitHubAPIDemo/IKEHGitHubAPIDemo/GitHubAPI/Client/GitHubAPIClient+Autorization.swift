@@ -21,7 +21,7 @@ extension GitHubAPIClient {
                                                          sessionCode: sessionCode)
         
         let currentTime = Date()
-        let response = try await self.oauthRequest(with: request)
+        let response = try await self.mainRequest(with: request)
 
         await tokenStore.set(
             accessToken: response.accessToken,
@@ -52,7 +52,7 @@ extension GitHubAPIClient {
         let request = GitHubAPIRequest.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstant.clientID,
                                                          clientSecret: GitHubAPIClient.PrivateConstant.clientSecret,
                                                          refreshToken: refreshToken)
-        let response = try await self.oauthRequest(with: request)
+        let response = try await self.mainRequest(with: request)
                 
         await tokenStore.set(
             accessToken: response.accessToken,

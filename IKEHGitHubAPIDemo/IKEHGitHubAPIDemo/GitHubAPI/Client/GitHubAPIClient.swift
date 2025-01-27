@@ -57,10 +57,10 @@ extension GitHubAPIClient {
             accessToken: tokenStore.accessToken,
             query: searchText,
             page: page,
-            perPage: 3,
+            perPage: 10,
             sortedBy: sortedBy
         )
-        let response = try await defaultRequest(with: request)
+        let response = try await mainRequest(with: request)
         return response
     }
     
@@ -71,7 +71,7 @@ extension GitHubAPIClient {
             throw GitHubAPIClientError.oauthError("有効なトークンが見つかりませんでした")
         }
         let request = GitHubAPIRequest.FetchLoginUser(accessToken: accessToken)
-        let response = try await defaultRequest(with: request)
+        let response = try await mainRequest(with: request)
         return response
     }
     
@@ -86,7 +86,7 @@ extension GitHubAPIClient {
             accessToken: tokenStore.accessToken
         )
         
-        let response = try await defaultRequest(with: request)
+        let response = try await mainRequest(with: request)
         return response
     }
 }

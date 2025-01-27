@@ -11,25 +11,37 @@ import HTTPTypes
 // MARK: - Public
 
 extension GitHubAPIClient {
+    
+    func mainRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
+        let (data, httpResponse) = try await sendRequest(with: request)
+        switch request.responseFailType {
+        case .statusCode:
+            try checkResponseDefault(data: data, httpResponse: httpResponse)
+        case .responseBody:
+            try checkResponseForOAuth(data: data, httpResponse: httpResponse)
+        }
+        let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
+        return response
+    }
                 
     func noResponseRequest<Request>(with request: Request) async throws where Request: GitHubAPIRequestProtocol {
         let (data, httpResponse) = try await sendRequest(with: request)
         try checkResponseForOAuth(data: data, httpResponse: httpResponse)
     }
     
-    func defaultRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
-        let (data, httpResponse) = try await sendRequest(with: request)
-        try checkResponseDefault(data: data, httpResponse: httpResponse)
-        let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
-        return response
-    }
-    
-    func oauthRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
-        let (data, httpResponse) = try await sendRequest(with: request)
-        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
-        let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
-        return response
-    }
+//    func defaultRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
+//        let (data, httpResponse) = try await sendRequest(with: request)
+//        try checkResponseDefault(data: data, httpResponse: httpResponse)
+//        let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
+//        return response
+//    }
+//    
+//    func oauthRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
+//        let (data, httpResponse) = try await sendRequest(with: request)
+//        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
+//        let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
+//        return response
+//    }
 //        
 //    func searchRequest<Request, Item>(with request: Request) async throws
 //    -> SearchResponse<Item> where Request: GitHubAPIRequestProtocol, Item: Decodable & Sendable {
