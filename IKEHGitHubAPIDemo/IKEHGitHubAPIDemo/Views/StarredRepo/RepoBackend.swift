@@ -8,16 +8,19 @@
 import Foundation
 
 protocol RepoBackendProtocol: Actor {
-    func add(_ repo: Repo, modified: Bool) async throws
+    static var shared: Self { get }
+    func add(_ value: Repo) async throws
+    func add(_ values: [Repo]) async throws
     func read(for ids: [Repo.ID]) async throws -> [Repo]
     func readAll() async throws -> [Repo]
     func delete(for ids: [Repo.ID]) async throws
     func deleteAll() async throws
 }
 
-
 /// 本来はRealmやCoreDataの想定で、今回は簡易的にUserDefaultsとする
 final actor RepoBackend: RepoBackendProtocol {
+
+    static let shared: RepoBackend = .init()
         
     private var reposUserDefaultsKey: String {
         let className = String(describing: type(of: self))
@@ -38,19 +41,20 @@ final actor RepoBackend: RepoBackendProtocol {
     
     // MARK: - CRUD
     
-    // MARK: - Create/Update
+    // MARK: Create/Update
         
-    func add(_ repo: Repo, modified: Bool = true) async throws {
-        if let index = repos.firstIndex(where: { $0.id == repo.id }) {
-            // 既に登録されている場合
-            if modified {
-                repos[index] = repo // Update
-            } else {
-                // 上書きを許可しない場合
-                throw RepoBackendError.writeFailed("Already registered")
-            }
+    func add(_ value: Repo) async throws {
+        if let index = repos.firstIndex(where: { $0.id == value.id }) {
+            repos[index] = value // Update
         } else {
-            repos.append(repo) // Create
+            repos.append(value) // Create
+        }
+    }
+    
+    func add(_ values: [Repo]) async throws {
+        // TODO: 効率化のために{ID: value}にしたほうがいいかも
+        for value in values {
+            try await add(value)
         }
     }
     
@@ -75,7 +79,7 @@ final actor RepoBackend: RepoBackendProtocol {
     }
 }
 
-// MARK: Backend+Error
+// MARK: - Backend+Error
 
 enum RepoBackendError: Error {
     case writeFailed(String)
