@@ -32,7 +32,7 @@ extension GitHubAPIClient {
     
     @MainActor
     func openLoginPageInBrowser() async throws {
-        await tokenStore.setLastLoginStateID(UUID().uuidString) // 多重ログイン防止のためログインセッションのIDを記録
+        await tokenStore.addLastLoginStateID(UUID().uuidString) // 多重ログイン防止のためログインセッションのIDを記録
         guard let url = await Self.createLoginPageURL(clientID: GitHubAPIClient.PrivateConstant.clientID,
                                                       lastLoginStateID: tokenStore.lastLoginStateID) else {
             throw GitHubAPIClientError.loginError("ログインURLの作成に失敗しました")

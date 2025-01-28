@@ -10,7 +10,6 @@ import SwiftUI
 import KeychainAccess
 
 enum KeychainConstant {
-    
     enum Service {
         static let oauth = "com.ikehgithubapi.oauth"
     }
@@ -24,7 +23,7 @@ enum KeychainConstant {
 final actor TokenStore {
     
     static let shared: TokenStore = .init()
-    
+        
     // MARK: - Property
     
     let keychain = Keychain(service: KeychainConstant.Service.oauth)
@@ -51,6 +50,13 @@ final actor TokenStore {
         
     @AppStorage("ikehgithubapi-refresh-token-expires-at")
     var refreshTokenExpiresAt: Date?
+    
+    // 認証ユーザの情報をAPIで利用する場合があるため、ここのプロパティで管理する
+    var loginUser: LoginUser? {
+        didSet {
+            UserDefaults.standard.setCodableItem(loginUser, forKey: "ikehgithubapi-login-user")
+        }
+    }
     
     // MARK: - Computed Properry
     
@@ -83,6 +89,7 @@ final actor TokenStore {
         // 保存されている値の読込
         self.accessToken = keychain[KeychainConstant.Key.accessToken]
         self.refreshToken = keychain[KeychainConstant.Key.refreshToken]
+        self.loginUser = UserDefaults.standard.codableItem(forKey: "ikehgithubapi-login-user")
     }
 }
 
@@ -90,9 +97,9 @@ final actor TokenStore {
 
 extension TokenStore {
     
-    // MARK: Update
+    // MARK: Create/Update
     
-    func set(
+    func updateTokens(
         accessToken: String? = nil,
         refreshToken: String? = nil,
         accessTokenExpiresAt: Date? = nil,
@@ -113,16 +120,21 @@ extension TokenStore {
     }
     
     @MainActor
-    func setLastLoginStateID(_ setLastLoginStateID: String) {
+    func addLastLoginStateID(_ setLastLoginStateID: String) {
         self.lastLoginStateID = setLastLoginStateID
+    }
+    
+    func addLoginUser(_ loginUser: LoginUser) {
+        self.loginUser = loginUser
     }
     
     // MARK: - Delete
     
-    func removeAll() {
+    func deleteAll() {
         accessToken = nil
         accessTokenExpiresAt = nil
         refreshToken = nil
         refreshTokenExpiresAt = nil
+        loginUser = nil
     }
 }

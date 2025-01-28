@@ -23,7 +23,7 @@ extension GitHubAPIClient {
         let currentTime = Date()
         let response = try await self.sendRequest(with: request)
 
-        await tokenStore.set(
+        await tokenStore.updateTokens(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
             accessTokenExpiresAt: currentTime.addingExpirationInterval(response.accessTokenExpiresIn),
@@ -54,7 +54,7 @@ extension GitHubAPIClient {
                                                          refreshToken: refreshToken)
         let response = try await self.sendRequest(with: request)
                 
-        await tokenStore.set(
+        await tokenStore.updateTokens(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
             accessTokenExpiresAt: currentTime.addingExpirationInterval(response.accessTokenExpiresIn),
