@@ -8,26 +8,6 @@
 import Foundation
 import SwiftUI
 
-func printUserDefaultsPath() {
-    if let bundleID = Bundle.main.bundleIdentifier {
-        let preferencesPath = FileManager.default.urls(
-            for: .libraryDirectory,
-            in: .userDomainMask
-        )
-        .first?
-        .appendingPathComponent("Preferences")
-        .appendingPathComponent("\(bundleID).plist")
-        
-        if let path = preferencesPath?.path {
-            print("UserDefaults file path: \(path)")
-        } else {
-            print("Could not determine the UserDefaults file path.")
-        }
-    } else {
-        print("Bundle identifier not found.")
-    }
-}
-
 final actor GitHubAPIClient {
 
     static let shared: GitHubAPIClient = .init()
@@ -45,48 +25,22 @@ final actor GitHubAPIClient {
     }
 }
 
-extension GitHubAPIClient {
-    func searchRepos(searchText: String, page: Int? = nil, sortedBy: GitHubAPIRequest.SearchReposRequest.SortBy = .bestMatch) async throws -> SearchResponse<Repo> {
-//        try? await Task.sleep(nanoseconds: 3_000_000_000)
-        // ログイン状態であればトークンの更新
-        if await tokenStore.isLoggedIn {
-            try await updateAccessTokenIfNeeded()
-        }
-        
-        let request = await GitHubAPIRequest.SearchReposRequest(
-            accessToken: tokenStore.accessToken,
-            query: searchText,
-            page: page,
-            perPage: 10,
-            sortedBy: sortedBy
+func printUserDefaultsPath() {
+    if let bundleID = Bundle.main.bundleIdentifier {
+        let preferencesPath = FileManager.default.urls(
+            for: .libraryDirectory,
+            in: .userDomainMask
         )
-        let response = try await mainRequest(with: request)
-        return response
-    }
-    
-    func fetchLoginUser() async throws -> LoginUser {
-//        try? await Task.sleep(nanoseconds: 3_000_000_000)
-        try await updateAccessTokenIfNeeded()
-        guard let accessToken = await tokenStore.accessToken else {
-            throw GitHubAPIClientError.oauthError("有効なトークンが見つかりませんでした")
-        }
-        let request = GitHubAPIRequest.FetchLoginUser(accessToken: accessToken)
-        let response = try await mainRequest(with: request)
-        return response
-    }
-    
-    func fetchStarredRepos(page: Int? = nil, sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy = .recentryStarred) async throws -> ListResponse<Repo> {
-        // ログイン状態であればトークンの更新
-        if await tokenStore.isLoggedIn {
-            try await updateAccessTokenIfNeeded()
-        }
+        .first?
+        .appendingPathComponent("Preferences")
+        .appendingPathComponent("\(bundleID).plist")
         
-        let request = await GitHubAPIRequest.StarredReposRequest(
-            userName: "pommdau",
-            accessToken: tokenStore.accessToken
-        )
-        
-        let response = try await mainRequest(with: request)
-        return response
+        if let path = preferencesPath?.path {
+            print("UserDefaults file path: \(path)")
+        } else {
+            print("Could not determine the UserDefaults file path.")
+        }
+    } else {
+        print("Bundle identifier not found.")
     }
 }

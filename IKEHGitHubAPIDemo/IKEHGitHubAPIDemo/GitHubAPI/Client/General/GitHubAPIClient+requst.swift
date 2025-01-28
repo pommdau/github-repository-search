@@ -12,55 +12,20 @@ import HTTPTypes
 
 extension GitHubAPIClient {
     
-    func mainRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
+    func sendRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
         let (data, httpResponse) = try await sendRequest(with: request)
-        switch request.responseFailType {
-        case .statusCode:
-            try checkResponseDefault(data: data, httpResponse: httpResponse)
-        case .responseBody:
-            try checkResponseForOAuth(data: data, httpResponse: httpResponse)
-        }
+        try checkResponse(request: request, data: data, httpResponse: httpResponse)
         let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
         return response
     }
                 
-    func noResponseRequest<Request>(with request: Request) async throws where Request: GitHubAPIRequestProtocol {
+    func sendRequestWithoutResponseData<Request>(with request: Request) async throws where Request: GitHubAPIRequestProtocol {
         let (data, httpResponse) = try await sendRequest(with: request)
-        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
+        try checkResponse(request: request, data: data, httpResponse: httpResponse)
     }
-    
-//    func defaultRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
-//        let (data, httpResponse) = try await sendRequest(with: request)
-//        try checkResponseDefault(data: data, httpResponse: httpResponse)
-//        let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
-//        return response
-//    }
-//    
-//    func oauthRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
-//        let (data, httpResponse) = try await sendRequest(with: request)
-//        try checkResponseForOAuth(data: data, httpResponse: httpResponse)
-//        let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
-//        return response
-//    }
-//        
-//    func searchRequest<Request, Item>(with request: Request) async throws
-//    -> SearchResponse<Item> where Request: GitHubAPIRequestProtocol, Item: Decodable & Sendable {
-//        let (data, httpResponse) = try await sendRequest(with: request)
-//        try checkResponseDefault(data: data, httpResponse: httpResponse)
-//        let response: SearchResponse<Item> = try decodeResponse(data: data, httpResponse: httpResponse)
-//        return response
-//    }
-//    
-//    func starredRepoRequest<Request>(with request: Request) async throws
-//    -> ListResponse<Repo> where Request: GitHubAPIRequestProtocol {
-//        let (data, httpResponse) = try await sendRequest(with: request)
-//        try checkResponseDefault(data: data, httpResponse: httpResponse)
-//        let response: ListResponse<Repo> = try decodeResponse(data: data, httpResponse: httpResponse)
-//        return response
-//    }
 }
 
-// MARK: - Helpers
+// MARK: - Private
 
 extension GitHubAPIClient {
             
@@ -87,7 +52,18 @@ extension GitHubAPIClient {
         return (data, httpResponse)
     }
     
-    // MARK: Check Response Success/Fail
+    // MARK: Check Response Success
+    
+    private func checkResponse(request: any GitHubAPIRequestProtocol,
+                               data: Data,
+                               httpResponse: HTTPResponse) throws {
+        switch request.responseFailType {
+        case .statusCode:
+            try checkResponseDefault(data: data, httpResponse: httpResponse)
+        case .responseBody:
+            try checkResponseForOAuth(data: data, httpResponse: httpResponse)
+        }
+    }
     
     private func checkResponseDefault(data: Data, httpResponse: HTTPResponse) throws {
         // 200番台であれば成功
@@ -137,7 +113,7 @@ extension GitHubAPIClient {
     }
     
     static private func attachRelationLink<Response>(to response: Response, from httpResponse: HTTPResponse) throws -> Response {
-        if var responseWithRelationLink = response as? ResponseWithRelationLink,
+        if var responseWithRelationLink = response as? ResponseWithRelationLinkProtocol,
            let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
             // Responseにページング情報を付与
             responseWithRelationLink.relationLink = RelationLink.create(rawValue: link.value)

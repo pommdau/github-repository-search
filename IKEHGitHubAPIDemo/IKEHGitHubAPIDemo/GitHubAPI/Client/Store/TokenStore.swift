@@ -83,8 +83,6 @@ final actor TokenStore {
         // 保存されている値の読込
         self.accessToken = keychain[KeychainConstant.Key.accessToken]
         self.refreshToken = keychain[KeychainConstant.Key.refreshToken]
-        print(accessToken, refreshToken)
-        print("stop")
     }
 }
 

@@ -22,7 +22,7 @@ protocol GitHubAPIRequestProtocol {
     
     associatedtype Response: Decodable
     
-    var allowResponseBodyIsEmpty: Bool { get }
+//    var allowResponseBodyIsEmpty: Bool { get }
     var responseFailType: ResponseFailType { get }
     
     // MARK: General
@@ -45,9 +45,9 @@ protocol GitHubAPIRequestProtocol {
 
 extension GitHubAPIRequestProtocol {
     
-    var allowResponseBodyIsEmpty: Bool {
-        false
-    }
+//    var allowResponseBodyIsEmpty: Bool {
+//        false
+//    }
     
     var responseFailType: ResponseFailType {
         .statusCode

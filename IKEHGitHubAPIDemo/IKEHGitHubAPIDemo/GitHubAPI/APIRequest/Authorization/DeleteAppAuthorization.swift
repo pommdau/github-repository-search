@@ -21,6 +21,10 @@ extension GitHubAPIRequest.DeleteAppAuthorization: GitHubAPIRequestProtocol {
 
     typealias Response = String // 実際には不使用
     
+//    var responseFailType: ResponseFailType {        
+//        .responseBody
+//    }
+    
     var method: HTTPTypes.HTTPRequest.Method {
         .delete
     }

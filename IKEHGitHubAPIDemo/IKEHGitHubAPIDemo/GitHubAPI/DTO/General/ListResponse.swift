@@ -7,11 +7,7 @@
 
 import Foundation
 
-protocol ResponseWithRelationLink {
-    var relationLink: RelationLink? { get set } // ページング情報
-}
-
-struct ListResponse<Item: Decodable & Sendable>: Sendable, ResponseWithRelationLink {
+struct ListResponse<Item: Decodable & Sendable>: Sendable, ResponseWithRelationLinkProtocol {
     var items: [Item]
     
     // MARK: - レスポンスのHeaderから所得される情報
