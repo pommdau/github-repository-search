@@ -102,9 +102,8 @@ struct LoginDebugView: View {
         }
         .onOpenURL { (url) in
             Task {
-                let sessionCode = try await gitHubAPIClient.extactSessionCodeFromCallbackURL(url)
                 do {
-                    try await gitHubAPIClient.fetchInitialToken(sessionCode: sessionCode)
+                    _ = try await gitHubAPIClient.handleLoginCallBackURL(url)
                     await loadTokens()
                 } catch {
                     print(error.localizedDescription)

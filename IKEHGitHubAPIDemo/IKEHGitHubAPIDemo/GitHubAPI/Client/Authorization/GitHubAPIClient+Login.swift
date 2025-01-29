@@ -40,9 +40,14 @@ extension GitHubAPIClient {
         await UIApplication.shared.open(url)
     }
     
+    func handleLoginCallBackURL(_ url: URL) async throws -> LoginUser {
+        let sessionCode = try await extactSessionCodeFromCallbackURL(url)
+        try await fetchInitialToken(sessionCode: sessionCode)        
+        return try await fetchLoginUser()
+    }
+            
     /// コールバックURLからログインセッションIDを取得
-    @MainActor
-    func extactSessionCodeFromCallbackURL(_ url: URL) async throws -> String {
+    private func extactSessionCodeFromCallbackURL(_ url: URL) async throws -> String {
         guard
             let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
             let queryItems = components.queryItems,
@@ -59,5 +64,5 @@ extension GitHubAPIClient {
         }
         
         return sessionCode // 初回認証時にのみ利用する一時的なcode
-    }    
+    }
 }
