@@ -71,14 +71,15 @@ extension GitHubAPIClient {
             return
         }
         
-        let errorResponse: GitHubAPIError
+        var errorResponse: GitHubAPIError
         do {
             errorResponse = try JSONDecoder().decode(GitHubAPIError.self, from: data)
         } catch {
-            // 未対応のエラーレスポンス(通常通らない)
+            // 未対応のエラーレスポンス、もしくはデータが空
             print(String(data: data, encoding: .utf8)!)
             throw GitHubAPIClientError.responseParseError(error)
         }
+        errorResponse.statusCode = httpResponse.status.code
         throw GitHubAPIClientError.apiError(errorResponse)
     }
     
@@ -88,13 +89,14 @@ extension GitHubAPIClient {
          /そのためレスポンスがエラーの形式かどうかで確認する
          */
                 
-        let oAuthError: OAuthError
+        var oAuthError: OAuthError
         do {
             oAuthError = try JSONDecoder().decode(OAuthError.self, from: data)
         } catch {
             // エラーの形式でないなら成功レスポンス
             return
         }
+        oAuthError.statusCode = httpResponse.status.code
         throw GitHubAPIClientError.apiError(oAuthError)
     }
     
@@ -106,6 +108,7 @@ extension GitHubAPIClient {
         do {
             response = try JSONDecoder().decode(Response.self, from: data)
         } catch {
+            print(String(data: data, encoding: .utf8)!)
             throw GitHubAPIClientError.responseParseError(error)
         }
         response = try Self.attachRelationLink(to: response, from: httpResponse)

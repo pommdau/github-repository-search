@@ -15,13 +15,14 @@ extension GitHubAPIClient {
     
     private static func createLoginPageURL(clientID: String, lastLoginStateID: String) async -> URL? {
         // ログインURLの作成
-        guard var components = URLComponents(string: "https://github.com/login/oauth/authorize") else {
+        guard var components = URLComponents(string: "https://github.com/login/oauth/authorize/") else {
             return nil
         }
         components.queryItems = [
             URLQueryItem(name: "client_id", value: clientID),
             URLQueryItem(name: "redirect_uri", value: "ikehgithubapi://callback"), // Callback URL
-            URLQueryItem(name: "state", value: lastLoginStateID)
+            URLQueryItem(name: "state", value: lastLoginStateID),
+//            URLQueryItem(name: "scope", value: "public_repo,read:user")
         ]
         guard let loginURL = components.url else {
             return nil

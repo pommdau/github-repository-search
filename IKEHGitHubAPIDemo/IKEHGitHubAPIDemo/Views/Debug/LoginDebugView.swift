@@ -88,6 +88,18 @@ struct LoginDebugView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
+                
+                Button("Is Starred") {
+                    Task {
+                        do {                            
+                            let isStarred = try await gitHubAPIClient.checkIsRepoStarred(ownerName: "koher", repoName: "swift-id")
+                            print(isStarred ? "starred" : "not starred")
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
             }
             
             Section("Access Token") {

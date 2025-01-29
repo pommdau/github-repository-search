@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct OAuthError: Sendable, Decodable, Error, LocalizedError {
+struct OAuthError: GitHubAPIErrorProtocol {
     enum CodingKeys: String, CodingKey {
         case error
         case errorDescriptionPrivate = "error_description"
@@ -16,6 +16,8 @@ struct OAuthError: Sendable, Decodable, Error, LocalizedError {
     let error: String
     let errorDescriptionPrivate: String
     let errorURI: String?
+    
+    var statusCode: Int?
     
     // MARK: - LocalizedError
     

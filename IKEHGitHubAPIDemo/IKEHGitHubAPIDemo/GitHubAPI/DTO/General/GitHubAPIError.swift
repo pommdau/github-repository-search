@@ -9,7 +9,8 @@
 
 import Foundation
 
-struct GitHubAPIError: Sendable, Decodable, Error, LocalizedError {
+struct GitHubAPIError: GitHubAPIErrorProtocol {
+    
     struct Error: Decodable {
         var resource: String
         var field: String
@@ -18,6 +19,10 @@ struct GitHubAPIError: Sendable, Decodable, Error, LocalizedError {
 
     var message: String  // レスポンスのJSONに必ず含まれる
     var errors: [Error?]?
+
+    // デコード外で後から付与されるパラメータ
+    
+    var statusCode: Int?
     
     // MARK: - LocalizedError
     
