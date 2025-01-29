@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RequestTokenResponse: Decodable, Equatable, Sendable {
+struct RequestTokenResponse: Decodable, Sendable {
     
     enum CodingKeys: String, CodingKey {
         case accessToken = "access_token"

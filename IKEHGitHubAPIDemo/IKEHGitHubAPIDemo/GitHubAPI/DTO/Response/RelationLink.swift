@@ -8,7 +8,7 @@
 import Foundation
 import SwiftID
 
-struct RelationLink: Equatable, Sendable, Decodable {
+struct RelationLink: Sendable, Decodable {
     
     struct Link: Identifiable, Equatable, Sendable, Decodable {
         struct ID: StringIDProtocol {

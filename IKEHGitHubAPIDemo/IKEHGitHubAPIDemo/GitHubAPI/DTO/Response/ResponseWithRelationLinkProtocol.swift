@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO ResponseProtocolくらいにまとめても良さそう
 protocol ResponseWithRelationLinkProtocol {
     var relationLink: RelationLink? { get set } // ページング情報
 }
