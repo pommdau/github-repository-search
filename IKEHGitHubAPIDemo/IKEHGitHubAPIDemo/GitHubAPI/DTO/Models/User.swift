@@ -7,20 +7,30 @@
 //
 
 import Foundation
+import SwiftID
 
 struct User: Identifiable, Equatable, Sendable, Codable {
     
+    struct ID: StringIDProtocol {
+        let rawValue:  String
+        init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+    }
+    
     private enum CodingKeys: String, CodingKey {
-        case id
+        case rawID = "id"
         case name = "login"
         case avatarImagePath = "avatar_url"
         case htmlPath = "html_url"
     }
     
-    let id: Int
+    let rawID: Int
     var name: String
     var avatarImagePath: String
     var htmlPath: String  // e.g. https://github.com/apple
+    
+    var id: ID { "\(rawID)" }
     
     var avatarImageURL: URL? {
         URL(string: avatarImagePath)
@@ -33,23 +43,23 @@ struct User: Identifiable, Equatable, Sendable, Codable {
 
 extension User {
     static let sampleData: [User] = [
-        User(id: 10639145,
+        User(rawID: 10639145,
              name: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
              avatarImagePath: "https://avatars.githubusercontent.com/u/10639145?v=4",
              htmlPath: "https://github.com/apple/ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"),
-        User(id: 12345678,
+        User(rawID: 12345678,
              name: "JohnDoe",
              avatarImagePath: "https://avatars.githubusercontent.com/u/12345678?v=4",
              htmlPath: "https://github.com/johndoe"),
-        User(id: 23456789,
+        User(rawID: 23456789,
              name: "JaneSmith",
              avatarImagePath: "https://avatars.githubusercontent.com/u/23456789?v=4",
              htmlPath: "https://github.com/janesmith"),
-        User(id: 34567890,
+        User(rawID: 34567890,
              name: "DevGuru",
              avatarImagePath: "https://avatars.githubusercontent.com/u/34567890?v=4",
              htmlPath: "https://github.com/devguru"),
-        User(id: 45678901,
+        User(rawID: 45678901,
              name: "CodeMaster",
              avatarImagePath: "https://avatars.githubusercontent.com/u/45678901?v=4",
              htmlPath: "https://github.com/codemaster")

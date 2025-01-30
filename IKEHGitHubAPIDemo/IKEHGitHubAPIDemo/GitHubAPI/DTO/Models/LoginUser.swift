@@ -6,9 +6,37 @@
 //
 
 import Foundation
+import SwiftID
 
 struct LoginUser: Codable, Identifiable, Sendable {
-    let id: Int
+    
+    struct ID: StringIDProtocol {
+        let rawValue:  String
+        init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case rawID = "id"
+        case login
+        case avatarURL = "avatar_url"
+        case url
+        case htmlURL = "html_url"
+        case name
+        case location
+        case email
+        case bio
+        case twitterUsername = "twitter_username"
+        case publicRepos = "public_repos"
+        case publicGists = "public_gists"
+        case followers
+        case following
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
+        
+    let rawID: Int
     let login: String
     let avatarURL: String
     let url: String
@@ -25,24 +53,7 @@ struct LoginUser: Codable, Identifiable, Sendable {
     let createdAt: String
     let updatedAt: String
     
-    enum CodingKeys: String, CodingKey {
-        case login
-        case id
-        case avatarURL = "avatar_url"
-        case url
-        case htmlURL = "html_url"
-        case name
-        case location
-        case email
-        case bio
-        case twitterUsername = "twitter_username"
-        case publicRepos = "public_repos"
-        case publicGists = "public_gists"
-        case followers
-        case following
-        case createdAt = "created_at"
-        case updatedAt = "updated_at"
-    }
+    var id: ID { "\(rawID)" }
     
     // MARK: - Computed Property
     
