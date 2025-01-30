@@ -13,32 +13,19 @@ import HTTPTypesFoundation
 
 extension GitHubAPIClient {
     
-    private static func createLoginPageURL(clientID: String, lastLoginStateID: String) async -> URL? {
-        // ログインURLの作成
-        guard var components = URLComponents(string: "https://github.com/login/oauth/authorize/") else {
-            return nil
-        }
-        components.queryItems = [
-            URLQueryItem(name: "client_id", value: clientID),
-            URLQueryItem(name: "redirect_uri", value: "ikehgithubapi://callback"), // Callback URL
-            URLQueryItem(name: "state", value: lastLoginStateID),
-//            URLQueryItem(name: "scope", value: "public_repo,read:user")
-        ]
-        guard let loginURL = components.url else {
-            return nil
-        }
-        
-        return loginURL
-    }
-    
+    /// ブラウザ上でログインページを開く
     @MainActor
     func openLoginPageInBrowser() async throws {
         await tokenStore.addLastLoginStateID(UUID().uuidString) // 多重ログイン防止のためログインセッションのIDを記録
-        guard let url = await Self.createLoginPageURL(clientID: GitHubAPIClient.PrivateConstant.clientID,
-                                                      lastLoginStateID: tokenStore.lastLoginStateID) else {
+        let request = await GitHubAPIRequest.LoginPage(
+            clientID: GitHubAPIClient.PrivateConstant.clientID,
+            lastLoginStateID: tokenStore.lastLoginStateID
+        )
+        guard let loginURL = request.url else {
             throw GitHubAPIClientError.loginError("ログインURLの作成に失敗しました")
         }
-        await UIApplication.shared.open(url)
+        
+        await UIApplication.shared.open(loginURL)
     }
     
     func handleLoginCallBackURL(_ url: URL) async throws -> LoginUser {

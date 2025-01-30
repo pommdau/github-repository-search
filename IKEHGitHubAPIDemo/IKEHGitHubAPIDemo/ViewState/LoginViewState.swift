@@ -42,7 +42,7 @@ final class LoginViewState {
             do {
                 let loginUser = try await gitHubAPIClient.handleLoginCallBackURL(url)
                 print("ログイン成功！")
-                loginUserStore.save(loginUser)
+                loginUserStore.addValue(loginUser)
             } catch {
                 print(error.localizedDescription)
                 alertError = error

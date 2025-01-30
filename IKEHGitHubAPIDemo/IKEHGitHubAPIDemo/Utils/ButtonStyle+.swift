@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// TODO: まとめる
 struct LogInButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label

@@ -17,6 +17,11 @@ struct RepoDetailsView: View {
                 userLabel()
                 repoLabel()
             }
+            
+            StarButtonView()
+                .padding(.vertical, 4)
+            
+            
             Divider()
             descriptionView()
 //            if let language = repo.language,
@@ -179,6 +184,36 @@ extension RepoDetailsView {
                 }
                 .gridCellColumns(3)
             }
+        }
+    }
+}
+
+struct StarButtonView: View {
+    
+    @State private var isStarred = false
+    
+    var body: some View {
+        
+        ZStack {
+            Button {
+                withAnimation {
+                    isStarred.toggle()
+                }
+            } label: {
+                HStack {
+                    Image(systemName: isStarred ? "star.fill" : "star")
+                    Text(isStarred ? "Starred" : "Star")
+                        .foregroundColor(.secondary)
+                }
+                .padding(8)
+            }
+            .tint(Color(uiColor: .systemYellow))
+            .frame(width: 120)
+            .contentTransition(.symbolEffect(.replace))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(.secondary, lineWidth: 1.0)
+            )
         }
     }
 }
