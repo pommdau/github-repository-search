@@ -9,32 +9,33 @@ import SwiftUI
 
 struct SearchScreen: View {
     
-    @State private var viewState = SearchScreenViewState()
+    @State private var state = SearchScreenViewState()
 
     var body: some View {
         NavigationStack {
 //            searchTypePicker()
             SearchResultView(
-                asyncRepos: viewState.asyncRepos,
+                asyncRepos: state.asyncRepos,
                 cancelSearching: {
-                    viewState.cancelSearch()
+                    state.cancelSearch()
                 },
                 bottomCellOnAppear: { _ in
                     // 一番下のセルが表示された場合
-                    viewState.handleSearchMore()
-                })
+                    state.handleSearchMore()
+                }
+            )
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
-                        Picker("Sorted By", selection: $viewState.sortedBy) {
+                        Picker("Sorted By", selection: $state.sortedBy) {
                             ForEach(GitHubAPIRequest.SearchReposRequest.SortBy.allCases) { type in
                                 /// 選択項目の一覧
                                 Text(type.title).tag(type)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
-                        .onChange(of: viewState.sortedBy) { _, _ in
-                            viewState.handleSortedByChanged()
+                        .onChange(of: state.sortedBy) { _, _ in
+                            state.handleSortedByChanged()
                         }
                     } label: {
                         Image(systemName: "arrow.up.arrow.down")
@@ -42,16 +43,16 @@ struct SearchScreen: View {
                 }
             }
         }
-        .searchable(text: $viewState.searchText, prompt: "Enter Keyword")
+        .searchable(text: $state.searchText, prompt: "Enter Keyword")
         .onSubmit(of: .search) {
-            viewState.handleSearch()
+            state.handleSearch()
         }
         .onAppear() {
         }
-        .alert("エラー", isPresented: $viewState.showAlert) {
+        .alert("エラー", isPresented: $state.showAlert) {
             Button("OK") { }
         } message: {
-            Text(viewState.alertError?.localizedDescription ?? "(不明なエラー)")
+            Text(state.alertError?.localizedDescription ?? "(不明なエラー)")
         }
     }
     

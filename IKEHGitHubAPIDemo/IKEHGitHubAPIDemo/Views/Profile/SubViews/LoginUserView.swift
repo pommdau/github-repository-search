@@ -11,7 +11,7 @@ struct LoginUserView: View {
             
     let loginUser: LoginUser
     let namespace: Namespace.ID
-    var handleLogOutButtonTapped: () -> Void = { }
+    var handleLogOutButtonTapped: () -> Void = {}
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -128,5 +128,7 @@ struct LoginUserView: View {
 
 #Preview {
     @Previewable @Namespace var namespace
-    LoginUserView(loginUser: LoginUser.Mock.ikeh, namespace: namespace)
+    LoginUserView(loginUser: LoginUser.Mock.ikeh, namespace: namespace) {
+        print("Log Out Button Tapped!")
+    }
 }

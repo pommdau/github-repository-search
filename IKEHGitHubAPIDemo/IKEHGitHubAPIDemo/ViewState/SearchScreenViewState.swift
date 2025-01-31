@@ -20,7 +20,24 @@ final class SearchScreenViewState {
     
     // MARK: 検索結果
     
-    private(set) var asyncRepos: AsyncValues<Repo, Error> = .initial
+    private var asyncRepoIDs: AsyncValues<Repo.ID, Error> = .initial
+    
+    var asyncRepos: AsyncValues<Repo, Error> {
+        let repos = asyncRepoIDs.values.compactMap { repoStore.valuesDic[$0] }
+        switch asyncRepoIDs {
+        case .initial:
+            return .initial
+        case .loading:
+            return .loading(repos)
+        case .loaded:
+            return .loaded(repos)
+        case .loadingMore:
+            return .loadingMore(repos)
+        case .error(let error, _):
+            return .error(error, repos)
+        }
+    }
+    
     private var relationLink: RelationLink?
     
     // エラー表示
@@ -32,13 +49,17 @@ final class SearchScreenViewState {
     private(set) var searchTask: Task<(), Never>?
         
     let gitHubAPIClient: GitHubAPIClient
+    let repoStore: RepoStore
     let loginUserStore: LoginUserStore
     
     // MARK: - LifeCycle
     
     init(gitHubAPIClient: GitHubAPIClient = .shared,
-         loginUserStore: LoginUserStore = .shared) {
+         repoStore: RepoStore = .shared,
+         loginUserStore: LoginUserStore = .shared
+    ) {
         self.gitHubAPIClient = gitHubAPIClient
+        self.repoStore = repoStore
         self.loginUserStore = loginUserStore
     }
 }
@@ -60,27 +81,28 @@ extension SearchScreenViewState {
             return
         }
         
-        asyncRepos = .loading(asyncRepos.values)
+        asyncRepoIDs = .loading(asyncRepoIDs.values)
         relationLink = nil
         
         searchTask = Task {
             do {
-                // 検索に成功
+                // 検索: 成功
                 let response = try await gitHubAPIClient.searchRepos(searchText: searchText, sortedBy: sortedBy)
+                try await repoStore.addValues(response.items)
                 withAnimation {
-                    asyncRepos = .loaded(response.items)
+                    asyncRepoIDs = .loaded(response.items.map { $0.id })
                 }
                 relationLink = response.relationLink
             } catch {
-                // 検索に失敗
+                // 検索: 失敗
                 if Task.isCancelled {
                     if asyncRepos.values.isEmpty {
-                        asyncRepos = .initial
+                        asyncRepoIDs = .initial
                     } else {
-                        asyncRepos = .loaded(asyncRepos.values)
+                        asyncRepoIDs = .loaded(asyncRepoIDs.values)
                     }
                 } else {
-                    asyncRepos = .error(error, asyncRepos.values)
+                    asyncRepoIDs = .error(error, asyncRepoIDs.values)
                     print(error.localizedDescription)
                     alertError = error
                     showAlert = true
@@ -106,21 +128,21 @@ extension SearchScreenViewState {
         }
         
         // 検索開始
-        asyncRepos = .loadingMore(asyncRepos.values)
+        asyncRepoIDs = .loadingMore(asyncRepoIDs.values)
         searchTask = Task {
             do {
                 // 検索に成功
                 let response = try await gitHubAPIClient.searchRepos(searchText: nextLink.searchText, page: nextLink.page)
                 withAnimation {
-                    asyncRepos = .loaded(asyncRepos.values + response.items)
+                    asyncRepoIDs = .loaded(asyncRepoIDs.values + response.items.map { $0.id })
                 }
                 relationLink = response.relationLink
             } catch {
                 // 検索に失敗
                 if Task.isCancelled {
-                    asyncRepos = .loaded(asyncRepos.values)
+                    asyncRepoIDs = .loaded(asyncRepoIDs.values)
                 } else {
-                    asyncRepos = .error(error, asyncRepos.values)
+                    asyncRepoIDs = .error(error, asyncRepoIDs.values)
                     print(error.localizedDescription)
                     alertError = error
                     showAlert = true
@@ -142,23 +164,23 @@ extension SearchScreenViewState {
             return
         }
         
-        asyncRepos = .loading(asyncRepos.values)
+        asyncRepoIDs = .loading(asyncRepoIDs.values)
         searchTask = Task {
             do {
                 let response = try await gitHubAPIClient.searchRepos(searchText: nextLink.searchText, sortedBy: sortedBy)
                 withAnimation {
-                    asyncRepos = .loaded(response.items)
+                    asyncRepoIDs = .loaded(response.items.map { $0.id })
                 }
                 relationLink = response.relationLink
             } catch {
                 if Task.isCancelled {
                     if asyncRepos.values.isEmpty {
-                        asyncRepos = .initial
+                        asyncRepoIDs = .initial
                     } else {
-                        asyncRepos = .loaded(asyncRepos.values)
+                        asyncRepoIDs = .loaded(asyncRepoIDs.values)
                     }
                 } else {
-                    asyncRepos = .error(error, asyncRepos.values)
+                    asyncRepoIDs = .error(error, asyncRepoIDs.values)
                     print(error.localizedDescription)
                     alertError = error
                     showAlert = true

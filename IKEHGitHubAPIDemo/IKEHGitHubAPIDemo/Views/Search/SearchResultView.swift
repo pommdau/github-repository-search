@@ -12,10 +12,11 @@ struct SearchResultView: View {
     // isSearchingは.searchableと同じViewで使用できないため、本Viewを切り出している
     @Environment(\.isSearching)
     private var isSearching: Bool
-    var asyncRepos: AsyncValues<Repo, Error> = .initial
+    
+    let asyncRepos: AsyncValues<Repo, Error>
     var cancelSearching: () -> Void = {}
     var bottomCellOnAppear: (Repo.ID) -> Void = { _ in }
-    
+            
     var showNoResultLabel: Bool {
         // 検索結果が0であることが前提
         if !asyncRepos.values.isEmpty {
@@ -31,6 +32,20 @@ struct SearchResultView: View {
         }
     }
     
+    let repoStore: RepoStore
+        
+    init(
+        asyncRepos: AsyncValues<Repo, Error>,
+        cancelSearching: @escaping () -> Void = {},
+        bottomCellOnAppear: @escaping (Repo.ID) -> Void = { _ in },
+        repoStore: RepoStore = .shared
+    ) {
+        self.asyncRepos = asyncRepos
+        self.cancelSearching = cancelSearching
+        self.bottomCellOnAppear = bottomCellOnAppear
+        self.repoStore = repoStore
+    }
+        
     var body: some View {
         List {
             switch asyncRepos {
@@ -103,48 +118,48 @@ struct SearchResultView: View {
     }
 }
 
-#Preview("SearchResultView_initial") {
-    NavigationStack {
-        SearchResultView(asyncRepos: .initial)
-    }
-}
-
-#Preview("SearchResultView_loading") {
-    NavigationStack {
-        SearchResultView(asyncRepos:
-                .loading([])
-        )
-    }
-}
-
-#Preview("SearchResultView_loaded") {
-    NavigationStack {
-        SearchResultView(asyncRepos:
-                .loaded(Array(Repo.sampleData[0...6]))
-        )
-    }
-}
-
-#Preview("SearchResultView_loaded_norepos") {
-    NavigationStack {
-        SearchResultView(asyncRepos:
-                .loaded([])
-        )
-    }
-}
-
-#Preview("SearchResultView_loadingmore") {
-    NavigationStack {
-        SearchResultView(asyncRepos:
-                .loadingMore(Array(Repo.sampleData[0...2]))
-        )
-    }
-}
-
-#Preview("SearchResultView_error") {
-    NavigationStack {
-        SearchResultView(asyncRepos:
-                .error(MessageError(description: "sample error"), [])
-        )
-    }
-}
+//#Preview("SearchResultView_initial") {
+//    NavigationStack {
+//        SearchResultView(asyncRepos: .initial)
+//    }
+//}
+//
+//#Preview("SearchResultView_loading") {
+//    NavigationStack {
+//        SearchResultView(asyncRepos:
+//                .loading([])
+//        )
+//    }
+//}
+//
+//#Preview("SearchResultView_loaded") {
+//    NavigationStack {
+//        SearchResultView(asyncRepos:
+//                .loaded(Array(Repo.sampleData[0...6]).map { $0.id })
+//        )
+//    }
+//}
+//
+//#Preview("SearchResultView_loaded_norepos") {
+//    NavigationStack {
+//        SearchResultView(asyncRepos:
+//                .loaded([])
+//        )
+//    }
+//}
+//
+//#Preview("SearchResultView_loadingmore") {
+//    NavigationStack {
+//        SearchResultView(asyncRepos:
+//                .loadingMore(Array(Repo.sampleData[0...2]).map { $0.id })
+//        )
+//    }
+//}
+//
+//#Preview("SearchResultView_error") {
+//    NavigationStack {
+//        SearchResultView(asyncRepos:
+//                .error(MessageError(description: "sample error"), [])
+//        )
+//    }
+//}
