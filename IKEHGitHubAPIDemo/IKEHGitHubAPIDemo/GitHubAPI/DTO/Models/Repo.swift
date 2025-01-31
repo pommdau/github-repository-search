@@ -7,17 +7,12 @@
 //
 
 import Foundation
-import SwiftID
 
 // アーキテクチャのRepositoryと区別するためRepoの名称を使う
-struct Repo: Sendable, Identifiable, Codable, Equatable {
+// TODO: remove Equatable
+struct Repo: GitHubDTO, Equatable {
     
-    struct ID: StringIDProtocol {
-        let rawValue:  String
-        init(rawValue: String) {
-            self.rawValue = rawValue
-        }
-    }
+    // MARK: - Decode Result
     
     private enum CodingKeys: String, CodingKey {
         case rawID = "id"
@@ -47,11 +42,13 @@ struct Repo: Sendable, Identifiable, Codable, Equatable {
     let htmlPath: String  // リポジトリのURL
     let websitePath: String?  // 設定したホームページ
     let description: String?
-            
+    
     // その他補完されて取得される情報
     var subscribersCount: Int?
+            
+    // MARK: - Computed Property
 
-    var id: ID { "\(rawID)" }
+    var id: SwiftID<Self> { "\(rawID)" }
     
     var htmlURL: URL? {
         URL(string: htmlPath)

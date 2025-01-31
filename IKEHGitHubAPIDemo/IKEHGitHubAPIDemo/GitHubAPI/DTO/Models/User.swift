@@ -9,15 +9,10 @@
 import Foundation
 import SwiftID
 
-struct User: Identifiable, Equatable, Sendable, Codable {
-    
-    struct ID: StringIDProtocol {
-        let rawValue:  String
-        init(rawValue: String) {
-            self.rawValue = rawValue
-        }
-    }
-    
+struct User: GitHubDTO, Equatable {
+
+    // MARK: - Decode Result
+
     private enum CodingKeys: String, CodingKey {
         case rawID = "id"
         case name = "login"
@@ -30,7 +25,9 @@ struct User: Identifiable, Equatable, Sendable, Codable {
     var avatarImagePath: String
     var htmlPath: String  // e.g. https://github.com/apple
     
-    var id: ID { "\(rawID)" }
+    // MARK: - Computed Property
+    
+    var id: SwiftID<Self> { "\(rawID)" }
     
     var avatarImageURL: URL? {
         URL(string: avatarImagePath)

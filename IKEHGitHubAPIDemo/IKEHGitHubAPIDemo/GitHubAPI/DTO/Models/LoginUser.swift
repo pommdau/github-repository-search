@@ -6,16 +6,10 @@
 //
 
 import Foundation
-import SwiftID
 
-struct LoginUser: Codable, Identifiable, Sendable {
-    
-    struct ID: StringIDProtocol {
-        let rawValue:  String
-        init(rawValue: String) {
-            self.rawValue = rawValue
-        }
-    }
+struct LoginUser: GitHubDTO {
+
+    // MARK: - Decode Result
     
     enum CodingKeys: String, CodingKey {
         case rawID = "id"
@@ -35,7 +29,7 @@ struct LoginUser: Codable, Identifiable, Sendable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }
-        
+            
     let rawID: Int
     let login: String
     let avatarURL: String
@@ -53,10 +47,10 @@ struct LoginUser: Codable, Identifiable, Sendable {
     let createdAt: String
     let updatedAt: String
     
-    var id: ID { "\(rawID)" }
-    
     // MARK: - Computed Property
     
+    var id: SwiftID<Self> { "\(rawID)" }
+        
     var twitterURL: URL? {
         guard let twitterUsername else {
             return nil
