@@ -6,15 +6,18 @@
 //
 
 import SwiftUI
+import UserDefaultsBrowser
 
 @main
 struct IKEHGitHubAPIDemoApp: App {
     var body: some Scene {
         WindowGroup {
-//            SearchScreen()
-//            LoginDebugView()
-            RootTabView()
-//            LoginUserView()
+            UserDefaultsBrowserContainer {                
+                //            SearchScreen()
+                //            LoginDebugView()
+                RootTabView()
+                //            LoginUserView()
+            }
         }
     }
 }

@@ -13,36 +13,29 @@ import HTTPTypesFoundation
 
 extension GitHubAPIClient {
     
-    private static func createLoginPageURL(clientID: String, lastLoginStateID: String) async -> URL? {
-        // ログインURLの作成
-        guard var components = URLComponents(string: "https://github.com/login/oauth/authorize") else {
-            return nil
-        }
-        components.queryItems = [
-            URLQueryItem(name: "client_id", value: clientID),
-            URLQueryItem(name: "redirect_uri", value: "ikehgithubapi://callback"), // Callback URL
-            URLQueryItem(name: "state", value: lastLoginStateID)
-        ]
-        guard let loginURL = components.url else {
-            return nil
-        }
-        
-        return loginURL
-    }
-    
+    /// ブラウザ上でログインページを開く
     @MainActor
     func openLoginPageInBrowser() async throws {
-        await tokenStore.setLastLoginStateID(UUID().uuidString) // 多重ログイン防止のためログインセッションのIDを記録
-        guard let url = await Self.createLoginPageURL(clientID: GitHubAPIClient.PrivateConstant.clientID,
-                                                      lastLoginStateID: tokenStore.lastLoginStateID) else {
+        await tokenStore.addLastLoginStateID(UUID().uuidString) // 多重ログイン防止のためログインセッションのIDを記録
+        let request = await GitHubAPIRequest.LoginPage(
+            clientID: GitHubAPIClient.PrivateConstant.clientID,
+            lastLoginStateID: tokenStore.lastLoginStateID
+        )
+        guard let loginURL = request.url else {
             throw GitHubAPIClientError.loginError("ログインURLの作成に失敗しました")
         }
-        await UIApplication.shared.open(url)
+        
+        await UIApplication.shared.open(loginURL)
     }
     
+    func handleLoginCallBackURL(_ url: URL) async throws -> LoginUser {
+        let sessionCode = try await extactSessionCodeFromCallbackURL(url)
+        try await fetchInitialToken(sessionCode: sessionCode)        
+        return try await fetchLoginUser()
+    }
+            
     /// コールバックURLからログインセッションIDを取得
-    @MainActor
-    func extactSessionCodeFromCallbackURL(_ url: URL) async throws -> String {
+    private func extactSessionCodeFromCallbackURL(_ url: URL) async throws -> String {
         guard
             let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
             let queryItems = components.queryItems,
@@ -59,5 +52,5 @@ extension GitHubAPIClient {
         }
         
         return sessionCode // 初回認証時にのみ利用する一時的なcode
-    }    
+    }
 }

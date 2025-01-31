@@ -21,9 +21,9 @@ extension GitHubAPIClient {
                                                          sessionCode: sessionCode)
         
         let currentTime = Date()
-        let response = try await self.oauthRequest(with: request)
+        let response = try await self.sendRequest(with: request)
 
-        await tokenStore.set(
+        await tokenStore.updateTokens(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
             accessTokenExpiresAt: currentTime.addingExpirationInterval(response.accessTokenExpiresIn),
@@ -52,46 +52,15 @@ extension GitHubAPIClient {
         let request = GitHubAPIRequest.UpdateAccessToken(clientID: GitHubAPIClient.PrivateConstant.clientID,
                                                          clientSecret: GitHubAPIClient.PrivateConstant.clientSecret,
                                                          refreshToken: refreshToken)
-        let response = try await self.oauthRequest(with: request)
+        let response = try await self.sendRequest(with: request)
+                
+        print("accessToken: \(response.accessToken)")
         
-        // プロパティに結果を保存
-        await tokenStore.set(
+        await tokenStore.updateTokens(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,
             accessTokenExpiresAt: currentTime.addingExpirationInterval(response.accessTokenExpiresIn),
             refreshTokenExpiresAt: currentTime.addingExpirationInterval(response.refreshTokenExpiresIn)
         )
-    }
-}
-
-// MARK: - Logout
-
-extension GitHubAPIClient {
-    
-    /// ログアウト処理
-    func logout() async throws  {
-        do {
-            // アクセストークンの更新
-            try await updateAccessTokenIfNeeded()
-            
-            // サーバ上の認証情報の削除
-            guard let accessToken = await tokenStore.accessToken else {
-                return
-            }
-            let request = GitHubAPIRequest.DeleteAppAuthorization(
-                clientID: GitHubAPIClient.PrivateConstant.clientID,
-                clientSecret: GitHubAPIClient.PrivateConstant.clientSecret,
-                accessToken: accessToken
-            )
-            try await self.noResponseRequest(with: request)
-        } catch {
-            // ローカル上の認証情報の削除
-            // サーバ上の認証情報の削除に失敗した場合もローカルを削除するようにする
-            await tokenStore.removeAll()
-            throw error
-        }
-        
-        // ローカル上の認証情報の削除
-        await tokenStore.removeAll()
     }
 }

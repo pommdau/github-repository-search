@@ -20,6 +20,10 @@ extension GitHubAPIRequest.UpdateAccessToken : GitHubAPIRequestProtocol {
 
     typealias Response = RequestTokenResponse
     
+    var responseFailType: ResponseFailType {
+        .responseBody
+    }
+    
     var method: HTTPTypes.HTTPRequest.Method {
         .post
     }

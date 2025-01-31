@@ -8,9 +8,9 @@
 import Foundation
 import SwiftID
 
-struct RelationLink: Equatable, Sendable {
+struct RelationLink: Sendable, Decodable {
     
-    struct Link: Identifiable, Equatable, Sendable {
+    struct Link: Identifiable, Equatable, Sendable, Decodable {
         struct ID: StringIDProtocol {
             let rawValue:  String
             init(rawValue: String) {

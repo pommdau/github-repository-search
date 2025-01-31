@@ -13,7 +13,7 @@ final class ProfileViewState {
     let loginUserStore: LoginUserStore
     
     var loginUser: LoginUser? {
-        loginUserStore.loginUser
+        loginUserStore.value
     }
     
     init(loginUserStore: LoginUserStore = .shared) {

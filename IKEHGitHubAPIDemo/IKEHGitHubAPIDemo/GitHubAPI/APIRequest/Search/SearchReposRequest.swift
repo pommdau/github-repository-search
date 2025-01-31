@@ -8,6 +8,17 @@
 import Foundation
 import HTTPTypes
 
+extension GitHubAPIRequest {
+    struct SearchReposRequest {
+        // TODO: Protocolに切り出しても良いかも
+        var accessToken: String?
+        var query: String
+        var page: Int?
+        var perPage: Int? = 3
+        var sortedBy: SortBy = .bestMatch
+    }
+}
+
 // MARK: - 検索タイプ
 
 extension GitHubAPIRequest.SearchReposRequest {
@@ -68,17 +79,6 @@ extension GitHubAPIRequest.SearchReposRequest {
                 return "asc"
             }
         }
-    }
-}
-
-extension GitHubAPIRequest {
-    struct SearchReposRequest {
-        // TODO: Protocolに切り出しても良いかも
-        var accessToken: String?
-        var query: String
-        var page: Int?
-        var perPage: Int? = 10
-        var sortedBy: SortBy = .bestMatch
     }
 }
 

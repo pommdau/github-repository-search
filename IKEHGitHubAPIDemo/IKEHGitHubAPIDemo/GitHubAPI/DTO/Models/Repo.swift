@@ -9,10 +9,13 @@
 import Foundation
 
 // アーキテクチャのRepositoryと区別するためRepoの名称を使う
-struct Repo: Sendable, Identifiable, Decodable, Equatable {
+// TODO: remove Equatable
+struct Repo: GitHubDTO, Equatable {
+    
+    // MARK: - Decode Result
     
     private enum CodingKeys: String, CodingKey {
-        case id
+        case rawID = "id"
         case name
         case fullName = "full_name"
         case owner
@@ -27,7 +30,7 @@ struct Repo: Sendable, Identifiable, Decodable, Equatable {
     }
     
     // searchReposで取得される情報
-    let id: Int
+    let rawID: Int
     let name: String  // e.g. "Tetris"
     let fullName: String  // e.g. "dtrupenn/Tetris"
     let owner: User
@@ -39,10 +42,14 @@ struct Repo: Sendable, Identifiable, Decodable, Equatable {
     let htmlPath: String  // リポジトリのURL
     let websitePath: String?  // 設定したホームページ
     let description: String?
-
+    
     // その他補完されて取得される情報
     var subscribersCount: Int?
+            
+    // MARK: - Computed Property
 
+    var id: SwiftID<Self> { "\(rawID)" }
+    
     var htmlURL: URL? {
         URL(string: htmlPath)
     }

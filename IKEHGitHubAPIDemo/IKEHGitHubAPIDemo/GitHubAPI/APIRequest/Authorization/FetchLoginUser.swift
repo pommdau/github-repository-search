@@ -4,6 +4,7 @@
 //
 //  Created by HIROKI IKEUCHI on 2025/01/23.
 //
+//  refs: https://docs.github.com/en/rest/users/users?apiVersion=2022-11-28
 
 import Foundation
 import HTTPTypes

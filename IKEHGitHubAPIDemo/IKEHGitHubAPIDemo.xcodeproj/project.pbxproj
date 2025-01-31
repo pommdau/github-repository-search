@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA0936912D4BC9C700484A5D /* UserDefaultsBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = DA0936902D4BC9C700484A5D /* UserDefaultsBrowser */; };
 		DA12C5E22D252C8000296345 /* IKEHGitHubAPI in Frameworks */ = {isa = PBXBuildFile; productRef = DA12C5E12D252C8000296345 /* IKEHGitHubAPI */; };
 		DA12C5EF2D2533C800296345 /* IKEHGitHubAPI in Frameworks */ = {isa = PBXBuildFile; productRef = DA12C5EE2D2533C800296345 /* IKEHGitHubAPI */; };
 		DA96BAAD2D25397D0081B93B /* HTTPTypes in Frameworks */ = {isa = PBXBuildFile; productRef = DA96BAAC2D25397D0081B93B /* HTTPTypes */; };
@@ -50,6 +51,7 @@
 				DAF43D0C2D41E31000D8A5F2 /* KeychainAccess in Frameworks */,
 				DA12C5E22D252C8000296345 /* IKEHGitHubAPI in Frameworks */,
 				DA12C5EF2D2533C800296345 /* IKEHGitHubAPI in Frameworks */,
+				DA0936912D4BC9C700484A5D /* UserDefaultsBrowser in Frameworks */,
 				DA96BAAF2D25397D0081B93B /* HTTPTypesFoundation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -99,6 +101,7 @@
 				DA96BAAE2D25397D0081B93B /* HTTPTypesFoundation */,
 				DA96BAB12D2539880081B93B /* SwiftID */,
 				DAF43D0B2D41E31000D8A5F2 /* KeychainAccess */,
+				DA0936902D4BC9C700484A5D /* UserDefaultsBrowser */,
 			);
 			productName = IKEHGitHubAPIDemo;
 			productReference = DA12C5CE2D252C6600296345 /* IKEHGitHubAPIDemo.app */;
@@ -133,6 +136,7 @@
 				DA96BAAB2D25397D0081B93B /* XCRemoteSwiftPackageReference "swift-http-types" */,
 				DA96BAB02D2539880081B93B /* XCRemoteSwiftPackageReference "swift-id" */,
 				DAF43D0A2D41E31000D8A5F2 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				DA09368F2D4BC9C700484A5D /* XCRemoteSwiftPackageReference "UserDefaultsBrowser" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DA12C5CF2D252C6600296345 /* Products */;
@@ -392,6 +396,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		DA09368F2D4BC9C700484A5D /* XCRemoteSwiftPackageReference "UserDefaultsBrowser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/YusukeHosonuma/UserDefaultsBrowser";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.2;
+			};
+		};
 		DA96BAAB2D25397D0081B93B /* XCRemoteSwiftPackageReference "swift-http-types" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-http-types";
@@ -419,6 +431,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		DA0936902D4BC9C700484A5D /* UserDefaultsBrowser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA09368F2D4BC9C700484A5D /* XCRemoteSwiftPackageReference "UserDefaultsBrowser" */;
+			productName = UserDefaultsBrowser;
+		};
 		DA12C5E12D252C8000296345 /* IKEHGitHubAPI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = IKEHGitHubAPI;

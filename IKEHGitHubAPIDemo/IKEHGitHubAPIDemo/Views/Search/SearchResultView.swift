@@ -14,7 +14,7 @@ struct SearchResultView: View {
     private var isSearching: Bool
     var asyncRepos: AsyncValues<Repo, Error> = .initial
     var cancelSearching: () -> Void = {}
-    var bottomCellOnAppear: (Int) -> Void = { _ in }
+    var bottomCellOnAppear: (Repo.ID) -> Void = { _ in }
     
     var showNoResultLabel: Bool {
         // 検索結果が0であることが前提

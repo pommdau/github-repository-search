@@ -37,7 +37,7 @@ final class LoginUserViewState {
                 alertError = error
                 showAlert = true
             }
-            loginUserStore.delete()
+            loginUserStore.deleteValue()
         }
     }
 }

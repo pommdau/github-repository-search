@@ -15,9 +15,9 @@ struct LoginDebugView: View {
     @State private var refreshToken = "(nil)"
     @State private var refreshTokenExpiresAt = "(nil)"
     
-    var realAccessToken: String? {
-        gitHubAPIClient.tokenStore.accessToken
-    }
+//    var realAccessToken: String? {
+//        gitHubAPIClient.tokenStore.accessToken
+//    }
     
     private let gitHubAPIClient: GitHubAPIClient
     
@@ -88,6 +88,18 @@ struct LoginDebugView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
+                
+                Button("Is Starred") {
+                    Task {
+                        do {                            
+                            let isStarred = try await gitHubAPIClient.checkIsRepoStarred(ownerName: "koher", repoName: "swift-id")
+                            print(isStarred ? "starred" : "not starred")
+                        } catch {
+                            print(error.localizedDescription)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
             }
             
             Section("Access Token") {
@@ -102,9 +114,8 @@ struct LoginDebugView: View {
         }
         .onOpenURL { (url) in
             Task {
-                let sessionCode = try await gitHubAPIClient.extactSessionCodeFromCallbackURL(url)
                 do {
-                    try await gitHubAPIClient.fetchInitialToken(sessionCode: sessionCode)
+                    _ = try await gitHubAPIClient.handleLoginCallBackURL(url)
                     await loadTokens()
                 } catch {
                     print(error.localizedDescription)
@@ -119,13 +130,17 @@ struct LoginDebugView: View {
     }
     
     private func loadTokens() async {
+                
         accessToken = await gitHubAPIClient.tokenStore.accessToken ?? "(nil)"
+        
         if let accessTokenExpiresAtDate = await gitHubAPIClient.tokenStore.accessTokenExpiresAt {
             accessTokenExpiresAt = DateFormatter.forTokenExpiresIn.string(from: accessTokenExpiresAtDate)
         } else {
             accessTokenExpiresAt = "(nil)"
         }
+        
         refreshToken = await gitHubAPIClient.tokenStore.refreshToken ?? "(nil)"
+        
         if let refreshTokenExpiresAtDate = await gitHubAPIClient.tokenStore.refreshTokenExpiresAt {
             refreshTokenExpiresAt = DateFormatter.forTokenExpiresIn.string(from: refreshTokenExpiresAtDate)
         } else {

@@ -39,12 +39,10 @@ final class LoginViewState {
 
     func handleOnCallbackURL(_ url: URL) {
         Task {
-            let sessionCode = try await gitHubAPIClient.extactSessionCodeFromCallbackURL(url)
             do {
-                try await gitHubAPIClient.fetchInitialToken(sessionCode: sessionCode)
+                let loginUser = try await gitHubAPIClient.handleLoginCallBackURL(url)
                 print("ログイン成功！")
-                let loginUser = try await gitHubAPIClient.fetchLoginUser()
-                loginUserStore.save(loginUser)
+                loginUserStore.addValue(loginUser)
             } catch {
                 print(error.localizedDescription)
                 alertError = error

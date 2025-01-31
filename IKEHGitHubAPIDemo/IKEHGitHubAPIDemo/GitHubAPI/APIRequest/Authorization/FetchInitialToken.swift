@@ -20,6 +20,10 @@ extension GitHubAPIRequest.FetchInitialToken: GitHubAPIRequestProtocol {
     
     typealias Response = RequestTokenResponse
     
+    var responseFailType: ResponseFailType {
+        .responseBody
+    }
+    
     var method: HTTPTypes.HTTPRequest.Method {
         .post
     }

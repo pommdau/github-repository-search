@@ -1,27 +1,39 @@
 //
-//  StarRequestProtocol.swift
+//  CheckIsRepoStarredRequest.swift
 //  IKEHGitHubAPIDemo
 //
-//  Created by HIROKI IKEUCHI on 2025/01/22.
+//  Created by HIROKI IKEUCHI on 2025/01/29.
 //
 
 import Foundation
 import HTTPTypes
 
-protocol StarRequestProtocol {
-    var accessToken: String { get }
+extension GitHubAPIRequest {
+    struct CheckIsRepoStarredRequest {
+        var accessToken: String
+        var ownerName: String
+        var repoName: String
+    }
 }
 
-extension GitHubAPIRequestProtocol where Self: StarRequestProtocol {
-    
-    typealias Response = [Repo]
+extension GitHubAPIRequest.CheckIsRepoStarredRequest : GitHubAPIRequestProtocol {
+
+    typealias Response = String
     
     var method: HTTPTypes.HTTPRequest.Method {
         .get
     }
     
     var baseURL: URL? {
-        return URL(string: "https://api.github.com")
+        URL(string: "https://api.github.com")
+    }
+    
+    var path: String {
+        "/user/starred/\(ownerName)/\(repoName)"
+    }
+    
+    var queryItems: [URLQueryItem] {
+        []
     }
     
     var header: HTTPTypes.HTTPFields {
@@ -32,11 +44,7 @@ extension GitHubAPIRequestProtocol where Self: StarRequestProtocol {
         return headerFields
     }
     
-    var queryItems: [URLQueryItem] {
-        return []
-    }
-    
     var body: Data? {
-        return nil
+        nil
     }
 }
