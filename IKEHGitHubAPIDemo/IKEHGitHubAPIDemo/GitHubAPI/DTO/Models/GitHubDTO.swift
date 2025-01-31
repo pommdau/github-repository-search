@@ -16,7 +16,7 @@ struct SwiftID<T>: StringIDProtocol {
     }
 }
 
-protocol GitHubDTO: Identifiable, Codable, Sendable {
+protocol GitHubDTO: Identifiable, Codable, Sendable, Hashable, Equatable {
     associatedtype Model
     var id: SwiftID<Model> { get } // 各DTOにユニークな型のIDを定義
 }

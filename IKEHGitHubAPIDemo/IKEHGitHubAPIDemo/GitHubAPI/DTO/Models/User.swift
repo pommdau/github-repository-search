@@ -62,3 +62,17 @@ extension User {
              htmlPath: "https://github.com/codemaster")
     ]
 }
+
+extension User {
+    static func createRandom() -> User {
+        let randomID = Int.random(in: 1000...9999)
+        let randomName = ["alice", "bob", "charlie", "dave", "eve"].randomElement()!
+
+        return User(
+            rawID: randomID,
+            name: randomName,
+            avatarImagePath: "https://avatars.githubusercontent.com/\(randomName)",
+            htmlPath: "https://github.com/\(randomName)"
+        )
+    }
+}

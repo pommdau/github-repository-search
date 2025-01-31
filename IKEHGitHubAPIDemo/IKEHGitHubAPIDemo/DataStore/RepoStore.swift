@@ -15,12 +15,16 @@ final class RepoStore {
     
     static let shared: RepoStore = .init()
 
-    let repository: RepoRepositoryProtocol
-    var values: [Repo] = []
+    let repository: RepoRepository
+    var valuesDic: [Repo.ID: Repo] = [:]
+    
+    var repos: [Repo] {
+        Array(valuesDic.values)
+    }
     
     // MARK: - LifeCycle
 
-    init(repository: RepoRepositoryProtocol) {
+    init(repository: RepoRepository) {
         self.repository = repository
     }
     
@@ -34,44 +38,27 @@ final class RepoStore {
 
     func addValue(_ value: Repo) async throws {
         try await repository.addValue(value)
-        withAnimation {
-            if let index = values.firstIndex(where: { $0.id == value.id }) {
-                values[index] = value // Update
-            } else {
-                values.append(value) // Create
-            }
-        }
+        valuesDic[value.id] = value
     }
     
-    func addValues(_ newValues: [Repo]) async throws {
+    func addValues(_ values: [Repo]) async throws {
         try await repository.addValues(values)
-        withAnimation {
-            for newValue in newValues {
-                if let index = values.firstIndex(where: { $0.id == newValue.id }) {
-                    values[index] = newValue // Update
-                } else {
-                    values.append(newValue) // Create
-                }
-            }
-        }
+        let newValuesDic = Dictionary(uniqueKeysWithValues: values.map { ($0.id, $0) })
+        valuesDic.merge(newValuesDic) { (_, new) in new }
     }
     
     // MARK: Read
     
     func fetchValues() async throws {
-        let values = try await repository.fetchAllValues()
-        withAnimation {
-            self.values = values
-        }
+        let values = try await repository.fetchValuesAll()
+        valuesDic = Dictionary(uniqueKeysWithValues: values.map { ($0.id, $0) }) // Array -> Dictionary
     }
-    
+
     // MARK: Delete
-    
+
     func deleteAllValues() async throws {
-        try await repository.deleteAllValues()
-        withAnimation {
-            values.removeAll()
-        }
+        try await repository.deleteAll()
+        valuesDic.removeAll()
     }
     
 }
