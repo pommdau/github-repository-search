@@ -31,20 +31,26 @@ struct Repo: GitHubDTO, Equatable {
     
     // searchReposで取得される情報
     let rawID: Int
-    let name: String  // e.g. "Tetris"
-    let fullName: String  // e.g. "dtrupenn/Tetris"
-    let owner: User
-    let starsCount: Int
-    let watchersCount: Int
-    let forksCount: Int
-    let openIssuesCount: Int
-    let language: String?
-    let htmlPath: String  // リポジトリのURL
-    let websitePath: String?  // 設定したホームページ
-    let description: String?
+    var name: String  // e.g. "Tetris"
+    var fullName: String  // e.g. "dtrupenn/Tetris"
+    var owner: User
+    var starsCount: Int
+    var watchersCount: Int
+    var forksCount: Int
+    var openIssuesCount: Int
+    var language: String?
+    var htmlPath: String  // リポジトリのURL
+    var websitePath: String?  // 設定したホームページ
+    var description: String?
     
-    // その他補完されて取得される情報
+    // MARK: その他補完されて取得される情報
+    
     var subscribersCount: Int?
+        
+    // MARK: Starred
+    
+    var starredAt: String? // e.g. "2024-12-17T01:54:20Z"
+    var isStarred: Bool = false
             
     // MARK: - Computed Property
 

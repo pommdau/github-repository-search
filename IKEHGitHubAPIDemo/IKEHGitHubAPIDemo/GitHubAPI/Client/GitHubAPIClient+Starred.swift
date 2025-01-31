@@ -10,7 +10,7 @@ import Foundation
 
 extension GitHubAPIClient {
     
-    func fetchStarredRepos(page: Int? = nil, sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy = .recentryStarred) async throws -> ListResponse<Repo> {
+    func fetchStarredRepos(page: Int? = nil, sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy = .recentryStarred) async throws -> [Repo] {
         // ログイン状態であればトークンの更新
         if await tokenStore.isLoggedIn {
             try await updateAccessTokenIfNeeded()
@@ -23,7 +23,7 @@ extension GitHubAPIClient {
         )
         
         let response = try await sendRequest(with: request)
-        return response
+        return response.repos
     }
     
     func checkIsRepoStarred(ownerName: String, repoName: String) async throws -> Bool {

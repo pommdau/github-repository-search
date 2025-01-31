@@ -13,7 +13,7 @@ extension GitHubAPIRequest {
         var userName: String
         var accessToken: String?
         var page: Int?
-        var perPage: Int? = 10
+        var perPage: Int? = 1
         var sortedBy: SortBy = .recentryStarred
     }
 }
@@ -67,7 +67,7 @@ extension GitHubAPIRequest.StarredReposRequest {
 
 extension GitHubAPIRequest.StarredReposRequest : GitHubAPIRequestProtocol {
 
-    typealias Response = ListResponse<Repo>
+    typealias Response = StarredReposResponse
     
     var method: HTTPTypes.HTTPRequest.Method {
         .get
@@ -103,7 +103,7 @@ extension GitHubAPIRequest.StarredReposRequest : GitHubAPIRequestProtocol {
     
     var header: HTTPTypes.HTTPFields {
         var headerFields = HTTPTypes.HTTPFields()
-        headerFields[.accept] = HTTPField.ConstantValue.applicationVndGitHubJSON
+        headerFields[.accept] = "application/vnd.github.star+json" // Includes a timestamp of when the star was created.
         if let accessToken {
             headerFields[.authorization] = "Bearer \(accessToken)"
         }

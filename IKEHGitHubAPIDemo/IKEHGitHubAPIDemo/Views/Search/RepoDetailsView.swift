@@ -18,7 +18,7 @@ struct RepoDetailsView: View {
                 repoLabel()
             }
             
-            StarButtonView()
+            StarButtonView(isStarred: repo.isStarred)
                 .padding(.vertical, 4)
             
             
@@ -190,15 +190,14 @@ extension RepoDetailsView {
 
 struct StarButtonView: View {
     
-    @State private var isStarred = false
+    let isStarred: Bool
+    var handleButtonTapped: () -> Void = {}
     
     var body: some View {
         
         ZStack {
             Button {
-                withAnimation {
-                    isStarred.toggle()
-                }
+                handleButtonTapped()
             } label: {
                 HStack {
                     Image(systemName: isStarred ? "star.fill" : "star")

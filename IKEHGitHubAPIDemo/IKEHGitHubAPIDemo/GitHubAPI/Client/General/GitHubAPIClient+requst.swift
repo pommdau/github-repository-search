@@ -48,7 +48,9 @@ extension GitHubAPIClient {
         } catch {
             throw GitHubAPIClientError.connectionError(error)
         }
-                                
+        
+        printFormattedJSON(data)
+        
         return (data, httpResponse)
     }
     

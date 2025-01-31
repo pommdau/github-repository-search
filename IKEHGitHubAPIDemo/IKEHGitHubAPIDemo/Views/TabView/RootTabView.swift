@@ -23,8 +23,7 @@ struct RootTabView: View {
             }
             
             Tab("Starred", systemImage: "star.fill", value: 2) {
-//                StarredRepoView()
-                Text("hoge")
+                StarredRepoView()
             }
             
             Tab("Debug", systemImage: "ladybug.fill", value: 3) {

@@ -31,21 +31,21 @@ struct LoginUser: GitHubDTO {
     }
             
     let rawID: Int
-    let login: String
-    let avatarURL: String
-    let url: String
-    let htmlURL: String
-    let name: String?
-    let location: String?
-    let email: String?
-    let bio: String?
-    let twitterUsername: String?
-    let publicRepos: Int
-    let publicGists: Int
-    let followers: Int
-    let following: Int
-    let createdAt: String
-    let updatedAt: String
+    var login: String
+    var avatarURL: String
+    var url: String
+    var htmlURL: String
+    var name: String?
+    var location: String?
+    var email: String?
+    var bio: String?
+    var twitterUsername: String?
+    var publicRepos: Int
+    var publicGists: Int
+    var followers: Int
+    var following: Int
+    var createdAt: String
+    var updatedAt: String
     
     // MARK: - Computed Property
     
