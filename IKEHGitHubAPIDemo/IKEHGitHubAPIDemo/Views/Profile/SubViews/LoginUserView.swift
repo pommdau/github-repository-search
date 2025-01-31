@@ -8,12 +8,10 @@
 import SwiftUI
 
 struct LoginUserView: View {
-    
-    @State private var viewState: LoginUserViewState
-    
-    init(loginUser: LoginUser) {
-        _viewState = .init(wrappedValue: LoginUserViewState(loginUser: loginUser))
-    }
+            
+    let loginUser: LoginUser
+    let namespace: Namespace.ID
+    var handleLogOutButtonTapped: () -> Void = { }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -25,19 +23,13 @@ struct LoginUserView: View {
             logoutButton()
         }
         .padding(.vertical, 20)
-        .alert("エラー", isPresented: $viewState.showAlert) {
-            Button("OK") { }
-        } message: {
-            Text(viewState.alertError?.localizedDescription ?? "(不明なエラー)")
-        }
-
     }
     
     // MARK: - View Parts
     
     @ViewBuilder
     private func userImage() -> some View {
-        AsyncImage(url: URL(string: viewState.loginUser.avatarURL),
+        AsyncImage(url: URL(string: loginUser.avatarURL),
                    content: { image in
             image.resizable()
         }, placeholder: {
@@ -46,6 +38,7 @@ struct LoginUserView: View {
         })
         .frame(width: 80, height: 80)
         .cornerRadius(40)
+        .matchedGeometryEffect(id: ProfileView.NamespaceID.image1, in: namespace)
         .accessibilityLabel(Text("User Image"))
         .background {
             Circle()
@@ -59,10 +52,10 @@ struct LoginUserView: View {
         HStack {
             userImage()
             VStack(alignment: .leading) {
-                Text(viewState.loginUser.name ?? "")
+                Text(loginUser.name ?? "")
                     .font(.title)
                     .bold()
-                Text(viewState.loginUser.login)
+                Text(loginUser.login)
                     .font(.title2)
                     .foregroundStyle(.secondary)
             }
@@ -72,7 +65,7 @@ struct LoginUserView: View {
     @ViewBuilder
     private func locationAndTwitterLabel() -> some View {
         HStack {
-            if let location = viewState.loginUser.location {
+            if let location = loginUser.location {
                 HStack(spacing: 0) {
                     Image(systemName: "mappin")
                         .scaledToFit()
@@ -83,8 +76,8 @@ struct LoginUserView: View {
                 .padding(.trailing, 10)
             }
             
-            if let twitterUsername = viewState.loginUser.twitterUsername,
-               let twitterURL = viewState.loginUser.twitterURL {
+            if let twitterUsername = loginUser.twitterUsername,
+               let twitterURL = loginUser.twitterURL {
                 HStack(spacing: 2) {
                     Text("X(Twitter)")
                         .foregroundStyle(.secondary)
@@ -108,13 +101,13 @@ struct LoginUserView: View {
                 .scaledToFit()
                 .frame(width: 20)
                 .foregroundStyle(.secondary)
-            Text("\(viewState.loginUser.followers)")
+            Text("\(loginUser.followers)")
                 .bold()
             Text("followers")
                 .foregroundStyle(.secondary)
             Text("・")
                 .foregroundStyle(.secondary)
-            Text("\(viewState.loginUser.following)")
+            Text("\(loginUser.following)")
                 .bold()
             Text("following")
                 .foregroundStyle(.secondary)
@@ -124,14 +117,16 @@ struct LoginUserView: View {
     @ViewBuilder
     private func logoutButton() -> some View {
         Button("Log out") {
-            viewState.handleLogOutButtonTapped()
+            handleLogOutButtonTapped()
         }
         .buttonStyle(LogOutButtonStyle())
+        .matchedGeometryEffect(id: ProfileView.NamespaceID.button1, in: namespace)
     }
 }
 
 // MARK: - Preview
 
 #Preview {
-    LoginUserView(loginUser: LoginUser.sampleData())
+    @Previewable @Namespace var namespace
+    LoginUserView(loginUser: LoginUser.Mock.ikeh, namespace: namespace)
 }

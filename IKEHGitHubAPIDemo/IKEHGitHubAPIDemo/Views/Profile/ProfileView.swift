@@ -9,14 +9,37 @@ import SwiftUI
 
 struct ProfileView: View {
     
-    @State private var viewState: ProfileViewState = .init()
+    // MARK: - Animated Transition
+    
+    @Namespace var profileViewNamespace
+    
+    enum NamespaceID {
+        case image1
+        case button1
+    }
+    
+    // MARK: - Property
+    
+    @State private var state: ProfileViewState = .init()
+        
+    // MARK: - View
     
     var body: some View {
-        if let loginUser = viewState.loginUser {
-            LoginUserView(loginUser: loginUser)
-        } else {
-            LoginView()
+        Group {
+            if let loginUser = state.loginUser {
+                LoginUserView(loginUser: loginUser, namespace: profileViewNamespace) {
+                    state.handleLogOutButtonTapped()
+                }
+            } else {
+                LoginView(namespace: profileViewNamespace) {
+                    state.handleLogInButtonTapped()
+                }
+            }
         }
+        .onOpenURL { url in
+            state.handleOnCallbackURL(url)
+        }
+        .errorAlert(error: $state.error)
     }
 }
 
