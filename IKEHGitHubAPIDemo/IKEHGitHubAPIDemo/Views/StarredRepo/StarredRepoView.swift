@@ -75,7 +75,7 @@ struct StarredRepoView: View {
                 
                 ForEach(state.repos) { repo in
                     NavigationLink {
-                        RepoDetailsView(repo: repo)
+                        RepoDetailsView(repoID: repo.id)
                     } label: {
                         RepoCell(repo: repo)
                     }

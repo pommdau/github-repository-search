@@ -89,7 +89,7 @@ struct SearchResultView: View {
     private func reposList(asyncRepos: AsyncValues<Repo, Error>) -> some View {
         ForEach(asyncRepos.values) { repo in
             NavigationLink {
-                RepoDetailsView(repo: repo)
+                RepoDetailsView(repoID: repo.id)
             } label: {
                 RepoCell(repo: repo)
                     .padding(.vertical, 4)
