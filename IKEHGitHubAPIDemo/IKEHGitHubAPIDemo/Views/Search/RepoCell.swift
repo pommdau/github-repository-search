@@ -92,16 +92,16 @@ struct RepoCell: View {
 // MARK: - Previews
 
 #Preview("通常", traits: .sizeThatFitsLayout) {
-    RepoCell(repo: Repo.sampleData[0])
+    RepoCell(repo: Repo.Mock.createRandom())
         .padding()
 }
 
 #Preview("長い語句を含む場合", traits: .sizeThatFitsLayout) {
-    RepoCell(repo: Repo.sampleDataWithLongWord)
+    RepoCell(repo: Repo.Mock.sampleDataWithLongWord)
         .padding()
 }
 
 #Preview("空の情報がある場合", traits: .sizeThatFitsLayout) {
-    RepoCell(repo: Repo.sampleDataWithoutSomeInfo)
+    RepoCell(repo: Repo.Mock.sampleDataWithoutSomeInfo)
         .padding()
 }

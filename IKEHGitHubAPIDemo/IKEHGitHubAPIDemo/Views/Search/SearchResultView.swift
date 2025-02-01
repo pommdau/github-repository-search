@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Shimmer
 
 struct SearchResultView: View {
     
@@ -55,7 +56,11 @@ struct SearchResultView: View {
                     .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             case .loading:
-                searchProgressView()
+                ForEach(0..<3, id: \.self) { _ in
+                    RepoCell(repo: Repo.Mock.sampleDataForReposCellSkelton)
+                        .redacted(reason: .placeholder)
+                        .shimmering()
+                }
             case .loaded, .loadingMore, .error:
                 if showNoResultLabel {
                     VStack {
@@ -118,48 +123,59 @@ struct SearchResultView: View {
     }
 }
 
-//#Preview("SearchResultView_initial") {
-//    NavigationStack {
-//        SearchResultView(asyncRepos: .initial)
-//    }
-//}
-//
-//#Preview("SearchResultView_loading") {
-//    NavigationStack {
-//        SearchResultView(asyncRepos:
-//                .loading([])
-//        )
-//    }
-//}
-//
-//#Preview("SearchResultView_loaded") {
-//    NavigationStack {
-//        SearchResultView(asyncRepos:
-//                .loaded(Array(Repo.sampleData[0...6]).map { $0.id })
-//        )
-//    }
-//}
-//
-//#Preview("SearchResultView_loaded_norepos") {
-//    NavigationStack {
-//        SearchResultView(asyncRepos:
-//                .loaded([])
-//        )
-//    }
-//}
-//
-//#Preview("SearchResultView_loadingmore") {
-//    NavigationStack {
-//        SearchResultView(asyncRepos:
-//                .loadingMore(Array(Repo.sampleData[0...2]).map { $0.id })
-//        )
-//    }
-//}
-//
-//#Preview("SearchResultView_error") {
-//    NavigationStack {
-//        SearchResultView(asyncRepos:
-//                .error(MessageError(description: "sample error"), [])
-//        )
-//    }
-//}
+// MARK: - Preview
+
+#Preview("initial") {
+    NavigationStack {
+        SearchResultView(asyncRepos: .initial)
+    }
+}
+
+#Preview("loading") {
+    NavigationStack {
+        SearchResultView(
+            asyncRepos: .loading([])
+        )
+    }
+}
+
+#Preview("loaded") {
+    NavigationStack {
+        SearchResultView(
+            asyncRepos: .loaded(Repo.Mock.createRandom(count: 10))
+        )
+    }
+}
+
+#Preview("loaded_no_result") {
+    NavigationStack {
+        SearchResultView(asyncRepos:.loaded([]))
+    }
+}
+
+#Preview("loading_more") {
+    NavigationStack {
+        SearchResultView(
+            asyncRepos: .loadingMore(Repo.Mock.createRandom(count: 3))
+        )
+    }
+}
+
+#Preview("error") {
+    NavigationStack {
+        SearchResultView(
+            asyncRepos: .error(
+                MessageError(description: "sample error"),
+                Repo.Mock.createRandom(count: 3)
+            )
+        )
+    }
+}
+
+#Preview("error_no_result") {
+    NavigationStack {
+        SearchResultView(
+            asyncRepos: .error(MessageError(description: "sample error"), [])
+        )
+    }
+}

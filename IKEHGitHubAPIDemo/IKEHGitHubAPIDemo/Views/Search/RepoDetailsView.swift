@@ -267,5 +267,5 @@ struct StarButton: View {
 }
 
 #Preview {
-    Content(repo: Repo.sampleData.first!)
+    Content(repo: Repo.Mock.createRandom())
 }

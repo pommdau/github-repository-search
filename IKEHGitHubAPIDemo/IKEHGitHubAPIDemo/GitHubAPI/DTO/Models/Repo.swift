@@ -73,26 +73,5 @@ struct Repo: GitHubDTO, Equatable {
 }
 
 extension Repo {
-    static func createRandom() -> Repo {
-        let randomID = Int.random(in: 1000...9999)
-        let randomName = ["Tetris", "Chess", "Snake", "Pong", "Breakout"].randomElement()!
-        let randomOwner = User.createRandom()
-        let randomLanguage = ["Swift", "Python", "JavaScript", "C++", "Rust"].randomElement()
-        
-        return Repo(
-            rawID: randomID,
-            name: randomName,
-            fullName: "\(randomOwner.name)/\(randomName)",
-            owner: randomOwner,
-            starsCount: Int.random(in: 0...10000),
-            watchersCount: Int.random(in: 0...5000),
-            forksCount: Int.random(in: 0...3000),
-            openIssuesCount: Int.random(in: 0...200),
-            language: randomLanguage,
-            htmlPath: "https://github.com/",
-            websitePath: Bool.random() ? "https://\(randomName.lowercased()).com" : nil,
-            description: "This is a random repository.",
-            subscribersCount: Int.random(in: 0...1000)
-        )
-    }
+    
 }

@@ -28,7 +28,7 @@ struct RepoCellNavigationLink: View {
 #Preview {
     NavigationStack {
         List {
-            RepoCellNavigationLink(repo: Repo.sampleData.first!)
+            RepoCellNavigationLink(repo: Repo.Mock.createRandom())
         }
     }
 }

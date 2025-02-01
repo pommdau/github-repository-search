@@ -10,7 +10,7 @@ import OrderedCollections
 
 struct RepoStoreDebugView: View {
     
-    @State private var repoStore = RepoStore()    
+    @State private var repoStore = RepoStore()
     @State private var repoIDs: OrderedSet<Repo.ID> = []
     
     var repos: [Repo] {
@@ -26,7 +26,7 @@ struct RepoStoreDebugView: View {
                 Button("Add") {
                     Task {
                         do {
-                            let newRepo = Repo.createRandom()
+                            let newRepo = Repo.Mock.createRandom()
                             try await repoStore.addValue(newRepo)
                             withAnimation {
                                 repoIDs.append(newRepo.id)
