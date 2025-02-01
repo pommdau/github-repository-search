@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct RepoCellLink: View {
+struct RepoCellNavigationLink: View {
     
     @Namespace var repoCellLinkNamespace
     
@@ -16,11 +16,11 @@ struct RepoCellLink: View {
     var body: some View {
         NavigationLink {
             RepoDetailsView(repoID: repo.id)
-                .navigationTransition(.zoom(sourceID: "\(repo.id)-repository", in: repoCellLinkNamespace))
+                .navigationBarBackButtonHidden()
+                .navigationTransition(.zoom(sourceID: "\(repo.id)", in: repoCellLinkNamespace))
         } label: {
             RepoCell(repo: repo)
-                .matchedTransitionSource(id:"\(repo.id)-repository", in: repoCellLinkNamespace)
-//                .padding(.vertical, 4)
+                .matchedTransitionSource(id:"\(repo.id)", in: repoCellLinkNamespace)
         }
     }
 }
@@ -28,7 +28,7 @@ struct RepoCellLink: View {
 #Preview {
     NavigationStack {
         List {
-            RepoCellLink(repo: Repo.sampleData.first!)
+            RepoCellNavigationLink(repo: Repo.sampleData.first!)
         }
     }
 }

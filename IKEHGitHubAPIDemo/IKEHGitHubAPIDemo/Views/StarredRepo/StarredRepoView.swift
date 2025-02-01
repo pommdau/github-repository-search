@@ -9,9 +9,15 @@ import SwiftUI
 
 @MainActor @Observable
 final class StarredRepoViewState {
-    
     let githubAPIClient: GitHubAPIClient
     let repoStore: RepoStore
+    var sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy = .recentryStarred
+    
+//    private var asyncRepoIDs: AsyncValues<Repo.ID, Error> = .initial
+
+    var repos: [Repo] {
+        repoStore.repos
+    }
     
     init(githubAPIClient: GitHubAPIClient = .shared, repoStore: RepoStore = .shared) {
         self.githubAPIClient = githubAPIClient
@@ -22,9 +28,7 @@ final class StarredRepoViewState {
 //        self.init(starredRepoStore: StarredRepoStore.shared)
 //    }
 //        
-    var repos: [Repo] {
-        repoStore.repos
-    }
+
     
     func fetchRepos() async {
         do {
@@ -48,41 +52,63 @@ final class StarredRepoViewState {
 
 struct StarredRepoView: View {
     
+    @Namespace var namespace
     @State private var state: StarredRepoViewState = .init()
-    
+        
     var body: some View {
         NavigationStack {
             List {
-                Button("Fetch") {
-                    Task {
-                        do {
-                            try await state.fetchRepos()
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                    }
-                }
-                
-                Button("Add") {
-//                    viewState.handleAddButtonTapped()
-                }
-                
-                Button("Delete All") {
-                    Task {
-                        try? await state.repoStore.deleteAllValues()
-                    }
-                }
+//                Button("Fetch") {
+//                    Task {
+//                        do {
+//                            try await state.fetchRepos()
+//                        } catch {
+//                            print(error.localizedDescription)
+//                        }
+//                    }
+//                }
+//                
+//                Button("Add") {
+////                    viewState.handleAddButtonTapped()
+//                }
+//                
+//                Button("Delete All") {
+//                    Task {
+//                        try? await state.repoStore.deleteAllValues()
+//                    }
+//                }
                 
                 ForEach(state.repos) { repo in
                     NavigationLink {
                         RepoDetailsView(repoID: repo.id)
+                            .navigationBarBackButtonHidden()
+                            .navigationTransition(.zoom(sourceID: "\(repo.id)", in: namespace))
                     } label: {
                         RepoCell(repo: repo)
+                            .matchedTransitionSource(id:"\(repo.id)", in: namespace)
                     }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("Starred Repositories")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Picker("Sorted By", selection: $state.sortedBy) {
+                            ForEach(GitHubAPIRequest.StarredReposRequest.SortBy.allCases) { type in
+                                /// 選択項目の一覧
+                                Text(type.title).tag(type)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                        .onChange(of: state.sortedBy) { _, _ in
+//                            state.handleSortedByChanged()
+                        }
+                    } label: {
+                        Image(systemName: "arrow.up.arrow.down")
+                    }
+                }
+            }
         }
         .onAppear {
             state.onAppear()
