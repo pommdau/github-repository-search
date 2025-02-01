@@ -59,9 +59,9 @@ struct RepoDetailsView: View {
         _state = .init(wrappedValue: RepoDetailsViewState(repoID: repoID))
     }
     
-    var body: some View {        
+    var body: some View {
         if let repo = state.repo {
-            _RepoDetailsView(repo: repo) {
+            Content(repo: repo) {
                 state.handleStarButtonTapped()
             }
         } else {
@@ -70,9 +70,7 @@ struct RepoDetailsView: View {
     }
 }
 
-// MARK: - Title
-
-struct _RepoDetailsView: View {
+private struct Content: View {
     
     let repo: Repo
     var handleStarButtonTapped: () -> Void = {}
@@ -83,25 +81,19 @@ struct _RepoDetailsView: View {
                 userLabel()
                 repoLabel()
             }
-            
             StarButton(isStarred: repo.isStarred) {
                 handleStarButtonTapped()
             }
             .padding(.vertical, 4)
             Divider()
             descriptionView()
-            //            if let language = repo.language,
-            //               !language.isEmpty {
-            //                Divider()
-            //                LanguageView(languageName: language)
-            //            }
             Spacer()
         }
         .padding(.horizontal, 20)
     }
 }
 
-extension _RepoDetailsView {
+extension Content {
     @ViewBuilder
     private func userLabel() -> some View {
         Button {
@@ -111,7 +103,7 @@ extension _RepoDetailsView {
             UIApplication.shared.open(url)
         } label: {
             HStack {
-                // Userアイコン
+                // Icon
                 AsyncImage(url: repo.owner.avatarImageURL) { image in
                     image.resizable()
                 } placeholder: {
@@ -127,7 +119,7 @@ extension _RepoDetailsView {
                         .stroke(lineWidth: 1)
                         .foregroundStyle(.secondary)
                 }
-                // User名
+                // User Name
                 Text(repo.owner.name)
                     .lineLimit(1)
             }
@@ -154,7 +146,7 @@ extension _RepoDetailsView {
 
 // MARK: - Description
 
-extension _RepoDetailsView {
+extension Content {
     @ViewBuilder
     private func descriptionView() -> some View {
         VStack(alignment: .leading) {
@@ -275,5 +267,5 @@ struct StarButton: View {
 }
 
 #Preview {
-    _RepoDetailsView(repo: Repo.sampleData.first!)
+    Content(repo: Repo.sampleData.first!)
 }
