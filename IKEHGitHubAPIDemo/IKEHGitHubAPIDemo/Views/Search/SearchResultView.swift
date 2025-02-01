@@ -14,6 +14,8 @@ struct SearchResultView: View {
     @Environment(\.isSearching)
     private var isSearching: Bool
     
+    @Namespace var namespace
+    
     let asyncRepos: AsyncValues<Repo, Error>
     var cancelSearching: () -> Void = {}
     var bottomCellOnAppear: (Repo.ID) -> Void = { _ in }
@@ -95,9 +97,13 @@ struct SearchResultView: View {
         ForEach(asyncRepos.values) { repo in
             NavigationLink {
                 RepoDetailsView(repoID: repo.id)
+//                    .navigationBarBackButtonHidden(true)
+                    .navigationTransition(.zoom(sourceID: "\(repo.id)", in: namespace))
             } label: {
                 RepoCell(repo: repo)
                     .padding(.vertical, 4)
+//                    .navigationBarBackButtonHidden(true)
+                    .matchedTransitionSource(id:"\(repo.id)", in: namespace)
                     .onAppear {
                         guard let lastRepo = asyncRepos.values.last else {
                             return
@@ -116,7 +122,7 @@ struct SearchResultView: View {
     @ViewBuilder
     private func searchProgressView() -> some View {
         // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
-        ProgressView("searching...")
+        ProgressView("Searching...")
             .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
             .frame(maxWidth: .infinity, alignment: .center)
             .id(UUID())

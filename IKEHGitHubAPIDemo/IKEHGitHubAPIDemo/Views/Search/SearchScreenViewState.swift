@@ -133,6 +133,7 @@ extension SearchScreenViewState {
             do {
                 // 検索に成功
                 let response = try await gitHubAPIClient.searchRepos(searchText: nextLink.searchText, page: nextLink.page)
+                try await repoStore.addValues(response.items)
                 withAnimation {
                     asyncRepoIDs = .loaded(asyncRepoIDs.values + response.items.map { $0.id })
                 }
@@ -168,6 +169,7 @@ extension SearchScreenViewState {
         searchTask = Task {
             do {
                 let response = try await gitHubAPIClient.searchRepos(searchText: nextLink.searchText, sortedBy: sortedBy)
+                try await repoStore.addValues(response.items)
                 withAnimation {
                     asyncRepoIDs = .loaded(response.items.map { $0.id })
                 }

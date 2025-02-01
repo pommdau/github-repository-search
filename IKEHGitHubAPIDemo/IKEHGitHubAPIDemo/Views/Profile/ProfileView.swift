@@ -11,7 +11,7 @@ struct ProfileView: View {
     
     // MARK: - Animated Transition
     
-    @Namespace var profileViewNamespace
+    @Namespace var namespace
     
     enum NamespaceID {
         case image1
@@ -27,11 +27,11 @@ struct ProfileView: View {
     var body: some View {
         Group {
             if let loginUser = state.loginUser {
-                LoginUserView(loginUser: loginUser, namespace: profileViewNamespace) {
+                LoginUserView(loginUser: loginUser, namespace: namespace) {
                     state.handleLogOutButtonTapped()
                 }
             } else {
-                LoginView(namespace: profileViewNamespace) {
+                LoginView(namespace: namespace) {
                     state.handleLogInButtonTapped()
                 }
             }
