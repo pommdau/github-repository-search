@@ -16,8 +16,7 @@ struct UserCell: View {
             VStack(spacing: 8) {
                 Text(user.name)
                     .lineLimit(1)
-                    .padding(.top, 2)
-                
+                    .padding(.top, 2)                
                 Button {
                     if let url = user.htmlURL {
                         UIApplication.shared.open(url)

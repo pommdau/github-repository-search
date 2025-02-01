@@ -81,6 +81,8 @@ struct StarredRepoView: View {
                     }
                 }
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Starred Repositories")
         }
         .onAppear {
             state.onAppear()
