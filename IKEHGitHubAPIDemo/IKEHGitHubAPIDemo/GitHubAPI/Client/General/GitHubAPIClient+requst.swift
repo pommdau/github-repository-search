@@ -49,7 +49,7 @@ extension GitHubAPIClient {
             throw GitHubAPIClientError.connectionError(error)
         }
         
-        printFormattedJSON(data)
+//        printFormattedJSON(data)
         
         return (data, httpResponse)
     }

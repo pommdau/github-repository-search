@@ -123,7 +123,11 @@ extension SearchScreenViewState {
         }
         
         // リンク情報がなければ何もしない
-        guard let nextLink = relationLink?.next else {
+        guard
+            let nextLink = relationLink?.next,
+            let query = nextLink.query,
+            let page = nextLink.page
+        else {
             return
         }
         
@@ -132,7 +136,7 @@ extension SearchScreenViewState {
         searchTask = Task {
             do {
                 // 検索に成功
-                let response = try await gitHubAPIClient.searchRepos(searchText: nextLink.searchText, page: nextLink.page)
+                let response = try await gitHubAPIClient.searchRepos(searchText: query, page: page)
                 try await repoStore.addValues(response.items)
                 withAnimation {
                     asyncRepoIDs = .loaded(asyncRepoIDs.values + response.items.map { $0.id })
@@ -160,7 +164,8 @@ extension SearchScreenViewState {
         // リンク情報がなければ何もしない(TODO: 見直せるかも)
         guard case .loaded = asyncRepos,
               !asyncRepos.values.isEmpty,
-              let nextLink = relationLink?.next
+              let nextLink = relationLink?.next,
+              let query = nextLink.query
         else {
             return
         }
@@ -168,7 +173,7 @@ extension SearchScreenViewState {
         asyncRepoIDs = .loading(asyncRepoIDs.values)
         searchTask = Task {
             do {
-                let response = try await gitHubAPIClient.searchRepos(searchText: nextLink.searchText, sortedBy: sortedBy)
+                let response = try await gitHubAPIClient.searchRepos(searchText: query, sortedBy: sortedBy)
                 try await repoStore.addValues(response.items)
                 withAnimation {
                     asyncRepoIDs = .loaded(response.items.map { $0.id })

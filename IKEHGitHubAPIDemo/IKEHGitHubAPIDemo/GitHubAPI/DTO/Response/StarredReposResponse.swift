@@ -18,7 +18,9 @@ private extension StarredReposResponse {
         
         func convertToRepo() -> Repo {
             var repo = self.repo
+            // スター情報を付与
             repo.starredAt = self.starredAt
+            repo.isStarred = true
             return repo
         }
     }

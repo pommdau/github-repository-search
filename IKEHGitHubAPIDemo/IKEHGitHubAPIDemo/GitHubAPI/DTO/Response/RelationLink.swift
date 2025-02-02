@@ -8,9 +8,9 @@
 import Foundation
 import SwiftID
 
-struct RelationLink: Sendable, Decodable {
+struct RelationLink: Sendable {
     
-    struct Link: Identifiable, Equatable, Sendable, Decodable {
+    struct Link: Identifiable, Equatable, Sendable {
         struct ID: StringIDProtocol {
             let rawValue:  String
             init(rawValue: String) {
@@ -19,8 +19,19 @@ struct RelationLink: Sendable, Decodable {
         }
         var id: ID
         var url: URL
-        var searchText: String
-        var page: Int
+        var queryItems: [URLQueryItem]
+        
+        // MARK: - QueryItems
+        
+        var query: String? {
+            queryItems.first(where: { $0.name == "q" })?.value
+        }
+        var page: Int? {
+            guard let page = queryItems.first(where: { $0.name == "page" })?.value else {
+                return 0
+            }
+            return Int(page)
+        }
     }
     
     var prev: Link?
@@ -37,7 +48,8 @@ extension RelationLink {
      
      rawValueの例:
      ```
-     Link: <https://api.github.com/search/repositories?q=swift&page=2>; rel="next", <https://api.github.com/search/repositories?q=swift&page=34>; rel="last"
+     <https://api.github.com/search/repositories?q=swift&page=2>; rel="next", <https://api.github.com/search/repositories?q=swift&page=34>; rel="last"
+     <https://api.github.com/user/29433103/starred?sort=created&direction=desc&per_page=5&page=2>; rel=\"next\", <https://api.github.com/user/29433103/starred?sort=created&direction=desc&per_page=5&page=12>; rel=\"last\"
      ```
      */
     static func create(rawValue: String) -> RelationLink {
@@ -56,15 +68,11 @@ extension RelationLink {
                 .replacingOccurrences(of: ">", with: "")
             
             guard let url = URL(string: path),
-                  let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true),
-                  let queryItems = urlComponents.queryItems,
-                  let searchTextItem = queryItems.first(where: { $0.name == "q" }),
-                  let searchText = searchTextItem.value,
-                  let pageItem = queryItems.first(where: { $0.name == "page" }),
-                  let pageValue = pageItem.value,
-                  let pageNumber = Int(pageValue) else {
+                  let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
                 continue
             }
+        
+            let queryItems = urlComponents.queryItems ?? []
             
             // rel="next" -> next
             let relationKey = linkElements[1]
@@ -74,13 +82,13 @@ extension RelationLink {
             
             switch relationKey {
             case "prev":
-                relationLink.prev = .init(id: "\(relationKey)", url: url, searchText: searchText, page: pageNumber)
+                relationLink.prev = .init(id: "\(relationKey)", url: url, queryItems: queryItems)
             case "next":
-                relationLink.next = .init(id: "\(relationKey)", url: url, searchText: searchText, page: pageNumber)
+                relationLink.next = .init(id: "\(relationKey)", url: url, queryItems: queryItems)
             case "last":
-                relationLink.last = .init(id: "\(relationKey)", url: url, searchText: searchText, page: pageNumber)
+                relationLink.last = .init(id: "\(relationKey)", url: url, queryItems: queryItems)
             case "first":
-                relationLink.first = .init(id: "\(relationKey)", url: url, searchText: searchText, page: pageNumber)
+                relationLink.first = .init(id: "\(relationKey)", url: url,queryItems: queryItems)
             default:
                 preconditionFailure()
             }
@@ -92,13 +100,24 @@ extension RelationLink {
 
 // MARK: - Test用
 
+import SwiftUI
+
+#Preview {
+    Button("Action") {
+        RelationLink.test()
+    }
+}
+
 extension RelationLink {
     static func test() {
+//        let testString = """
+////// <https://api.github.com/search/repositories?q=swift&page=2>; rel="next", <https://api.github.com/search/repositories?q=swift&page=34>; rel="last"
+//"""
         let testString = """
- <https://api.github.com/search/repositories?q=swift&page=2>; rel="next", <https://api.github.com/search/repositories?q=swift&page=34>; rel="last"
+     <https://api.github.com/user/29433103/starred?sort=created&direction=desc&per_page=5&page=2>; rel=\"next\", <https://api.github.com/user/29433103/starred?sort=created&direction=desc&per_page=5&page=12>; rel=\"last\"
 """
         let relationLink = RelationLink.create(rawValue: testString)
         print(relationLink)
-        print("Check")
+        print("Completed")
     }
 }

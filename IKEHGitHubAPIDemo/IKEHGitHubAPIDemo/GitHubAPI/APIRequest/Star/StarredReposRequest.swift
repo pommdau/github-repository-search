@@ -13,7 +13,7 @@ extension GitHubAPIRequest {
         var userName: String
         var accessToken: String?
         var page: Int?
-        var perPage: Int? = 1
+        var perPage: Int? = 5
         var sortedBy: SortBy = .recentryStarred
     }
 }
