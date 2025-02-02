@@ -1,14 +1,14 @@
 //
-//  StarredRepoView.swift
+//  StarredReposViewState.swift
 //  IKEHGitHubAPIDemo
 //
-//  Created by HIROKI IKEUCHI on 2025/01/25.
+//  Created by HIROKI IKEUCHI on 2025/02/02.
 //
 
 import SwiftUI
 
 @MainActor @Observable
-final class StarredRepoViewState {
+final class StarredReposViewState {
     
     let loginUserStore: LoginUserStore
     let githubAPIClient: GitHubAPIClient
@@ -194,74 +194,5 @@ final class StarredRepoViewState {
                 print(error.localizedDescription)
             }
         }
-    }
-}
-
-struct StarredRepoView: View {
-    
-    @Namespace private var namespace
-    @State private var state: StarredRepoViewState = .init()
-    
-    var handleLogInButtonTapped: () -> (Void) = {}
-    
-    var body: some View {
-        
-        if state.loginUser == nil {
-            ZStack {
-                List {
-                    Button("Fetch") {
-                        state.handleFetchingStarredRepos()
-                    }
-                    
-                    Button("Fetch More") {
-                        state.fetchStarredReposMore()
-                    }
-                }
-                LoginView(namespace: namespace)
-            }
-        } else {
-            NavigationStack {
-                StarredRepoListView(asyncRepos: state.asyncRepos)
-                    .errorAlert(error: $state.error)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .navigationTitle("Starred Repositories")
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            toolbarItemContentSortedBy()
-                        }
-                    }
-            }
-            .onAppear {
-                state.onAppear()
-            }
-        }
-    }
-    
-    // MARK: - UI
-    
-    @ViewBuilder
-    private func toolbarItemContentSortedBy() -> some View {
-        Menu {
-            Picker("Sorted By", selection: $state.sortedBy) {
-                ForEach(GitHubAPIRequest.StarredReposRequest.SortBy.allCases) { type in
-                    /// 選択項目の一覧
-                    Text(type.title).tag(type)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-            .onChange(of: state.sortedBy) { _, _ in
-                state.handleSortedByChanged()
-            }
-        } label: {
-            Image(systemName: "arrow.up.arrow.down")
-        }
-    }
-}
-
-// MARK: - Preview
-
-#Preview("initial") {
-    NavigationStack {
-        StarredRepoView()
     }
 }

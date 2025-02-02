@@ -4,6 +4,7 @@
 //
 //  Created by HIROKI IKEUCHI on 2025/01/15.
 //
+//  refs: [非同期処理をラクにする！SwiftUIでの設計パターンの紹介](https://zenn.dev/timetree/articles/97ad70c4611894)
 
 import Foundation
 

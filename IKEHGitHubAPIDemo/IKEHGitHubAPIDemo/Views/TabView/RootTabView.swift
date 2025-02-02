@@ -56,7 +56,7 @@ struct RootTabView: View {
             }
             
             Tab(TabType.starredRepos.title, systemImage: TabType.starredRepos.icon, value: TabType.starredRepos) {
-                StarredRepoView()
+                StarredReposView()
             }
             
             Tab(TabType.debug.title, systemImage: TabType.debug.icon, value: TabType.debug) {
