@@ -37,6 +37,14 @@ extension ISO8601DateFormatter: @retroactive @unchecked Sendable {
 }
 
 extension RelativeDateTimeFormatter: @retroactive @unchecked Sendable {
+    /*
+     e.g.
+     in 11 months
+     3 months ago
+     4 weeks ago
+     2 days ago
+     5 hours ago
+     */
     static let in30days: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
