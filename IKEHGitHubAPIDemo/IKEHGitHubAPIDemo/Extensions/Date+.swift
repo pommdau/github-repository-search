@@ -40,7 +40,7 @@ extension Date {
         }
         
         // 直近の更新
-        return "Updated \(RelativeDateTimeFormatter.in30days.localizedString(for: self, relativeTo: .now) )"
+        return "Updated \(RelativeDateTimeFormatter.shared.localizedString(for: self, relativeTo: .now) )"
 
         
         

@@ -45,7 +45,7 @@ extension RelativeDateTimeFormatter: @retroactive @unchecked Sendable {
      2 days ago
      5 hours ago
      */
-    static let in30days: RelativeDateTimeFormatter = {
+    static let shared: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
         
