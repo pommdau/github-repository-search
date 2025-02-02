@@ -27,7 +27,7 @@ extension GitHubAPIClient {
     }
     
     func checkIsRepoStarred(ownerName: String, repoName: String) async throws -> Bool {
-        
+        print(Date.now)
 //        try await Task.sleep(nanoseconds: 10_000_000_000) // 10s待機
         
         try await updateAccessTokenIfNeeded()
@@ -39,7 +39,9 @@ extension GitHubAPIClient {
         
         do {
             try await sendRequestWithoutResponseData(with: request)
+            print(Date.now)
         } catch {
+            print(Date.now)
             switch error {
             case let GitHubAPIClientError.apiError(error):
                 if error.statusCode == 404 {

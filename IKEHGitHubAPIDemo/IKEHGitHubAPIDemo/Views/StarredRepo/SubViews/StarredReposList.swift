@@ -51,6 +51,7 @@ extension StarredReposList {
                 .redacted(reason: .placeholder)
                 .shimmering()
         }
+        .id(UUID())
     }
     
     @ViewBuilder

@@ -49,7 +49,7 @@ extension RepoDetailsView {
         }
         .padding(.horizontal, 20)
         .onAppear {
-
+            state.checkIsStarred()
         }
     }
 

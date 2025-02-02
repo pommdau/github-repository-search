@@ -63,6 +63,7 @@ struct SearchResultView: View {
                         .redacted(reason: .placeholder)
                         .shimmering()
                 }
+                .id(UUID())
             case .loaded, .loadingMore, .error:
                 if showNoResultLabel {
                     VStack {

@@ -17,8 +17,11 @@ final class RepoDetailsViewState {
     let loginUserStore: LoginUserStore
     let repoID: Repo.ID
     
-    private(set) var checkIsStarredTask: Task<(), Never>?
-    private(set) var starredTask: Task<(), Never>?
+    private var checkIsStarredTask: Task<(), Never>?
+    private var starredTask: Task<(), Never>?
+
+    private var checkIsStarredInProcessing: Bool = false
+    private var starredInProcessing: Bool = false
     
     private(set) var error: Error?
     
@@ -31,7 +34,9 @@ final class RepoDetailsViewState {
     }
     
     var disableStarButton: Bool {
-        (loginUser == nil)
+        (loginUser == nil) ||
+        checkIsStarredInProcessing ||
+        starredInProcessing
     }
     
     // MARK: - LifeCycle
@@ -49,27 +54,71 @@ final class RepoDetailsViewState {
     }
     
     func handleStarButtonTapped() {
+        guard var repo, let loginUser else {
+            return
+        }
+        let isStarred = repo.isStarred
+                
         starredTask = Task {
-//            guard var repo else {
-//                return
-//            }
-//            repo.isStarred.toggle()
-//            // スター日時の更新
-//            repo.starredAt = repo.isStarred ? ISO8601DateFormatter.shared.string(from: .now) : nil
-//            try await repoStore.addValue(repo)
+            // UI更新
+            starredInProcessing = true
+            defer {
+                starredInProcessing = false
+            }
+            
+            // API通信
+            do {
+                if isStarred {
+                    try await gitHubAPIClient.unstarRepo(ownerName: loginUser.login, repoName: repo.name)
+                } else {
+                    try await gitHubAPIClient.starRepo(ownerName: loginUser.login, repoName: repo.name)
+                    
+                }
+            } catch {
+                self.error = error
+                return
+            }
+            
+            // ローカルの情報の更新
+            repo.isStarred.toggle()
+            // スター日時の更新
+            repo.starredAt = repo.isStarred ? ISO8601DateFormatter.shared.string(from: .now) : nil
+            do {
+                try await repoStore.addValue(repo)
+            } catch {
+                self.error = error
+                return
+            }
         }
     }
     
-    func onAppear() {
+    func checkIsStarred() {
+        guard var repo, let loginUser else {
+            return
+        }
         checkIsStarredTask = Task {
-            guard let loginUser, let repo else {
-                return
-            }            
+            // UI更新
+            checkIsStarredInProcessing = true
+            defer {
+                checkIsStarredInProcessing = false
+            }
+            
+            // API通信
+            let isStarred: Bool
             do {
-                let starred = try await gitHubAPIClient.checkIsRepoStarred(ownerName: loginUser.login, repoName: repo.name)                
-                print(starred)
+                isStarred = try await gitHubAPIClient.checkIsRepoStarred(ownerName: loginUser.login, repoName: repo.name)
             } catch {
                 self.error = error
+                return
+            }
+            
+            // ローカルの情報の更新
+            repo.isStarred = isStarred
+            do {
+                try await repoStore.addValue(repo)
+            } catch {
+                self.error = error
+                return
             }
         }
     }
