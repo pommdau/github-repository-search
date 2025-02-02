@@ -31,7 +31,9 @@ struct ProfileView: View {
                     state.handleLogOutButtonTapped()
                 }
             } else {
-                LoginView(namespace: namespace)
+                LoginView(namespace: namespace) {
+                    state.handleLogInButtonTapped()
+                }
             }
         }
         .onOpenURL { url in

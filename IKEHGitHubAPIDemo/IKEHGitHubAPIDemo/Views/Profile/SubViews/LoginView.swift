@@ -7,55 +7,10 @@
 
 import SwiftUI
 
-@MainActor @Observable
-final class LoginViewState {
-    
-    // MARK: - Property
-            
-    let loginUserStore: LoginUserStore
-    let githubAPIClient: GitHubAPIClient
-    var error: Error?
-    
-    // MARK: - LifeCycle
-    
-    init(loginUserStore: LoginUserStore = .shared, githubAPIClient: GitHubAPIClient = .shared) {
-        self.loginUserStore = loginUserStore
-        self.githubAPIClient = githubAPIClient
-    }
-    
-    // MARK: - Actions
-    
-    func handleOnCallbackURL(_ url: URL) {
-        Task {
-            do {
-                let loginUser = try await githubAPIClient.handleLoginCallBackURL(url)
-                print("ログイン成功！")
-                withAnimation {
-                    loginUserStore.addValue(loginUser)
-                }
-            } catch {
-                print(error.localizedDescription)
-                self.error = error
-            }
-        }
-    }
-    
-    func handleLogInButtonTapped() {
-        Task {
-            do {
-                try await githubAPIClient.openLoginPageInBrowser()
-            } catch {
-                print(error.localizedDescription)
-                self.error = error
-            }
-        }
-    }
-}
-
 struct LoginView: View {
     
     let namespace: Namespace.ID
-    @State private var state: LoginViewState = .init()
+    var handleLogInButtonTapped: () -> Void = {}
                     
     var body: some View {
         VStack {
@@ -70,7 +25,7 @@ struct LoginView: View {
                 .padding(.bottom, 60)
             
             Button("Log in") {
-                state.handleLogInButtonTapped()
+                handleLogInButtonTapped()
             }
             .buttonStyle(LogInButtonStyle())
             .padding(.bottom, 8)

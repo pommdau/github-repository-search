@@ -10,22 +10,30 @@ import SwiftUI
 @MainActor @Observable
 final class ProfileViewState {
     
+    // MARK: - Property
+        
     let loginUserStore: LoginUserStore
     let githubAPIClient: GitHubAPIClient
+    var error: Error?
     
     var loginUser: LoginUser? {
         loginUserStore.value
     }
     
-    var error: Error?
+    // MARK: - LifeCycle
     
-    init(loginUserStore: LoginUserStore = .shared,
-         githubAPIClient: GitHubAPIClient = .shared) {
+    init(
+        loginUserStore: LoginUserStore = .shared,
+        githubAPIClient: GitHubAPIClient = .shared
+    ) {
         self.loginUserStore = loginUserStore
         self.githubAPIClient = githubAPIClient
     }
-    
-    // MARK: - Actions
+}
+
+// MARK: - Actions
+
+extension ProfileViewState {
     
     func handleOnCallbackURL(_ url: URL) {
         Task {
@@ -36,7 +44,6 @@ final class ProfileViewState {
                     loginUserStore.addValue(loginUser)
                 }
             } catch {
-                print(error.localizedDescription)
                 self.error = error
             }
         }
@@ -47,7 +54,6 @@ final class ProfileViewState {
             do {
                 try await githubAPIClient.openLoginPageInBrowser()
             } catch {
-                print(error.localizedDescription)
                 self.error = error
             }
         }
@@ -57,11 +63,11 @@ final class ProfileViewState {
         Task {
             do {
                 try await githubAPIClient.logout()
+                withAnimation {
+                    loginUserStore.deleteValue()
+                }
             } catch {
                 self.error = error
-            }
-            withAnimation {
-                loginUserStore.deleteValue()
             }
         }
     }

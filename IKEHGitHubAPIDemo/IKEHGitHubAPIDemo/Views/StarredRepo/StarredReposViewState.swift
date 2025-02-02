@@ -57,16 +57,15 @@ final class StarredReposViewState {
         }
     }
     
-    init(loginUserStore: LoginUserStore = .shared, githubAPIClient: GitHubAPIClient = .shared, repoStore: RepoStore = .shared) {
+    init(
+        loginUserStore: LoginUserStore = .shared,
+        githubAPIClient: GitHubAPIClient = .shared,
+        repoStore: RepoStore = .shared
+    ) {
         self.loginUserStore = loginUserStore
         self.githubAPIClient = githubAPIClient
         self.repoStore = repoStore
     }
-    
-    //    convenience init() {
-    //        self.init(starredRepoStore: StarredRepoStore.shared)
-    //    }
-    //
     
     func handleFetchingStarredRepos() {
         
