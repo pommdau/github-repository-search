@@ -112,16 +112,16 @@ struct LoginDebugView: View {
                 LabeledContent("Expires in", value: refreshTokenExpiresAt)
             }
         }
-        .onOpenURL { (url) in
-            Task {
-                do {
-                    _ = try await gitHubAPIClient.handleLoginCallBackURL(url)
-                    await loadTokens()
-                } catch {
-                    print(error.localizedDescription)
-                }
-            }
-        }
+//        .onOpenURL { (url) in
+//            Task {
+//                do {
+//                    _ = try await gitHubAPIClient.handleLoginCallBackURL(url)
+//                    await loadTokens()
+//                } catch {
+//                    print(error.localizedDescription)
+//                }
+//            }
+//        }
         .onAppear() {
             Task {
                 await loadTokens()

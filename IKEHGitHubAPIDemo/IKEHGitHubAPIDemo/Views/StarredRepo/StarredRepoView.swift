@@ -10,14 +10,17 @@ import SwiftUI
 @MainActor @Observable
 final class StarredRepoViewState {
     
-    let loginUser: LoginUser = LoginUser.Mock.ikeh
-    
+    let loginUserStore: LoginUserStore
     let githubAPIClient: GitHubAPIClient
     let repoStore: RepoStore
     var sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy = .recentryStarred
     
-    private var asyncRepoIDs: AsyncValues<Repo.ID, Error> = .initial
-
+    var loginUser: LoginUser? {
+        loginUserStore.value
+    }
+    
+    private(set) var asyncRepoIDs: AsyncValues<Repo.ID, Error> = .initial
+    
     var asyncRepos: AsyncValues<Repo, Error> {
         let repos = asyncRepoIDs.values.compactMap { repoStore.valuesDic[$0] }
         switch asyncRepoIDs {
@@ -54,21 +57,25 @@ final class StarredRepoViewState {
         }
     }
     
-    init(githubAPIClient: GitHubAPIClient = .shared, repoStore: RepoStore = .shared) {
+    init(loginUserStore: LoginUserStore = .shared, githubAPIClient: GitHubAPIClient = .shared, repoStore: RepoStore = .shared) {
+        self.loginUserStore = loginUserStore
         self.githubAPIClient = githubAPIClient
         self.repoStore = repoStore
     }
     
-//    convenience init() {
-//        self.init(starredRepoStore: StarredRepoStore.shared)
-//    }
-//        
-
+    //    convenience init() {
+    //        self.init(starredRepoStore: StarredRepoStore.shared)
+    //    }
+    //
     
     func handleFetchingStarredRepos() {
         
         // すでに検索中であれば何もしない
         if case .loading = asyncRepoIDs {
+            return
+        }
+        
+        guard let userName = loginUser?.login else {
             return
         }
         
@@ -78,7 +85,7 @@ final class StarredRepoViewState {
         fetchStarredReposTask = Task {
             do {
                 // 検索: 成功
-                let response = try await githubAPIClient.fetchStarredRepos(userName: loginUser.login, sortedBy: sortedBy)
+                let response = try await githubAPIClient.fetchStarredRepos(userName: userName, sortedBy: sortedBy)
                 try await repoStore.addValues(response.repos)
                 withAnimation {
                     asyncRepoIDs = .loaded(response.repos.map { $0.id })
@@ -111,8 +118,10 @@ final class StarredRepoViewState {
             break
         }
         
-        // リンク情報がなければ何もしない
-        guard let nextLink = relationLink?.next else {
+        guard
+            let userName = loginUser?.login,
+            let nextLink = relationLink?.next // リンク情報がなければ何もしない
+        else {
             return
         }
         
@@ -121,7 +130,7 @@ final class StarredRepoViewState {
         fetchStarredReposTask = Task {
             do {
                 // 検索に成功
-                let response = try await githubAPIClient.fetchStarredRepos(userName: loginUser.login, page: nextLink.page, sortedBy: sortedBy)
+                let response = try await githubAPIClient.fetchStarredRepos(userName: userName, page: nextLink.page, sortedBy: sortedBy)
                 try await repoStore.addValues(response.repos)
                 withAnimation {
                     asyncRepoIDs = .loaded(asyncRepoIDs.values + response.repos.map { $0.id })
@@ -147,7 +156,8 @@ final class StarredRepoViewState {
         // リンク情報がなければ何もしない(=検索結果がこれ以上無いので並び替えだけでOK)(TODO: 見直せるかも)
         guard case .loaded = asyncRepos,
               !asyncRepoIDs.values.isEmpty,
-              let _ = relationLink?.next
+              let _ = relationLink?.next,
+              let userName = loginUser?.login
         else {
             return
         }
@@ -155,7 +165,7 @@ final class StarredRepoViewState {
         asyncRepoIDs = .loading(asyncRepoIDs.values)
         fetchStarredReposTask = Task {
             do {
-                let response = try await githubAPIClient.fetchStarredRepos(userName: loginUser.login, sortedBy: sortedBy)
+                let response = try await githubAPIClient.fetchStarredRepos(userName: userName, sortedBy: sortedBy)
                 try await repoStore.addValues(response.repos)
                 withAnimation {
                     asyncRepoIDs = .loaded(response.repos.map { $0.id })
@@ -189,86 +199,45 @@ final class StarredRepoViewState {
 
 struct StarredRepoView: View {
     
-    @Namespace var namespace
+    @Namespace private var namespace
     @State private var state: StarredRepoViewState = .init()
-        
+    
+    var handleLogInButtonTapped: () -> (Void) = {}
+    
     var body: some View {
-        NavigationStack {
-            List {
-                Button("Fetch") {
-                    state.handleFetchingStarredRepos()
-                }
-
-                Button("Fetch More") {
-                    state.fetchStarredReposMore()
-                }
-                
-//                Button("Delete All") {
-//                    Task {
-//                        try? await state.repoStore.deleteAllValues()
-//                    }
-//                }
-
-                            
-                switch state.asyncRepos {
-                case .initial:
-                    Text("Search GitHub Repositories!")
-                        .foregroundStyle(.secondary)
-                        .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                case .loading:
-                    ForEach(0..<3, id: \.self) { _ in
-                        RepoCell(repo: Repo.Mock.sampleDataForReposCellSkelton)
-                            .redacted(reason: .placeholder)
-                            .shimmering()
+        
+        if state.loginUser == nil {
+            ZStack {
+                List {
+                    Button("Fetch") {
+                        state.handleFetchingStarredRepos()
                     }
-                case .loaded, .loadingMore, .error:
-                    if state.showNoResultLabel {
-                        VStack {
-                            Image(systemName: "magnifyingglass")
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundStyle(.secondary)
-                                .frame(width: 36)
-                            Text("No Results")
-                                .font(.title)
-                                .bold()
-                            Text("Check the spelling or try a new search")
-                                .foregroundStyle(.secondary)
-                        }
-                        .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                    } else {
-                        ForEach(state.asyncRepos.values) { repo in
-                            NavigationLink {
-                                RepoDetailsView(repoID: repo.id)
-                                    .navigationBarBackButtonHidden()
-                                    .navigationTransition(.zoom(sourceID: "\(repo.id)", in: namespace))
-                            } label: {
-                                RepoCell(repo: repo)
-                                    .matchedTransitionSource(id:"\(repo.id)", in: namespace)
-                            }
-                        }
+                    
+                    Button("Fetch More") {
+                        state.fetchStarredReposMore()
                     }
                 }
+                LoginView(namespace: namespace)
             }
-            .errorAlert(error: $state.error)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle("Starred Repositories")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    toolbarItemContentSortedBy()
-                }
+        } else {
+            NavigationStack {
+                StarredRepoListView(asyncRepos: state.asyncRepos)
+                    .errorAlert(error: $state.error)
+                    .navigationBarTitleDisplayMode(.inline)
+                    .navigationTitle("Starred Repositories")
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            toolbarItemContentSortedBy()
+                        }
+                    }
             }
-        }
-        .onAppear {
-            state.onAppear()
+            .onAppear {
+                state.onAppear()
+            }
         }
     }
     
     // MARK: - UI
-    
-    
     
     @ViewBuilder
     private func toolbarItemContentSortedBy() -> some View {
@@ -289,6 +258,10 @@ struct StarredRepoView: View {
     }
 }
 
-#Preview {
-    StarredRepoView()
+// MARK: - Preview
+
+#Preview("initial") {
+    NavigationStack {
+        StarredRepoView()
+    }
 }
