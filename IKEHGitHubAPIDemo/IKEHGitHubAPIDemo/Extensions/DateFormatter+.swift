@@ -9,7 +9,8 @@
 import Foundation
 
 extension DateFormatter {
-    static let forTokenExpiresIn: DateFormatter = {
+    // e.g. "Feb 2, 2025 at 17:25:33"
+    static let tokenExpiresIn: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .medium
@@ -17,13 +18,53 @@ extension DateFormatter {
         formatter.locale = Locale.current
         return formatter
     }()
+    
+    // e.g. "Feb 2, 2025"
+    static let shortYearMonthDate: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        
+        return formatter
+    }()
 }
 
-//extension ISO8601DateFormatter: @retroactive @unchecked Sendable {}
-
-extension ISO8601DateFormatter {
-    @MainActor static let shared: ISO8601DateFormatter = {
+extension ISO8601DateFormatter: @retroactive @unchecked Sendable {
+    // e.g. "2024-12-21T12:20:29Z"
+    static let shared: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         return formatter
     }()
 }
+
+extension RelativeDateTimeFormatter: @retroactive @unchecked Sendable {
+    static let in30days: RelativeDateTimeFormatter = {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        
+        return formatter
+    }()
+}
+
+
+// MARK: - Debugging
+
+/*
+import SwiftUI
+
+fileprivate struct SampleView: View {
+    
+    var title: String {
+        DateFormatter.forTokenExpiresIn.string(from: Date())
+    }
+    
+    var body: some View {
+        VStack {
+            Text(title)
+        }
+    }
+}
+
+#Preview("Sample") {
+    SampleView()
+}
+*/

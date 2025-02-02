@@ -21,6 +21,9 @@ struct RepoCell: View {
             HStack(spacing: 18) {
                 starsLabel()
                 languageLabel()
+                
+                Text(repo.updatedAt)
+                    .foregroundStyle(.secondary)
             }
             .padding(.top, 2)
         }
@@ -92,7 +95,7 @@ struct RepoCell: View {
 // MARK: - Previews
 
 #Preview("通常", traits: .sizeThatFitsLayout) {
-    RepoCell(repo: Repo.Mock.createRandom())
+    RepoCell(repo: Repo.Mock.random())
         .padding()
 }
 

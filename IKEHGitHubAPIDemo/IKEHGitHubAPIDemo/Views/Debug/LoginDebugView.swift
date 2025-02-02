@@ -134,7 +134,7 @@ struct LoginDebugView: View {
         accessToken = await gitHubAPIClient.tokenStore.accessToken ?? "(nil)"
         
         if let accessTokenExpiresAtDate = await gitHubAPIClient.tokenStore.accessTokenExpiresAt {
-            accessTokenExpiresAt = DateFormatter.forTokenExpiresIn.string(from: accessTokenExpiresAtDate)
+            accessTokenExpiresAt = DateFormatter.tokenExpiresIn.string(from: accessTokenExpiresAtDate)
         } else {
             accessTokenExpiresAt = "(nil)"
         }
@@ -142,7 +142,7 @@ struct LoginDebugView: View {
         refreshToken = await gitHubAPIClient.tokenStore.refreshToken ?? "(nil)"
         
         if let refreshTokenExpiresAtDate = await gitHubAPIClient.tokenStore.refreshTokenExpiresAt {
-            refreshTokenExpiresAt = DateFormatter.forTokenExpiresIn.string(from: refreshTokenExpiresAtDate)
+            refreshTokenExpiresAt = DateFormatter.tokenExpiresIn.string(from: refreshTokenExpiresAtDate)
         } else {
             refreshTokenExpiresAt = "(nil)"
         }

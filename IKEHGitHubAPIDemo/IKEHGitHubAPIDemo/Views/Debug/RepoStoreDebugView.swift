@@ -26,7 +26,7 @@ struct RepoStoreDebugView: View {
                 Button("Add") {
                     Task {
                         do {
-                            let newRepo = Repo.Mock.createRandom()
+                            let newRepo = Repo.Mock.random()
                             try await repoStore.addValue(newRepo)
                             withAnimation {
                                 repoIDs.append(newRepo.id)

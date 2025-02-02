@@ -107,7 +107,7 @@ struct StarredRepoListView: View {
 #Preview("loaded") {
     NavigationStack {
         StarredRepoListView(
-            asyncRepos: .loaded(Repo.Mock.createRandom(count: 10))
+            asyncRepos: .loaded(Repo.Mock.random(count: 10))
         )
     }
 }
@@ -121,7 +121,7 @@ struct StarredRepoListView: View {
 #Preview("loading_more") {
     NavigationStack {
         StarredRepoListView(
-            asyncRepos: .loadingMore(Repo.Mock.createRandom(count: 3))
+            asyncRepos: .loadingMore(Repo.Mock.random(count: 3))
         )
     }
 }
@@ -131,7 +131,7 @@ struct StarredRepoListView: View {
         StarredRepoListView(
             asyncRepos: .error(
                 MessageError(description: "sample error"),
-                Repo.Mock.createRandom(count: 3)
+                Repo.Mock.random(count: 3)
             )
         )
     }

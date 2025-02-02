@@ -9,14 +9,15 @@
 import Foundation
 
 extension Repo {
-    
+
+    @MainActor
     struct Mock {
         
-        static func createRandom(count: Int) -> [Repo] {
-            (0..<count).map { _ in createRandom() }
+        static func random(count: Int) -> [Repo] {
+            (0..<count).map { _ in random() }
         }
         
-        static func createRandom() -> Repo {
+        static func random() -> Repo {
             let randomID = Int.random(in: 1000...9999)
             let randomName = ["Tetris", "Chess", "Snake", "Pong", "Breakout"].randomElement()!
             let randomOwner = User.createRandom()
@@ -35,6 +36,8 @@ extension Repo {
                 htmlPath: "https://github.com/",
                 websitePath: Bool.random() ? "https://\(randomName.lowercased()).com" : nil,
                 description: "This is a random repository.",
+                createdAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
+                updatedAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
                 subscribersCount: Int.random(in: 0...1000)
             )
         }
@@ -56,6 +59,8 @@ extension Repo {
                   htmlPath: "https://github.com/apple/swift/ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
                   websitePath: "https://www.swift.org/ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
                   description: String(repeating: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", count: 5),
+                  createdAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
+                  updatedAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
                   subscribersCount: 2508)
         
         static let sampleDataWithoutSomeInfo: Repo =
@@ -75,7 +80,10 @@ extension Repo {
                   htmlPath: "https://github.com/apple/swift",
                   websitePath: nil,
                   description: nil,
-                  subscribersCount: 0)
+                  createdAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
+                  updatedAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
+                  subscribersCount: 0
+            )
         
         static let sampleDataForReposCellSkelton = Repo(
             rawID: 44838949,
@@ -97,7 +105,16 @@ extension Repo {
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 """,
+            createdAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
+            updatedAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
             subscribersCount: 0
         )
     }
 }
+
+/*
+ curl -L \
+   -H "Accept: application/vnd.github+json" \
+   -H "X-GitHub-Api-Version: 2022-11-28" \
+   "https://api.github.com/search/repositories?q=swift&per_page=1"
+ */

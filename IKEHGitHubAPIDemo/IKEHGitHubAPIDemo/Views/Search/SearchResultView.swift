@@ -148,7 +148,7 @@ struct SearchResultView: View {
 #Preview("loaded") {
     NavigationStack {
         SearchResultView(
-            asyncRepos: .loaded(Repo.Mock.createRandom(count: 10))
+            asyncRepos: .loaded(Repo.Mock.random(count: 10))
         )
     }
 }
@@ -162,7 +162,7 @@ struct SearchResultView: View {
 #Preview("loading_more") {
     NavigationStack {
         SearchResultView(
-            asyncRepos: .loadingMore(Repo.Mock.createRandom(count: 3))
+            asyncRepos: .loadingMore(Repo.Mock.random(count: 3))
         )
     }
 }
@@ -172,7 +172,7 @@ struct SearchResultView: View {
         SearchResultView(
             asyncRepos: .error(
                 MessageError(description: "sample error"),
-                Repo.Mock.createRandom(count: 3)
+                Repo.Mock.random(count: 3)
             )
         )
     }

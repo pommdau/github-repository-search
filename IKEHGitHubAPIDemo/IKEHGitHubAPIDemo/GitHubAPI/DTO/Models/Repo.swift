@@ -27,6 +27,8 @@ struct Repo: GitHubDTO, Equatable {
         case htmlPath = "html_url"
         case websitePath = "homepage"
         case description
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
     }
     
     // searchReposで取得される情報
@@ -42,6 +44,8 @@ struct Repo: GitHubDTO, Equatable {
     var htmlPath: String  // リポジトリのURL
     var websitePath: String?  // 設定したホームページ
     var description: String?
+    var createdAt: String // e.g. "2015-10-23T21:15:07Z",
+    var updatedAt: String // e.g. "2025-02-02T06:17:34Z",
     
     // MARK: その他補完されて取得される情報
     
