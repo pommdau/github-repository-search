@@ -12,6 +12,13 @@ import SwiftUI
 struct RepoCell: View {
 
     let repo: Repo
+    
+    var updateAt: String {
+        guard let date = ISO8601DateFormatter.shared.date(from: repo.updatedAt) else {
+            return ""
+        }
+        return date.convertToUpdatedAtText()
+    }
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -21,9 +28,11 @@ struct RepoCell: View {
             HStack(spacing: 18) {
                 starsLabel()
                 languageLabel()
-                
-                Text(repo.updatedAt)
+                Text(updateAt)
                     .foregroundStyle(.secondary)
+                    .font(.footnote)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.1)
             }
             .padding(.top, 2)
         }
@@ -79,6 +88,7 @@ struct RepoCell: View {
                 .accessibilityLabel(Text("Star Image"))
             Text("\(repo.starsCount)")
         }
+        .font(.footnote)
         .foregroundStyle(.secondary)
     }
 
@@ -88,6 +98,7 @@ struct RepoCell: View {
            !language.isEmpty {
             Text(language)
                 .foregroundStyle(.secondary)
+                .font(.footnote)
         }
     }
 }
