@@ -22,6 +22,7 @@ extension Date {
         return self.addingTimeInterval(TimeInterval(expiresIn))
     }
     
+    @MainActor
     func convertToUpdatedAtText() -> String {
         let now = Date()
         let calendar = Calendar.current

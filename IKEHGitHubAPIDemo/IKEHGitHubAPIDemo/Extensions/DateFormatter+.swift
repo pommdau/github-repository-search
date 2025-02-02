@@ -28,15 +28,15 @@ extension DateFormatter {
     }()
 }
 
-extension ISO8601DateFormatter: @retroactive @unchecked Sendable {
+extension ISO8601DateFormatter {
     // e.g. "2024-12-21T12:20:29Z"
-    static let shared: ISO8601DateFormatter = {
+    nonisolated(unsafe) static let shared: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         return formatter
     }()
 }
 
-extension RelativeDateTimeFormatter: @retroactive @unchecked Sendable {
+extension RelativeDateTimeFormatter {
     /*
      e.g.
      in 11 months
@@ -45,7 +45,7 @@ extension RelativeDateTimeFormatter: @retroactive @unchecked Sendable {
      2 days ago
      5 hours ago
      */
-    static let shared: RelativeDateTimeFormatter = {
+    nonisolated(unsafe) static let shared: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
         

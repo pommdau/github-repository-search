@@ -26,20 +26,7 @@ struct SearchScreen: View {
             )
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Picker("Sorted By", selection: $state.sortedBy) {
-                            ForEach(GitHubAPIRequest.SearchReposRequest.SortBy.allCases) { type in
-                                /// 選択項目の一覧
-                                Text(type.title).tag(type)
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                        }
-                        .onChange(of: state.sortedBy) { _, _ in
-                            state.handleSortedByChanged()
-                        }
-                    } label: {
-                        Image(systemName: "arrow.up.arrow.down")
-                    }
+                    sortedByToolbarItemContent()
                 }
             }
         }
@@ -49,30 +36,25 @@ struct SearchScreen: View {
         }
         .onAppear() {
         }
-        .alert("エラー", isPresented: $state.showAlert) {
-            Button("OK") { }
-        } message: {
-            Text(state.alertError?.localizedDescription ?? "(不明なエラー)")
-        }
+        .errorAlert(error: $state.error)
     }
     
     @ViewBuilder
-    private func searchTypePicker() -> some View {
-        HStack(spacing: 0) {
-            Text("Sort by:")
-                .padding()
-//            Picker("SearchType", selection: $viewState.searchType) {
-//                ForEach(GitHubAPIRequest.NewSearchRequest.SortBy.allCases) { sortedBy in
-//                    /// 選択項目の一覧
-//                    Text(sortedBy.title).tag(sortedBy)
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                }
-//            }
-            .accentColor(.primary)
-            .pickerStyle(.menu)
+    private func sortedByToolbarItemContent() -> some View {
+        Menu {
+            Picker("Sorted By", selection: $state.sortedBy) {
+                ForEach(GitHubAPIRequest.SearchReposRequest.SortBy.allCases) { type in
+                    /// 選択項目の一覧
+                    Text(type.title).tag(type)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .onChange(of: state.sortedBy) { _, _ in
+                state.handleSortedByChanged()
+            }
+        } label: {
+            Image(systemName: "arrow.up.arrow.down")
         }
-        .frame(maxWidth: .infinity, alignment: .trailing)
-        .padding(.trailing, 18)
     }
 }
 

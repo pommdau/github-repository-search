@@ -7,26 +7,59 @@
 
 import SwiftUI
 
+enum TabType: String {
+    case profile
+    case search
+    case starredRepos
+    case debug
+    
+    var title: String {
+        switch self {
+        case .profile:
+            "Profile"
+        case .search:
+            "Search"
+        case .starredRepos:
+            "Starred"
+        case .debug:
+            "Debug"
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .profile:
+            "person.crop.circle.fill"
+        case .search:
+            "magnifyingglass"
+        case .starredRepos:
+            "star.fill"
+        case .debug:
+            "ladybug.fill"
+        }
+    }
+}
+
 struct RootTabView: View {
     
-    @AppStorage("selectedTab")
-    private var selectedTab = 0
+    @AppStorage("roottabview-selected-tab")
+    private var selectedTab: TabType = .profile
         
     var body: some View {
         TabView(selection: $selectedTab) {
-            Tab("Profile", systemImage: "person.crop.circle.fill", value: 0) {
+            Tab(TabType.profile.title, systemImage: TabType.profile.icon, value: TabType.profile) {
                 ProfileView()
             }
 
-            Tab("Search", systemImage: "magnifyingglass", value: 1) {
+            Tab(TabType.search.title, systemImage: TabType.search.icon, value: TabType.search) {
                 SearchScreen()
             }
             
-            Tab("Starred", systemImage: "star.fill", value: 2) {
+            Tab(TabType.starredRepos.title, systemImage: TabType.starredRepos.icon, value: TabType.starredRepos) {
                 StarredRepoView()
             }
             
-            Tab("Debug", systemImage: "ladybug.fill", value: 3) {
+            Tab(TabType.debug.title, systemImage: TabType.debug.icon, value: TabType.debug) {
                 LoginDebugView()
             }
         }

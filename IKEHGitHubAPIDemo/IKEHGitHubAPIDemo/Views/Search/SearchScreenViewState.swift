@@ -37,12 +37,8 @@ final class SearchScreenViewState {
             return .error(error, repos)
         }
     }
-    
     private var relationLink: RelationLink?
-    
-    // エラー表示
-    var alertError: Error?
-    var showAlert = false
+    var error: Error?
     
     // MARK: その他
     
@@ -103,9 +99,7 @@ extension SearchScreenViewState {
                     }
                 } else {
                     asyncRepoIDs = .error(error, asyncRepoIDs.values)
-                    print(error.localizedDescription)
-                    alertError = error
-                    showAlert = true
+                    self.error = error
                 }
             }
         }
@@ -136,7 +130,7 @@ extension SearchScreenViewState {
         searchTask = Task {
             do {
                 // 検索に成功
-                let response = try await gitHubAPIClient.searchRepos(searchText: query, page: page)
+                let response = try await gitHubAPIClient.searchRepos(searchText: query, page: page, sortedBy: sortedBy)
                 try await repoStore.addValues(response.items)
                 withAnimation {
                     asyncRepoIDs = .loaded(asyncRepoIDs.values + response.items.map { $0.id })
@@ -148,9 +142,7 @@ extension SearchScreenViewState {
                     asyncRepoIDs = .loaded(asyncRepoIDs.values)
                 } else {
                     asyncRepoIDs = .error(error, asyncRepoIDs.values)
-                    print(error.localizedDescription)
-                    alertError = error
-                    showAlert = true
+                    self.error = error
                 }
             }
         }
@@ -188,9 +180,7 @@ extension SearchScreenViewState {
                     }
                 } else {
                     asyncRepoIDs = .error(error, asyncRepoIDs.values)
-                    print(error.localizedDescription)
-                    alertError = error
-                    showAlert = true
+                    self.error = error
                 }
             }
         }

@@ -97,12 +97,10 @@ struct SearchResultView: View {
         ForEach(asyncRepos.values) { repo in
             NavigationLink {
                 RepoDetailsView(repoID: repo.id)
-//                    .navigationBarBackButtonHidden(true)
                     .navigationTransition(.zoom(sourceID: "\(repo.id)", in: namespace))
             } label: {
                 RepoCell(repo: repo)
                     .padding(.vertical, 4)
-//                    .navigationBarBackButtonHidden(true)
                     .matchedTransitionSource(id:"\(repo.id)", in: namespace)
                     .onAppear {
                         guard let lastRepo = asyncRepos.values.last else {
