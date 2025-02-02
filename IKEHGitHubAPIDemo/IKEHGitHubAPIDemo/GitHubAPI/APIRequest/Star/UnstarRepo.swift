@@ -1,0 +1,50 @@
+//
+//  UnstarRepo.swift
+//  IKEHGitHubAPIDemo
+//
+//  Created by HIROKI IKEUCHI on 2025/02/03.
+//
+
+import Foundation
+import HTTPTypes
+
+extension GitHubAPIRequest {
+    struct UnstarRepo {
+        var accessToken: String
+        var ownerName: String
+        var repoName: String
+    }
+}
+
+extension GitHubAPIRequest.UnstarRepo : GitHubAPIRequestProtocol {
+
+    typealias Response = String // unused
+    
+    var method: HTTPTypes.HTTPRequest.Method {
+        .delete
+    }
+    
+    var baseURL: URL? {
+        URL(string: "https://api.github.com")
+    }
+    
+    var path: String {
+        "/user/starred/\(ownerName)/\(repoName)"
+    }
+    
+    var queryItems: [URLQueryItem] {
+        []
+    }
+    
+    var header: HTTPTypes.HTTPFields {
+        var headerFields = HTTPTypes.HTTPFields()
+        headerFields[.accept] = HTTPField.ConstantValue.applicationVndGitHubJSON
+        headerFields[.authorization] = "Bearer \(accessToken)"
+        headerFields[.xGithubAPIVersion] = HTTPField.ConstantValue.xGitHubAPIVersion
+        return headerFields
+    }
+    
+    var body: Data? {
+        nil
+    }
+}

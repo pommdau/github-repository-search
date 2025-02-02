@@ -41,5 +41,7 @@ struct LoginView: View {
 
 #Preview {
     @Previewable @Namespace var namespace
-    LoginView(namespace: namespace)
+    LoginView(namespace: namespace) {
+        print("Log In Button Tapped!")
+    }
 }

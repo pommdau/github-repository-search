@@ -27,6 +27,9 @@ extension GitHubAPIClient {
     }
     
     func checkIsRepoStarred(ownerName: String, repoName: String) async throws -> Bool {
+        
+//        try await Task.sleep(nanoseconds: 10_000_000_000) // 10s待機
+        
         try await updateAccessTokenIfNeeded()
         let request = await GitHubAPIRequest.CheckIsRepoStarredRequest(
             accessToken: tokenStore.accessToken ?? "",
@@ -49,4 +52,50 @@ extension GitHubAPIClient {
         }
         return true // スター済み
     }
+    
+    func starRepo(ownerName: String, repoName: String) async throws {
+        try await updateAccessTokenIfNeeded()
+        let request = await GitHubAPIRequest.StarRepo(
+            accessToken: tokenStore.accessToken ?? "",
+            ownerName: ownerName,
+            repoName: repoName
+        )
+        
+        do {
+            try await sendRequestWithoutResponseData(with: request)
+        } catch {
+            switch error {
+            case let GitHubAPIClientError.apiError(error):
+                if error.statusCode == 304 {
+                    return // not modified
+                }
+                throw error
+            default:
+                throw error
+            }
+        }
+    }
+    
+    func unstarRepo(ownerName: String, repoName: String) async throws {
+        try await updateAccessTokenIfNeeded()
+        let request = await GitHubAPIRequest.UnstarRepo(
+            accessToken: tokenStore.accessToken ?? "",
+            ownerName: ownerName,
+            repoName: repoName
+        )
+        
+        do {
+            try await sendRequestWithoutResponseData(with: request)
+        } catch {
+            switch error {
+            case let GitHubAPIClientError.apiError(error):
+                if error.statusCode == 304 {
+                    return // not modified
+                }
+                throw error
+            default:
+                throw error
+            }
+        }
+    }        
 }

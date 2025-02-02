@@ -5,49 +5,7 @@
 //  Created by HIROKI IKEUCHI on 2025/01/23.
 //
 
-import Foundation
 import SwiftUI
-
-@MainActor @Observable
-final class RepoDetailsViewState {
-    
-    // MARK: - Property
-                
-    private(set) var starredTask: Task<(), Never>?
-        
-    let repoID: Repo.ID
-    var repo: Repo? {
-        repoStore.valuesDic[repoID]
-    }
-    let gitHubAPIClient: GitHubAPIClient
-    let repoStore: RepoStore
-    var error: Error?
-    
-    // MARK: - LifeCycle
-        
-    init(repoID: Repo.ID, gitHubAPIClient: GitHubAPIClient = .shared, repoStore: RepoStore = .shared) {
-        self.repoID = repoID
-        self.gitHubAPIClient = gitHubAPIClient
-        self.repoStore = repoStore
-    }
-    
-    // MARK: - Actions
-    
-    func handleStarButtonTapped() {
-        Task {
-            guard var repo else {
-                return
-            }
-            repo.isStarred.toggle()
-            // スター日時の更新
-            repo.starredAt = repo.isStarred
-            ? ISO8601DateFormatter.shared.string(from: .now)
-            : nil
-            try await repoStore.addValue(repo)
-        }
-    }
-}
-
 
 struct RepoDetailsView: View {
     
@@ -58,44 +16,45 @@ struct RepoDetailsView: View {
     init(repoID: Repo.ID) {
         _state = .init(wrappedValue: RepoDetailsViewState(repoID: repoID))
     }
+
+    // MARK: - View
     
     var body: some View {
         if let repo = state.repo {
-            Content(repo: repo) {
-                state.handleStarButtonTapped()
-            }
+            content(repo: repo)
         } else {
             ProgressView()
         }
     }
 }
 
-private struct Content: View {
+extension RepoDetailsView {
     
-    let repo: Repo
-    var handleStarButtonTapped: () -> Void = {}
-    
-    var body: some View {
+    @ViewBuilder
+    private func content(repo: Repo) -> some View {
         VStack(alignment: .leading) {
             VStack(alignment: .leading, spacing: 8) {
-                userLabel()
-                repoLabel()
+                userLabel(repo: repo)
+                repoLabel(repo: repo)
             }
             StarButton(isStarred: repo.isStarred) {
-                handleStarButtonTapped()
+                state.handleStarButtonTapped()
             }
+            .disabled(state.disableStarButton)
+            
             .padding(.vertical, 4)
             Divider()
-            descriptionView()
+            descriptionView(repo: repo)
             Spacer()
         }
         .padding(.horizontal, 20)
-    }
-}
+        .onAppear {
 
-extension Content {
+        }
+    }
+
     @ViewBuilder
-    private func userLabel() -> some View {
+    private func userLabel(repo: Repo) -> some View {
         Button {
             guard let url = repo.owner.htmlURL else {
                 return
@@ -128,7 +87,7 @@ extension Content {
     }
 
     @ViewBuilder
-    private func repoLabel() -> some View {
+    private func repoLabel(repo: Repo) -> some View {
         Button {
             guard let url = repo.htmlURL else {
                 return
@@ -142,13 +101,9 @@ extension Content {
         }
         .foregroundStyle(.primary)
     }
-}
 
-// MARK: - Description
-
-extension Content {
     @ViewBuilder
-    private func descriptionView() -> some View {
+    private func descriptionView(repo: Repo) -> some View {
         VStack(alignment: .leading) {
             if let description = repo.description,
                !description.isEmpty {
@@ -213,7 +168,7 @@ extension Content {
             Image(systemName: "circle.circle")
                 .accessibilityLabel(Text("Issues Image"))
                 .foregroundStyle(.secondary)
-            Text(String.compactName(repo.openIssuesCount))
+            Text(String.compactName(issuesCount))
                 .bold()
             Text("issues")
                 .foregroundStyle(.secondary)
@@ -240,32 +195,6 @@ extension Content {
     }
 }
 
-struct StarButton: View {
-    
-    let isStarred: Bool
-    var handleButtonTapped: () -> Void = {}
-    
-    var body: some View {
-        Button {
-            handleButtonTapped()
-        } label: {
-            HStack {
-                Image(systemName: isStarred ? "star.fill" : "star")
-                Text(isStarred ? "Starred" : "Star")
-                    .foregroundColor(.secondary)
-            }
-            .padding(8)
-        }
-        .tint(Color(uiColor: .systemYellow))
-        .frame(width: 120)
-        .contentTransition(.symbolEffect(.replace))
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(.secondary, lineWidth: 1.0)
-        )
-    }
-}
-
-#Preview {
-    Content(repo: Repo.Mock.random())
-}
+//#Preview {
+//    Content(repo: Repo.Mock.random())
+//}
