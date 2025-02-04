@@ -9,6 +9,7 @@
 import SwiftUI
 
 extension View {
+    // TODO:GitHubAPIErrorとの統合
     func errorAlert(error: Binding<Error?>, buttonTitle: String = "OK") -> some View {
         let localizedAlertError = LocalizedAlertError(error: error.wrappedValue)
         return self.alert(isPresented: .constant(localizedAlertError != nil), error: localizedAlertError) { _ in

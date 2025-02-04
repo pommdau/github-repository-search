@@ -48,6 +48,7 @@ extension RepoDetailsView {
             Spacer()
         }
         .padding(.horizontal, 20)
+        .errorAlert(error: $state.error)
         .onAppear {
             state.checkIsStarred()
         }

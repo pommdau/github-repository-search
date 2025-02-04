@@ -23,7 +23,7 @@ final class RepoDetailsViewState {
     private var checkIsStarredInProcessing: Bool = false
     private var starredInProcessing: Bool = false
     
-    private(set) var error: Error?
+    var error: Error?
     
     var repo: Repo? {
         repoStore.valuesDic[repoID]
@@ -69,9 +69,9 @@ final class RepoDetailsViewState {
             // API通信
             do {
                 if isStarred {
-                    try await gitHubAPIClient.unstarRepo(ownerName: loginUser.login, repoName: repo.name)
+                    try await gitHubAPIClient.unstarRepo(ownerName: repo.owner.name, repoName: repo.name)
                 } else {
-                    try await gitHubAPIClient.starRepo(ownerName: loginUser.login, repoName: repo.name)
+                    try await gitHubAPIClient.starRepo(ownerName: repo.owner.name, repoName: repo.name)
                     
                 }
             } catch {

@@ -22,7 +22,7 @@ extension GitHubAPIClient {
         
         let currentTime = Date()
         let response = try await self.sendRequest(with: request)
-
+        print("accessToken: \(response.accessToken)")
         await tokenStore.updateTokens(
             accessToken: response.accessToken,
             refreshToken: response.refreshToken,

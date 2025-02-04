@@ -62,14 +62,14 @@ extension GitHubAPIClient {
             ownerName: ownerName,
             repoName: repoName
         )
-        
+        print(request)
         do {
             try await sendRequestWithoutResponseData(with: request)
         } catch {
             switch error {
             case let GitHubAPIClientError.apiError(error):
                 if error.statusCode == 304 {
-                    return // not modified
+                    return // not modified(=成功とみなす)
                 }
                 throw error
             default:
