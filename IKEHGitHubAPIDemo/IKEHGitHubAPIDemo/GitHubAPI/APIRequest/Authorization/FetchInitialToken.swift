@@ -4,6 +4,7 @@
 //
 //  Created by HIROKI IKEUCHI on 2025/01/21.
 //
+//  refs: https://docs.github.com/ja/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
 
 import Foundation
 import HTTPTypes
@@ -18,7 +19,7 @@ extension GitHubAPIRequest {
 
 extension GitHubAPIRequest.FetchInitialToken: GitHubAPIRequestProtocol {
     
-    typealias Response = RequestTokenResponse
+    typealias Response = FetchInitialTokenResponse
     
     var responseFailType: ResponseFailType {
         .responseBody

@@ -106,7 +106,7 @@ final class RepoDetailsViewState {
             // API通信
             let isStarred: Bool
             do {
-                isStarred = try await gitHubAPIClient.checkIsRepoStarred(ownerName: loginUser.login, repoName: repo.name)
+                isStarred = try await gitHubAPIClient.checkIsRepoStarred(ownerName: repo.owner.name, repoName: repo.name)
             } catch {
                 self.error = error
                 return

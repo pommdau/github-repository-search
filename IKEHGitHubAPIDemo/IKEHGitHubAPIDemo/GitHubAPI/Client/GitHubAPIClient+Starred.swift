@@ -11,11 +11,6 @@ import Foundation
 extension GitHubAPIClient {
     
     func fetchStarredRepos(userName: String, page: Int? = nil, sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy = .recentryStarred) async throws -> StarredReposResponse {
-        // ログイン状態であればトークンの更新
-        if await tokenStore.isLoggedIn {
-            try await updateAccessTokenIfNeeded()
-        }
-        
         // TODO: fix
         let request = await GitHubAPIRequest.StarredReposRequest(
             userName: userName,
@@ -27,10 +22,7 @@ extension GitHubAPIClient {
     }
     
     func checkIsRepoStarred(ownerName: String, repoName: String) async throws -> Bool {
-        print(Date.now)
 //        try await Task.sleep(nanoseconds: 10_000_000_000) // 10s待機
-        
-        try await updateAccessTokenIfNeeded()
         let request = await GitHubAPIRequest.CheckIsRepoStarredRequest(
             accessToken: tokenStore.accessToken ?? "",
             ownerName: ownerName,
@@ -39,9 +31,7 @@ extension GitHubAPIClient {
         
         do {
             try await sendRequestWithoutResponseData(with: request)
-            print(Date.now)
         } catch {
-            print(Date.now)
             switch error {
             case let GitHubAPIClientError.apiError(error):
                 if error.statusCode == 404 {
@@ -56,7 +46,6 @@ extension GitHubAPIClient {
     }
     
     func starRepo(ownerName: String, repoName: String) async throws {
-        try await updateAccessTokenIfNeeded()
         let request = await GitHubAPIRequest.StarRepo(
             accessToken: tokenStore.accessToken ?? "",
             ownerName: ownerName,
@@ -79,13 +68,11 @@ extension GitHubAPIClient {
     }
     
     func unstarRepo(ownerName: String, repoName: String) async throws {
-        try await updateAccessTokenIfNeeded()
         let request = await GitHubAPIRequest.UnstarRepo(
             accessToken: tokenStore.accessToken ?? "",
             ownerName: ownerName,
             repoName: repoName
-        )
-        
+        )        
         do {
             try await sendRequestWithoutResponseData(with: request)
         } catch {

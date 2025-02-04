@@ -12,12 +12,6 @@ struct LoginDebugView: View {
     
     @State private var accessToken = "(nil)"
     @State private var accessTokenExpiresAt = "(nil)"
-    @State private var refreshToken = "(nil)"
-    @State private var refreshTokenExpiresAt = "(nil)"
-    
-//    var realAccessToken: String? {
-//        gitHubAPIClient.tokenStore.accessToken
-//    }
     
     private let gitHubAPIClient: GitHubAPIClient
     
@@ -38,19 +32,7 @@ struct LoginDebugView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
-                
-                Button("Update Access Token") {
-                    Task {
-                        do {
-                            try await gitHubAPIClient.updateAccessTokenIfNeeded(forceUpdate: true)
-                            await loadTokens()
-                        } catch {
-                            print(error.localizedDescription)
-                        }
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .center)
-                
+                                
                 Button("Log out", role: .destructive) {
                     Task {
                         do {
@@ -106,22 +88,7 @@ struct LoginDebugView: View {
                 LabeledContent("Value", value: accessToken)
                 LabeledContent("Expires in", value: accessTokenExpiresAt)
             }
-            
-            Section("Refresh Token") {
-                LabeledContent("Value", value: refreshToken)
-                LabeledContent("Expires in", value: refreshTokenExpiresAt)
-            }
         }
-//        .onOpenURL { (url) in
-//            Task {
-//                do {
-//                    _ = try await gitHubAPIClient.handleLoginCallBackURL(url)
-//                    await loadTokens()
-//                } catch {
-//                    print(error.localizedDescription)
-//                }
-//            }
-//        }
         .onAppear() {
             Task {
                 await loadTokens()
@@ -137,14 +104,6 @@ struct LoginDebugView: View {
             accessTokenExpiresAt = DateFormatter.tokenExpiresIn.string(from: accessTokenExpiresAtDate)
         } else {
             accessTokenExpiresAt = "(nil)"
-        }
-        
-        refreshToken = await gitHubAPIClient.tokenStore.refreshToken ?? "(nil)"
-        
-        if let refreshTokenExpiresAtDate = await gitHubAPIClient.tokenStore.refreshTokenExpiresAt {
-            refreshTokenExpiresAt = DateFormatter.tokenExpiresIn.string(from: refreshTokenExpiresAtDate)
-        } else {
-            refreshTokenExpiresAt = "(nil)"
         }
     }
 }
