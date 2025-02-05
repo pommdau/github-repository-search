@@ -21,7 +21,7 @@ extension GitHubAPIRequest {
 // MARK: - 検索タイプ
 
 extension GitHubAPIRequest.StarredReposRequest {
-    enum SortBy: String, CaseIterable, Identifiable, Equatable {
+    enum SortBy: String, CaseIterable, Identifiable, Equatable, Codable {
         case recentryStarred // クエリで指定しない場合のデフォルト
         case recentryActive
         case leastRecentlyStarred

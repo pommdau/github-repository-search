@@ -35,20 +35,9 @@ final class ProfileViewState {
 
 extension ProfileViewState {
     
-    func handleOnCallbackURL(_ url: URL) {
-        Task {
-            do {
-                let loginUser = try await githubAPIClient.handleLoginCallBackURL(url)
-                print("ログイン成功！")
-                withAnimation {
-                    loginUserStore.addValue(loginUser)
-                }
-            } catch {
-                self.error = error
-            }
-        }
-    }
-    
+    // MARK: Log in
+        
+    /// ログインボタンが押された
     func handleLogInButtonTapped() {
         Task {
             do {
@@ -59,6 +48,23 @@ extension ProfileViewState {
         }
     }
     
+    /// ログインページからコールバックURLを受け取った際の処理
+    func handleOnCallbackURL(_ url: URL) {
+        Task {
+            do {
+                let loginUser = try await githubAPIClient.handleLoginCallBackURL(url)
+                withAnimation {
+                    loginUserStore.addValue(loginUser)
+                }
+            } catch {
+                self.error = error
+            }
+        }
+    }
+    
+    // MARK: Log out
+    
+    /// ログアウトボタンが押された
     func handleLogOutButtonTapped() {
         Task {
             do {

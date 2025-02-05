@@ -29,14 +29,7 @@ struct StarredReposView: View {
             } else {
                 // ログイン時
                 NavigationStack {
-                    StarredReposList(asyncRepos: state.asyncRepos)
-                        .navigationBarTitleDisplayMode(.inline)
-                        .navigationTitle("Starred Repositories")
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                toolbarItemContentSortedBy()
-                            }
-                        }
+                    starredReposResult()
                 }
                 .onAppear {
                     state.onAppear()
@@ -51,7 +44,8 @@ struct StarredReposView: View {
         Menu {
             Picker("Sorted By", selection: $state.sortedBy) {
                 ForEach(GitHubAPIRequest.StarredReposRequest.SortBy.allCases) { type in
-                    Text(type.title).tag(type)
+                    Text(type.title)
+                        .tag(type)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
@@ -64,8 +58,88 @@ struct StarredReposView: View {
     }
 }
 
-// MARK: - Content
+// MARK: - StarredReposResult
 
+extension StarredReposView {
+    @ViewBuilder
+    private func starredReposResult() -> some View {
+        List {
+            switch state.asyncRepos {
+            case .initial, .loading:
+                skeltonView()
+            case .loaded, .loadingMore, .error:
+                if state.showNoResultView {
+                    noResultView()
+                } else {
+                    starredReposList()
+                    if case .loadingMore = state.asyncRepos {
+                        lodingMoreProgressView()
+                    }
+                }
+            }
+        }
+//        .matchedGeometryEffect(id: ProfileView.NamespaceID.image1, in: namespace)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle("Starred Repositories")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                toolbarItemContentSortedBy()
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func skeltonView() -> some View {
+        ForEach(0..<3, id: \.self) { _ in
+            RepoCell(repo: Repo.Mock.sampleDataForReposCellSkelton)
+                .redacted(reason: .placeholder)
+                .shimmering()
+                .id(UUID())
+        }
+    }
+    
+    @ViewBuilder
+    private func noResultView() -> some View {
+        VStack {
+            Image(systemName: "star.slash")
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(.secondary)
+                .frame(width: 36)
+            Text("There are no starred repositories")
+                .lineLimit(1)
+                .bold()
+        }
+        .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+    }
+    
+    @ViewBuilder
+    private func starredReposList() -> some View {
+        ForEach(state.asyncRepos.values) { repo in
+            NavigationLink {
+                RepoDetailsView(repoID: repo.id)
+                    .navigationBarBackButtonHidden()
+                    .navigationTransition(.zoom(sourceID: "\(repo.id)", in: namespace))
+            } label: {
+                RepoCell(repo: repo)
+                    .matchedTransitionSource(id:"\(repo.id)", in: namespace)
+                    .onAppear {
+                        state.onAppearRepoCell(id: repo.id)
+                    }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func lodingMoreProgressView() -> some View {
+        // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
+        ProgressView("Loading...")
+            .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+            .frame(maxWidth: .infinity, alignment: .center)
+            .id(UUID())
+    }
+}
 
 // MARK: - Preview
 

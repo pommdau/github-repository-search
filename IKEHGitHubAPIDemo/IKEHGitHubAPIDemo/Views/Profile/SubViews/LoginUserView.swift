@@ -8,10 +8,14 @@
 import SwiftUI
 
 struct LoginUserView: View {
+    
+    // MARK: - Property
             
     let loginUser: LoginUser
     let namespace: Namespace.ID
     var handleLogOutButtonTapped: () -> Void = {}
+    
+    // MARK: - View
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
