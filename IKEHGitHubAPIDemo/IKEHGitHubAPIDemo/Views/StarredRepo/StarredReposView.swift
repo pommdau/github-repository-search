@@ -10,7 +10,7 @@ import SwiftUI
 struct StarredReposView: View {
     
     // MARK: - Property
-        
+    
     @Namespace private var namespace
     @State private var state: StarredReposViewState = .init()
     
@@ -19,38 +19,33 @@ struct StarredReposView: View {
     // MARK: - View
     
     var body: some View {
-        if state.loginUser == nil {
-            // 未ログイン時
-            ZStack {
-                List {
-                    Button("Fetch") {
-                        state.handleFetchingStarredRepos()
-                    }
-                    Button("Fetch More") {
-                        state.fetchStarredReposMore()
-                    }
+        Group {
+            if state.loginUser == nil {
+                // 未ログイン時
+                LoginView(namespace: namespace) {
+                    // コールバックURLはProfile側で受け取る
+                    state.handleLogInButtonTapped()
                 }
-                LoginView(namespace: namespace)
-            }
-        } else {
-            // ログイン時
-            NavigationStack {
-                StarredReposList(asyncRepos: state.asyncRepos)
-                    .errorAlert(error: $state.error)
-                    .navigationBarTitleDisplayMode(.inline)
-                    .navigationTitle("Starred Repositories")
-                    .toolbar {
-                        ToolbarItem(placement: .topBarTrailing) {
-                            toolbarItemContentSortedBy()
+            } else {
+                // ログイン時
+                NavigationStack {
+                    StarredReposList(asyncRepos: state.asyncRepos)
+                        .navigationBarTitleDisplayMode(.inline)
+                        .navigationTitle("Starred Repositories")
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                toolbarItemContentSortedBy()
+                            }
                         }
-                    }
-            }
-            .onAppear {
-                state.onAppear()
+                }
+                .onAppear {
+                    state.onAppear()
+                }
             }
         }
+        .errorAlert(error: $state.error)
     }
-        
+    
     @ViewBuilder
     private func toolbarItemContentSortedBy() -> some View {
         Menu {
@@ -68,6 +63,9 @@ struct StarredReposView: View {
         }
     }
 }
+
+// MARK: - Content
+
 
 // MARK: - Preview
 

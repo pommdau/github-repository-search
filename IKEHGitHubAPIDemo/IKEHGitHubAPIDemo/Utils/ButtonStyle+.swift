@@ -18,6 +18,7 @@ struct LogInButtonStyle: ButtonStyle {
             .background(
                 Color.init(red: 46/255, green: 164/255, blue: 79/255)
             )
+            .opacity(configuration.isPressed ? 0.5 : 1.0)
             .cornerRadius(8)
     }
 }
@@ -30,6 +31,7 @@ struct LogOutButtonStyle: ButtonStyle {
             .frame(width: 240, height: 40)
             .foregroundStyle(.white)
             .background(Color(uiColor: .systemRed))
+            .opacity(configuration.isPressed ? 0.5 : 1.0)
             .cornerRadius(8)
     }
 }

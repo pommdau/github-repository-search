@@ -42,20 +42,20 @@ final class StarredReposViewState {
     
     private var fetchStarredReposTask: Task<(), Never>?
     
-    var showNoResultLabel: Bool {
-        // 検索結果が0であることが前提
-        if !asyncRepos.values.isEmpty {
-            return false
-        }
-        
-        // 検索済み or エラーのとき
-        switch asyncRepos {
-        case .loaded, .error:
-            return true
-        default:
-            return false
-        }
-    }
+//    var showNoResultLabel: Bool {
+//        // 検索結果が0であることが前提
+//        if !asyncRepos.values.isEmpty {
+//            return false
+//        }
+//        
+//        // 検索済み or エラーのとき
+//        switch asyncRepos {
+//        case .loaded, .error:
+//            return true
+//        default:
+//            return false
+//        }
+//    }
     
     init(
         loginUserStore: LoginUserStore = .shared,
@@ -65,6 +65,16 @@ final class StarredReposViewState {
         self.loginUserStore = loginUserStore
         self.githubAPIClient = githubAPIClient
         self.repoStore = repoStore
+    }
+    
+    func handleLogInButtonTapped() {
+        Task {
+            do {
+                try await githubAPIClient.openLoginPageInBrowser()
+            } catch {
+                self.error = error
+            }
+        }
     }
     
     func handleFetchingStarredRepos() {
@@ -186,11 +196,17 @@ final class StarredReposViewState {
     }
     
     func onAppear() {
+        // 初回読み込み時のみ実行
+        if asyncRepoIDs != .initial {
+            return
+        }
+        
         Task {
             do {
-                try await repoStore.fetchValues()
+//                try await repoStore.fetchValues()
+                try await handleFetchingStarredRepos()
             } catch {
-                print(error.localizedDescription)
+                self.error = error
             }
         }
     }
