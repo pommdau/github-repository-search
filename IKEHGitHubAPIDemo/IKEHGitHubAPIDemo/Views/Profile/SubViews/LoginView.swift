@@ -50,7 +50,7 @@ struct NewLoginView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 100)
-                .matchedGeometryEffect(id: NameSpaceID.ProfileView.image1, in: namespace)
+                .matchedGeometryEffect(id: NamespaceID.ProfileView.image1, in: namespace)
             
             Text("Log in to GitHub")
                 .font(.title)
@@ -61,7 +61,7 @@ struct NewLoginView: View {
             }
             .buttonStyle(LogInButtonStyle())
             .padding(.bottom, 8)
-            .matchedGeometryEffect(id: NameSpaceID.ProfileView.button1, in: namespace)
+            .matchedGeometryEffect(id: NamespaceID.ProfileView.button1, in: namespace)
             
             Text("When you log in to GitHub, you can star repositories and browse a list of repositories you’ve starred.")
                 .foregroundStyle(.secondary)

@@ -12,6 +12,8 @@ final class LoginUserViewState {
     
     // MARK: - Property
         
+    let loginUser: LoginUser
+    let namespace: Namespace.ID?
     let loginUserStore: LoginUserStore
     let githubAPIClient: GitHubAPIClient
     var error: Error?
@@ -19,9 +21,13 @@ final class LoginUserViewState {
     // MARK: - LifeCycle
     
     init(
+        loginUser: LoginUser,
+        namespace: Namespace.ID?,
         loginUserStore: LoginUserStore = .shared,
         githubAPIClient: GitHubAPIClient = .shared
     ) {
+        self.loginUser = loginUser
+        self.namespace = namespace
         self.loginUserStore = loginUserStore
         self.githubAPIClient = githubAPIClient
     }
@@ -31,13 +37,15 @@ final class LoginUserViewState {
     /// ログアウトボタンが押された
     func handleLogOutButtonTapped() {
         Task {
-            do {
-                try await githubAPIClient.logout()
+            defer {
                 withAnimation {
                     loginUserStore.deleteValue()
                 }
+            }
+            do {
+                try await githubAPIClient.logout()
             } catch {
-                self.error = error
+                self.error = error // TODO: fix
             }
         }
     }
@@ -45,10 +53,15 @@ final class LoginUserViewState {
 struct LoginUserView: View {
     
     // MARK: - Property
-            
-    let loginUser: LoginUser
-    let namespace: Namespace.ID
-    @State private var state: LoginUserViewState = .init()
+    
+    @State private var state: LoginUserViewState
+    
+    init(loginUser: LoginUser, namespace: Namespace.ID? = nil) {
+        _state = .init(
+            wrappedValue:
+                LoginUserViewState(loginUser: loginUser, namespace: namespace)
+        )
+    }
     
     // MARK: - View
     
@@ -69,7 +82,7 @@ struct LoginUserView: View {
     
     @ViewBuilder
     private func userImage() -> some View {
-        AsyncImage(url: URL(string: loginUser.avatarURL),
+        AsyncImage(url: URL(string: state.loginUser.avatarURL),
                    content: { image in
             image.resizable()
         }, placeholder: {
@@ -78,7 +91,7 @@ struct LoginUserView: View {
         })
         .frame(width: 80, height: 80)
         .cornerRadius(40)
-        .matchedGeometryEffect(id: NameSpaceID.ProfileView.image1, in: namespace)
+        .matchedGeometryEffect(id: NamespaceID.ProfileView.image1, in: state.namespace)
         .accessibilityLabel(Text("User Image"))
         .background {
             Circle()
@@ -92,10 +105,10 @@ struct LoginUserView: View {
         HStack {
             userImage()
             VStack(alignment: .leading) {
-                Text(loginUser.name ?? "")
+                Text(state.loginUser.name ?? "")
                     .font(.title)
                     .bold()
-                Text(loginUser.login)
+                Text(state.loginUser.login)
                     .font(.title2)
                     .foregroundStyle(.secondary)
             }
@@ -105,7 +118,7 @@ struct LoginUserView: View {
     @ViewBuilder
     private func locationAndTwitterLabel() -> some View {
         HStack {
-            if let location = loginUser.location {
+            if let location = state.loginUser.location {
                 HStack(spacing: 0) {
                     Image(systemName: "mappin")
                         .scaledToFit()
@@ -116,8 +129,8 @@ struct LoginUserView: View {
                 .padding(.trailing, 10)
             }
             
-            if let twitterUsername = loginUser.twitterUsername,
-               let twitterURL = loginUser.twitterURL {
+            if let twitterUsername = state.loginUser.twitterUsername,
+               let twitterURL = state.loginUser.twitterURL {
                 HStack(spacing: 2) {
                     Text("X(Twitter)")
                         .foregroundStyle(.secondary)
@@ -141,13 +154,13 @@ struct LoginUserView: View {
                 .scaledToFit()
                 .frame(width: 20)
                 .foregroundStyle(.secondary)
-            Text("\(loginUser.followers)")
+            Text("\(state.loginUser.followers)")
                 .bold()
             Text("followers")
                 .foregroundStyle(.secondary)
             Text("・")
                 .foregroundStyle(.secondary)
-            Text("\(loginUser.following)")
+            Text("\(state.loginUser.following)")
                 .bold()
             Text("following")
                 .foregroundStyle(.secondary)
@@ -160,7 +173,7 @@ struct LoginUserView: View {
             state.handleLogOutButtonTapped()
         }
         .buttonStyle(LogOutButtonStyle())
-        .matchedGeometryEffect(id: NameSpaceID.ProfileView.button1, in: namespace)
+        .matchedGeometryEffect(id: NamespaceID.ProfileView.button1, in: state.namespace)
     }
 }
 

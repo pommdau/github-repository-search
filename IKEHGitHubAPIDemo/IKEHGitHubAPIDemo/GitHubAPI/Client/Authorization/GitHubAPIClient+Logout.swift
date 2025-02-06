@@ -26,7 +26,7 @@ extension GitHubAPIClient {
             try await self.sendRequestWithoutResponseData(with: request)
         } catch {
             // ローカル上の認証情報の削除
-            // サーバ上の認証情報の削除に失敗した場合もローカルを削除するようにする
+            // サーバ上の認証情報の削除に失敗した場合もローカルのトークン情報を削除する
             await tokenStore.deleteAll()
             throw error
         }

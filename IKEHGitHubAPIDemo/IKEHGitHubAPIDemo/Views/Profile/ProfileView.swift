@@ -7,13 +7,6 @@
 
 import SwiftUI
 
-enum NameSpaceID {
-    enum ProfileView {
-        case image1
-        case button1
-    }
-}
-
 struct ProfileView: View {
     
     // MARK: - Animated Transition
@@ -56,12 +49,15 @@ private struct PreviewView: View {
     @State var loginUser: LoginUser?
     
     var body: some View {
-        VStack {
+        ZStack {
             Button("Toggle") {
                 withAnimation {
                     loginUser = (loginUser == nil) ? LoginUser.Mock.ikeh : nil
                 }
             }
+            .buttonStyle(LogInButtonStyle())
+            .offset(y: -300)
+            
             ProfileView.Content(loginUser: loginUser)
         }
     }
