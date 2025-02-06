@@ -172,7 +172,7 @@ struct LoginUserView: View {
         Button("Log out") {
             state.handleLogOutButtonTapped()
         }
-        .buttonStyle(LogOutButtonStyle())
+        .gitHubButtonStyle(.logOut)
         .matchedGeometryEffect(id: NamespaceID.ProfileView.button1, in: state.namespace)
     }
 }

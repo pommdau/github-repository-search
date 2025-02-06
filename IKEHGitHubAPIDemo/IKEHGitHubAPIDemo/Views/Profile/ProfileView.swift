@@ -55,7 +55,7 @@ private struct PreviewView: View {
                     loginUser = (loginUser == nil) ? LoginUser.Mock.ikeh : nil
                 }
             }
-            .buttonStyle(LogInButtonStyle())
+            .gitHubButtonStyle(.logIn)
             .offset(y: -300)
             
             ProfileView.Content(loginUser: loginUser)

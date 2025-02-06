@@ -12,6 +12,7 @@ final class LoginViewState {
     
     // MARK: - Property
         
+    let namespace: Namespace.ID?
     let loginUserStore: LoginUserStore
     let githubAPIClient: GitHubAPIClient
     var error: Error?
@@ -19,9 +20,11 @@ final class LoginViewState {
     // MARK: - LifeCycle
     
     init(
+        namespace: Namespace.ID? = nil,
         loginUserStore: LoginUserStore = .shared,
         githubAPIClient: GitHubAPIClient = .shared
     ) {
+        self.namespace = namespace
         self.loginUserStore = loginUserStore
         self.githubAPIClient = githubAPIClient
     }
@@ -41,8 +44,11 @@ final class LoginViewState {
 
 struct NewLoginView: View {
         
-    let namespace: Namespace.ID?
-    @State private var state: LoginViewState = .init()
+    @State private var state: LoginViewState
+    
+    init(namespace: Namespace.ID? = nil) {
+        _state = .init(wrappedValue: LoginViewState(namespace: namespace))
+    }
     
     var body: some View {
         VStack {
@@ -50,7 +56,7 @@ struct NewLoginView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 100)
-                .matchedGeometryEffect(id: NamespaceID.ProfileView.image1, in: namespace)
+                .matchedGeometryEffect(id: NamespaceID.ProfileView.image1, in: state.namespace)
             
             Text("Log in to GitHub")
                 .font(.title)
@@ -59,9 +65,9 @@ struct NewLoginView: View {
             Button("Log in") {
                 state.handleLogInButtonTapped()
             }
-            .buttonStyle(LogInButtonStyle())
+            .gitHubButtonStyle(.logIn)
             .padding(.bottom, 8)
-            .matchedGeometryEffect(id: NamespaceID.ProfileView.button1, in: namespace)
+            .matchedGeometryEffect(id: NamespaceID.ProfileView.button1, in: state.namespace)
             
             Text("When you log in to GitHub, you can star repositories and browse a list of repositories you’ve starred.")
                 .foregroundStyle(.secondary)
