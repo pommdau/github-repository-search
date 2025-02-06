@@ -22,10 +22,7 @@ struct StarredReposView: View {
         Group {
             if state.loginUser == nil {
                 // 未ログイン時
-                LoginView(namespace: namespace) {
-                    // コールバックURLはProfile側で受け取る
-                    state.handleLogInButtonTapped()
-                }
+                NewLoginView(namespace: namespace)
             } else {
                 // ログイン時
                 NavigationStack {

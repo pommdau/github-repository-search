@@ -7,18 +7,19 @@
 
 import SwiftUI
 
+enum NameSpaceID {
+    enum ProfileView {
+        case image1
+        case button1
+    }
+}
+
 struct ProfileView: View {
     
     // MARK: - Animated Transition
         
     @Namespace var namespace
-    
-    // TODO 分離させてもいいかも
-    enum NamespaceID {
-        case image1
-        case button1
-    }
-    
+        
     // MARK: - Property
     
     @State private var state: ProfileViewState = .init()
@@ -32,16 +33,18 @@ struct ProfileView: View {
     }
 }
 
-private struct Content: View {
-    
-    @Namespace var namespace
-    let loginUser: LoginUser?
-    
-    var body: some View {
-        if let loginUser {
-            LoginUserView(loginUser: loginUser, namespace: namespace)
-        } else {
-            NewLoginView(namespace: namespace)
+extension ProfileView {
+    fileprivate struct Content: View {
+        
+        @Namespace var namespace
+        let loginUser: LoginUser?
+        
+        var body: some View {
+            if let loginUser {
+                LoginUserView(loginUser: loginUser, namespace: namespace)
+            } else {
+                NewLoginView(namespace: namespace)
+            }
         }
     }
 }
@@ -59,7 +62,7 @@ private struct PreviewView: View {
                     loginUser = (loginUser == nil) ? LoginUser.Mock.ikeh : nil
                 }
             }
-            Content(loginUser: loginUser)
+            ProfileView.Content(loginUser: loginUser)
         }
     }
 }

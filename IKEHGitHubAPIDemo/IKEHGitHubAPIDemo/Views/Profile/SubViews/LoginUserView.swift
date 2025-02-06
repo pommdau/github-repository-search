@@ -78,7 +78,7 @@ struct LoginUserView: View {
         })
         .frame(width: 80, height: 80)
         .cornerRadius(40)
-        .matchedGeometryEffect(id: ProfileView.NamespaceID.image1, in: namespace)
+        .matchedGeometryEffect(id: NameSpaceID.ProfileView.image1, in: namespace)
         .accessibilityLabel(Text("User Image"))
         .background {
             Circle()
@@ -160,7 +160,7 @@ struct LoginUserView: View {
             state.handleLogOutButtonTapped()
         }
         .buttonStyle(LogOutButtonStyle())
-        .matchedGeometryEffect(id: ProfileView.NamespaceID.button1, in: namespace)
+        .matchedGeometryEffect(id: NameSpaceID.ProfileView.button1, in: namespace)
     }
 }
 
