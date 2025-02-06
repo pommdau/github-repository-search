@@ -7,13 +7,48 @@
 
 import SwiftUI
 
+@MainActor @Observable
+final class LoginUserViewState {
+    
+    // MARK: - Property
+        
+    let loginUserStore: LoginUserStore
+    let githubAPIClient: GitHubAPIClient
+    var error: Error?
+
+    // MARK: - LifeCycle
+    
+    init(
+        loginUserStore: LoginUserStore = .shared,
+        githubAPIClient: GitHubAPIClient = .shared
+    ) {
+        self.loginUserStore = loginUserStore
+        self.githubAPIClient = githubAPIClient
+    }
+    
+    // MARK: - Action
+    
+    /// ログアウトボタンが押された
+    func handleLogOutButtonTapped() {
+        Task {
+            do {
+                try await githubAPIClient.logout()
+                withAnimation {
+                    loginUserStore.deleteValue()
+                }
+            } catch {
+                self.error = error
+            }
+        }
+    }
+}
 struct LoginUserView: View {
     
     // MARK: - Property
             
     let loginUser: LoginUser
     let namespace: Namespace.ID
-    var handleLogOutButtonTapped: () -> Void = {}
+    @State private var state: LoginUserViewState = .init()
     
     // MARK: - View
     
@@ -27,6 +62,7 @@ struct LoginUserView: View {
             logoutButton()
         }
         .padding(.vertical, 20)
+        .errorAlert(error: $state.error)
     }
     
     // MARK: - View Parts
@@ -121,7 +157,7 @@ struct LoginUserView: View {
     @ViewBuilder
     private func logoutButton() -> some View {
         Button("Log out") {
-            handleLogOutButtonTapped()
+            state.handleLogOutButtonTapped()
         }
         .buttonStyle(LogOutButtonStyle())
         .matchedGeometryEffect(id: ProfileView.NamespaceID.button1, in: namespace)
@@ -132,7 +168,5 @@ struct LoginUserView: View {
 
 #Preview {
     @Previewable @Namespace var namespace
-    LoginUserView(loginUser: LoginUser.Mock.ikeh, namespace: namespace) {
-        print("Log Out Button Tapped!")
-    }
+    LoginUserView(loginUser: LoginUser.Mock.ikeh, namespace: namespace)
 }

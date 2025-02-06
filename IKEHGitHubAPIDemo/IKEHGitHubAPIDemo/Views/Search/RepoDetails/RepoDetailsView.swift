@@ -196,6 +196,6 @@ extension RepoDetailsView {
     }
 }
 
-//#Preview {
-//    Content(repo: Repo.Mock.random())
-//}
+#Preview {
+    
+}
