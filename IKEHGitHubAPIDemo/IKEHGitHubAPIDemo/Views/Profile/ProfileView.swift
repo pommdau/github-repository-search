@@ -27,58 +27,40 @@ struct ProfileView: View {
     
     var body: some View {
         Group {
-            if let loginUser = state.loginUser {
-                LoginUserView(loginUser: loginUser, namespace: namespace)
-            } else {
-                NewLoginView(namespace: namespace)
-            }
-        }
-        .errorAlert(error: $state.error)
-    }
-    
-    @ViewBuilder
-    fileprivate func content(loginUser: LoginUser?, state: ProfileViewState? = nil) -> some View {
-        if let loginUser {
-            LoginUserView(loginUser: loginUser, namespace: namespace)
-        } else {
-            LoginView(namespace: namespace) {
-                state?.handleLogInButtonTapped()
-            }
+            Content(loginUser: state.loginUser)
         }
     }
 }
 
-fileprivate struct MyContentView: View {
+private struct Content: View {
     
     @Namespace var namespace
-    
     let loginUser: LoginUser?
-    var state: ProfileViewState?
     
     var body: some View {
         if let loginUser {
             LoginUserView(loginUser: loginUser, namespace: namespace)
         } else {
-            LoginView(namespace: namespace) {
-                state?.handleLogInButtonTapped()
-            }
+            NewLoginView(namespace: namespace)
         }
     }
 }
 
+// MARK: - Preview
 
-struct PreviewView: View {
+private struct PreviewView: View {
     
-    private var profileView = ProfileView()
     @State var loginUser: LoginUser?
     
     var body: some View {
-        Button("Toggle") {
-            withAnimation {
-                loginUser = (loginUser == nil) ? LoginUser.Mock.ikeh : nil
+        VStack {
+            Button("Toggle") {
+                withAnimation {
+                    loginUser = (loginUser == nil) ? LoginUser.Mock.ikeh : nil
+                }
             }
+            Content(loginUser: loginUser)
         }
-        MyContentView(loginUser: loginUser)
     }
 }
 
