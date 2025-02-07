@@ -251,14 +251,6 @@ extension StarredRepoResultViewState {
 }
 
 
-
-
-
-
-
-
-
-
 ////
 ////  StarredRepoListView.swift
 ////  IKEHGitHubAPIDemo

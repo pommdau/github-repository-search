@@ -8,11 +8,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    
-    // MARK: - Animated Transition
-        
-    @Namespace var namespace
-        
+            
     // MARK: - Property
     
     @State private var state: ProfileViewState = .init()
@@ -20,9 +16,7 @@ struct ProfileView: View {
     // MARK: - View
     
     var body: some View {
-        Group {
-            Content(loginUser: state.loginUser)
-        }
+        Content(loginUser: state.loginUser)
     }
 }
 
