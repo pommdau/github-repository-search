@@ -71,7 +71,6 @@ struct LoginUserView: View {
             locationAndTwitterLabel()
             followLabel()
                 .padding(.bottom, 60)
-            
             logoutButton()
         }
         .padding(.vertical, 20)

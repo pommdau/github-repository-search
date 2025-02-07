@@ -19,21 +19,22 @@ struct StarredReposView: View {
     // MARK: - View
     
     var body: some View {
-        Group {
-            if state.loginUser == nil {
-                // 未ログイン時
-                NewLoginView(namespace: namespace)
-            } else {
-                // ログイン時
-                NavigationStack {
-                    starredReposResult()
-                }
-                .onAppear {
-                    state.onAppear()
-                }
-            }
-        }
-        .errorAlert(error: $state.error)
+//        Group {
+//            if state.loginUser == nil {
+//                // 未ログイン時
+//                NewLoginView(namespace: namespace)
+//            } else {
+//                // ログイン時
+//                NavigationStack {
+//                    starredReposResult()
+//                }
+//                .onAppear {
+//                    state.onAppear()
+//                }
+//            }
+//        }
+        Content(loginUser: state.loginUser)
+            .errorAlert(error: $state.error)
     }
     
     @ViewBuilder
@@ -51,6 +52,26 @@ struct StarredReposView: View {
             }
         } label: {
             Image(systemName: "arrow.up.arrow.down")
+        }
+    }
+}
+
+extension StarredReposView {
+    fileprivate struct Content: View {
+        
+        @Namespace var namespace
+        let loginUser: LoginUser?
+        
+        var body: some View {
+            if let loginUser {
+//                NavigationStack {
+////                    starredReposResult()
+//                    Text("Hoge")
+//                }
+                StarredReposResultView()
+            } else {
+                NewLoginView(namespace: namespace)
+            }
         }
     }
 }
@@ -140,8 +161,24 @@ extension StarredReposView {
 
 // MARK: - Preview
 
-#Preview("initial") {
-    NavigationStack {
-        StarredReposView()
+private struct PreviewView: View {
+    
+    @State private var loginUser: LoginUser?
+    
+    var body: some View {
+        ZStack {
+            Button("Toggle") {
+                withAnimation {
+                    loginUser = (loginUser == nil) ? LoginUser.Mock.ikeh : nil
+                }
+            }
+            .gitHubButtonStyle(.logIn)
+            .offset(y: -300)
+            StarredReposView.Content(loginUser: loginUser)
+        }
     }
+}
+
+#Preview {
+    PreviewView()
 }
