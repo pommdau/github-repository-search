@@ -10,11 +10,11 @@ import HTTPTypes
 
 extension GitHubAPIRequest {
     struct StarredReposRequest {
-        var userName: String
         var accessToken: String?
+        var userName: String
         var page: Int?
         var perPage: Int? = 5
-        var sortedBy: SortBy = .recentryStarred
+        var sortedBy: SortBy
     }
 }
 

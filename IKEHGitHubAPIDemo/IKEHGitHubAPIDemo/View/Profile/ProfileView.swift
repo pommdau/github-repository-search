@@ -16,7 +16,9 @@ struct ProfileView: View {
     // MARK: - View
     
     var body: some View {
-        Content(loginUser: state.loginUser)
+        Content(loginUser: state.loginUser) {
+            state.handleLogInButtonTapped()
+        }
     }
 }
 
@@ -26,12 +28,15 @@ extension ProfileView {
         
         @Namespace var namespace
         let loginUser: LoginUser?
+        var handleLogInButtonTapped: () -> Void = {}
         
         var body: some View {
             if let loginUser {
                 LoginUserView(loginUser: loginUser, namespace: namespace)
             } else {
-                NewLoginView(namespace: namespace)
+                NewLoginView(namespace: namespace) {
+                    handleLogInButtonTapped()
+                }
             }
         }
     }
@@ -41,18 +46,21 @@ extension ProfileView {
 
 private struct PreviewView: View {
     
-    @State var loginUser: LoginUser?
+    @State private var loginUser: LoginUser?
+
+    private var loggedIn: Bool {
+        loginUser != nil
+    }
     
     var body: some View {
         ZStack {
-            Button("Toggle") {
+            Toggle("Login: ", isOn: .bind(loggedIn, with: { loggedIn in
                 withAnimation {
-                    loginUser = (loginUser == nil) ? LoginUser.Mock.ikeh : nil
+                    loginUser = loggedIn ? LoginUser.Mock.ikeh : nil
                 }
-            }
-            .gitHubButtonStyle(.logIn)
+            }))
+            .frame(width: 120)
             .offset(y: -300)
-            
             ProfileView.Content(loginUser: loginUser)
         }
     }

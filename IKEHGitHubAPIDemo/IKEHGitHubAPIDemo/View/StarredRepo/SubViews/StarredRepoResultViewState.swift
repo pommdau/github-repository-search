@@ -160,7 +160,7 @@ extension StarredRepoResultViewState {
         fetchStarredReposTask = Task {
             do {
                 // 検索に成功
-                let response = try await githubAPIClient.fetchStarredRepos(userName: userName, page: nextLink.page, sortedBy: sortedBy)
+                let response = try await githubAPIClient.fetchStarredRepos(userName: userName, sortedBy: sortedBy, page: nextLink.page)
                 try await repoStore.addValues(response.repos)
                 withAnimation {
                     asyncRepoIDs = .loaded(asyncRepoIDs.values + response.repos.map { $0.id })

@@ -82,11 +82,18 @@ struct LoginDebugView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
+                
+                
             }
             
             Section("Access Token") {
                 LabeledContent("Value", value: accessToken)
                 LabeledContent("Expires in", value: accessTokenExpiresAt)
+                
+                Button("Print") {
+                    print(accessToken)
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
             }
         }
         .onAppear() {

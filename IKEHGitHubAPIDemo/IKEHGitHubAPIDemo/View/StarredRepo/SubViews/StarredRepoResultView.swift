@@ -11,15 +11,17 @@ import SwiftUI
 
 struct StarredReposResultView: View {
     
-    @State private var state: StarredReposViewState = .init()
+    @State private var state: StarredRepoResultViewState = .init()
     
     var body: some View {
-        Content(asyncRepos: state.asyncRepos, bottomRepoCellOnAppear: {
-            print("load more!")
-        })
-        .toolbar {
-            ToolbarItem {
-                toolbarItemContentSortedBy()
+        NavigationStack {
+            Content(asyncRepos: state.asyncRepos, bottomRepoCellOnAppear: {
+                print("load more!")
+            })
+            .toolbar {
+                ToolbarItem {
+                    toolbarItemContentSortedBy()
+                }
             }
         }
         .onAppear() {
@@ -38,7 +40,8 @@ struct StarredReposResultView: View {
                 }
             }
             .onChange(of: state.sortedBy) { _, _ in
-//                state.handleSortedByChanged()
+                state.handleSortedByChanged()
+//                print(state.sortedBy)
             }
         } label: {
             Image(systemName: "arrow.up.arrow.down")
@@ -74,25 +77,23 @@ extension StarredReposResultView {
         }
         
         var body: some View {
-            NavigationStack {
-                List {
-                    switch asyncRepos {
-                    case .initial, .loading:
-                        skeltonView()
-                    case .loaded, .loadingMore, .error:
-                        if showNoResultView {
-                            noResultView()
-                        } else {
-                            starredReposList()
-                            if case .loadingMore = asyncRepos {
-                                lodingMoreProgressView()
-                            }
+            List {
+                switch asyncRepos {
+                case .initial, .loading:
+                    skeltonView()
+                case .loaded, .loadingMore, .error:
+                    if showNoResultView {
+                        noResultView()
+                    } else {
+                        starredReposList()
+                        if case .loadingMore = asyncRepos {
+                            lodingMoreProgressView()
                         }
                     }
                 }
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationTitle("Starred List")
             }
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Starred List")
         }
     }
 }
@@ -156,6 +157,10 @@ extension StarredReposResultView.Content {
 
 // MARK: - Preview
 
+#Preview("StarredResultView") {
+    StarredReposResultView()
+}
+
 #Preview("initial") {
     StarredReposResultView.Content(asyncRepos: .initial)
 }
@@ -165,7 +170,9 @@ extension StarredReposResultView.Content {
 }
 
 #Preview("loaded") {
-    StarredReposResultView.Content(asyncRepos: .loaded(Repo.Mock.random(count: 3)))
+    NavigationStack {
+        StarredReposResultView.Content(asyncRepos: .loaded(Repo.Mock.random(count: 3)))
+    }
 }
 
 #Preview("loaded_no_result") {

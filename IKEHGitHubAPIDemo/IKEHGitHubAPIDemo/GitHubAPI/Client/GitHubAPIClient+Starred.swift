@@ -10,13 +10,17 @@ import Foundation
 
 extension GitHubAPIClient {
     
-    func fetchStarredRepos(userName: String, page: Int? = nil, sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy = .recentryStarred) async throws -> StarredReposResponse {
+    func fetchStarredRepos(
+        userName: String,
+        sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy,
+        page: Int? = nil
+    ) async throws -> StarredReposResponse {
         // TODO: fix
         let request = await GitHubAPIRequest.StarredReposRequest(
+            accessToken: tokenStore.accessToken,
             userName: userName,
-            accessToken: tokenStore.accessToken
+            sortedBy: sortedBy
         )
-        
         let response = try await sendRequest(with: request)
         return response
     }

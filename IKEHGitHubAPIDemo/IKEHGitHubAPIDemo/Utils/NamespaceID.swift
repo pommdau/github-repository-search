@@ -8,10 +8,9 @@
 import Foundation
 
 enum NamespaceID {
-    enum ProfileView {
+    enum LoginView {
         case image1
         case button1
     }
-    
 }
 

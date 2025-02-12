@@ -19,22 +19,28 @@ struct StarredReposView: View {
     // MARK: - View
     
     var body: some View {
-        Content(loginUser: state.loginUser)
-            .errorAlert(error: $state.error)
+        Content(loginUser: state.loginUser, handleLogInButtonTapped: {
+            state.handleLogInButtonTapped()
+        })
+        .errorAlert(error: $state.error)
     }
 }
 
 extension StarredReposView {
     fileprivate struct Content: View {
-        
         @Namespace var namespace
         let loginUser: LoginUser?
+        var handleLogInButtonTapped: () -> Void = {}
         
         var body: some View {
-            if loginUser == nil {
-                NewLoginView(namespace: namespace)
-            } else {
-                StarredReposResultView()
+            Group {
+                if loginUser == nil {
+                    NewLoginView(namespace: namespace) {
+                        handleLogInButtonTapped()
+                    }
+                } else {
+                    StarredReposResultView()
+                }
             }
         }
     }
@@ -76,17 +82,22 @@ private struct PreviewView: View {
     
     @State private var loginUser: LoginUser?
     
+    private var loggedIn: Bool {
+        loginUser != nil
+    }
+    
     var body: some View {
         ZStack {
-            Button("Toggle") {
+            Toggle("Login: ", isOn: .bind(loggedIn, with: { loggedIn in
                 withAnimation {
-                    loginUser = (loginUser == nil) ? LoginUser.Mock.ikeh : nil
+                    loginUser = loggedIn ? LoginUser.Mock.ikeh : nil
                 }
-            }
-            .gitHubButtonStyle(.logIn)
+            }))
+            .frame(width: 120)
             .offset(y: -300)
             
             StarredReposView.Content(loginUser: loginUser)
+                .zIndex(-1)
         }
     }
 }

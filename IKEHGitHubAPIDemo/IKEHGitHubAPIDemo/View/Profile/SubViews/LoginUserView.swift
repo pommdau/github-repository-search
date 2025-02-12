@@ -7,49 +7,6 @@
 
 import SwiftUI
 
-@MainActor @Observable
-final class LoginUserViewState {
-    
-    // MARK: - Property
-        
-    let loginUser: LoginUser
-    let namespace: Namespace.ID?
-    let loginUserStore: LoginUserStore
-    let githubAPIClient: GitHubAPIClient
-    var error: Error?
-
-    // MARK: - LifeCycle
-    
-    init(
-        loginUser: LoginUser,
-        namespace: Namespace.ID?,
-        loginUserStore: LoginUserStore = .shared,
-        githubAPIClient: GitHubAPIClient = .shared
-    ) {
-        self.loginUser = loginUser
-        self.namespace = namespace
-        self.loginUserStore = loginUserStore
-        self.githubAPIClient = githubAPIClient
-    }
-    
-    // MARK: - Action
-    
-    /// ログアウトボタンが押された
-    func handleLogOutButtonTapped() {
-        Task {
-            defer {
-                withAnimation {
-                    loginUserStore.deleteValue()
-                }
-            }
-            do {
-                try await githubAPIClient.logout()
-            } catch {
-                self.error = error // TODO: fix
-            }
-        }
-    }
-}
 struct LoginUserView: View {
     
     // MARK: - Property
@@ -90,7 +47,7 @@ struct LoginUserView: View {
         })
         .frame(width: 80, height: 80)
         .cornerRadius(40)
-        .matchedGeometryEffect(id: NamespaceID.ProfileView.image1, in: state.namespace)
+        .matchedGeometryEffect(id: NamespaceID.LoginView.image1, in: state.namespace)
         .accessibilityLabel(Text("User Image"))
         .background {
             Circle()
@@ -172,13 +129,12 @@ struct LoginUserView: View {
             state.handleLogOutButtonTapped()
         }
         .gitHubButtonStyle(.logOut)
-        .matchedGeometryEffect(id: NamespaceID.ProfileView.button1, in: state.namespace)
+        .matchedGeometryEffect(id: NamespaceID.LoginView.button1, in: state.namespace)
     }
 }
 
 // MARK: - Preview
 
 #Preview {
-    @Previewable @Namespace var namespace
-    LoginUserView(loginUser: LoginUser.Mock.ikeh, namespace: namespace)
+    LoginUserView(loginUser: LoginUser.Mock.ikeh)
 }
