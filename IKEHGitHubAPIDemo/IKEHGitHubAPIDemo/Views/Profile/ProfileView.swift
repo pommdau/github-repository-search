@@ -21,6 +21,7 @@ struct ProfileView: View {
 }
 
 extension ProfileView {
+    
     fileprivate struct Content: View {
         
         @Namespace var namespace

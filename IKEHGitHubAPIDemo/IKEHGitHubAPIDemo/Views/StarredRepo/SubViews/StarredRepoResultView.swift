@@ -17,13 +17,36 @@ struct StarredReposResultView: View {
         Content(asyncRepos: state.asyncRepos, bottomRepoCellOnAppear: {
             print("load more!")
         })
-            .onAppear() {
-                state.onAppear()
+        .toolbar {
+            ToolbarItem {
+                toolbarItemContentSortedBy()
             }
+        }
+        .onAppear() {
+            state.onAppear()
+        }
+    }
+    
+    @ViewBuilder
+    private func toolbarItemContentSortedBy() -> some View {
+        Menu {
+            Picker("Sorted By", selection: $state.sortedBy) {
+                ForEach(GitHubAPIRequest.StarredReposRequest.SortBy.allCases) { type in
+                    Text(type.title)
+                        .tag(type)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+            }
+            .onChange(of: state.sortedBy) { _, _ in
+//                state.handleSortedByChanged()
+            }
+        } label: {
+            Image(systemName: "arrow.up.arrow.down")
+        }
     }
 }
 
-// MARK: - StarredReposResultView + Content
+// MARK: - StarredReposResultView - Content
 
 extension StarredReposResultView {
     
@@ -131,6 +154,8 @@ extension StarredReposResultView.Content {
     }
 }
 
+// MARK: - Preview
+
 #Preview("initial") {
     StarredReposResultView.Content(asyncRepos: .initial)
 }
@@ -141,6 +166,10 @@ extension StarredReposResultView.Content {
 
 #Preview("loaded") {
     StarredReposResultView.Content(asyncRepos: .loaded(Repo.Mock.random(count: 3)))
+}
+
+#Preview("loaded_no_result") {
+    StarredReposResultView.Content(asyncRepos: .loaded([]))
 }
 
 #Preview("loading-more") {
