@@ -1,11 +1,9 @@
-////
-////  StarredReposList.swift
-////  IKEHGitHubAPIDemo
-////
-////  Created by HIROKI IKEUCHI on 2025/02/02.
-////
-
-
+//
+//  StarredReposList.swift
+//  IKEHGitHubAPIDemo
+//
+//  Created by HIROKI IKEUCHI on 2025/02/02.
+//
 
 import SwiftUI
 

@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct LoginDebugView: View {
     
     @State private var accessToken = "(nil)"

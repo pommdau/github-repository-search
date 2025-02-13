@@ -28,14 +28,14 @@ extension ProfileView {
         
         @Namespace var namespace
         let loginUser: LoginUser?
-        var handleLogInButtonTapped: () -> Void = {}
+        var logInButtonTapped: () -> Void = {}
         
         var body: some View {
             if let loginUser {
                 LoginUserView(loginUser: loginUser, namespace: namespace)
             } else {
                 NewLoginView(namespace: namespace) {
-                    handleLogInButtonTapped()
+                    logInButtonTapped()
                 }
             }
         }

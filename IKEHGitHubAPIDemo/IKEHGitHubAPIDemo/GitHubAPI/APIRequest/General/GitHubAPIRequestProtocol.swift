@@ -65,14 +65,13 @@ extension GitHubAPIRequestProtocol {
             return nil
         }
         // 0個の場合末尾に?がついてしまうのを防止
-        if queryItems.count > 0 {
-            components.queryItems = queryItems            
+        if !queryItems.isEmpty {
+            components.queryItems = queryItems
         }
         
         return components.url
     }
-    
-    
+        
     /// プロパティの値からHTTPRequestを作成
     func buildHTTPRequest() -> HTTPRequest? {
         guard let url else {
