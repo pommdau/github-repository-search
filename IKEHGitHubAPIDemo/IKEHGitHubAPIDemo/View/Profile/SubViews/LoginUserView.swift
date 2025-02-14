@@ -13,6 +13,7 @@ struct LoginUserView: View {
     
     @State private var state: LoginUserViewState
     
+    // swiftlint:disable:next type_contents_order
     init(loginUser: LoginUser, namespace: Namespace.ID? = nil) {
         _state = .init(
             wrappedValue:

@@ -27,6 +27,39 @@ extension GitHubAPIClient {
 
 // MARK: - Private
 
+// MARK: Decode Response
+
+extension GitHubAPIClient {
+    
+    
+    static private func attachRelationLink<Response>(to response: Response, from httpResponse: HTTPResponse) throws -> Response {
+        if var responseWithRelationLink = response as? ResponseWithRelationLinkProtocol,
+           let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
+            // Responseにページング情報を付与
+            responseWithRelationLink.relationLink = RelationLink.create(rawValue: link.value)
+            guard let responseWithRelationLink = (responseWithRelationLink as? Response) else {
+                throw GitHubAPIClientError.responseParseError(MessageError(description: "ページング情報の取得に失敗しました"))
+            }
+            return responseWithRelationLink
+        } else {
+            return response
+        }
+    }
+    
+    /// レスポンスのデータをDTOへデコード
+    private func decodeResponse<Response: Decodable>(data: Data, httpResponse: HTTPResponse) throws -> Response {
+        var response: Response
+        do {
+            response = try JSONDecoder().decode(Response.self, from: data)
+        } catch {
+            print(String(data: data, encoding: .utf8)!)
+            throw GitHubAPIClientError.responseParseError(error)
+        }
+        response = try Self.attachRelationLink(to: response, from: httpResponse)
+        return response
+    }
+}
+
 extension GitHubAPIClient {
             
     // MARK: Send Request
@@ -100,34 +133,5 @@ extension GitHubAPIClient {
         }
         oAuthError.statusCode = httpResponse.status.code
         throw GitHubAPIClientError.apiError(oAuthError)
-    }
-    
-    // MARK: Decode Response
-    
-    /// レスポンスのデータをDTOへデコード
-    private func decodeResponse<Response: Decodable>(data: Data, httpResponse: HTTPResponse) throws -> Response {
-        var response: Response
-        do {
-            response = try JSONDecoder().decode(Response.self, from: data)
-        } catch {
-            print(String(data: data, encoding: .utf8)!)
-            throw GitHubAPIClientError.responseParseError(error)
-        }
-        response = try Self.attachRelationLink(to: response, from: httpResponse)
-        return response
-    }
-    
-    static private func attachRelationLink<Response>(to response: Response, from httpResponse: HTTPResponse) throws -> Response {
-        if var responseWithRelationLink = response as? ResponseWithRelationLinkProtocol,
-           let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
-            // Responseにページング情報を付与
-            responseWithRelationLink.relationLink = RelationLink.create(rawValue: link.value)
-            guard let responseWithRelationLink = (responseWithRelationLink as? Response) else {
-                throw GitHubAPIClientError.responseParseError(MessageError(description: "ページング情報の取得に失敗しました"))
-            }
-            return responseWithRelationLink
-        } else {
-            return response
-        }
     }
 }

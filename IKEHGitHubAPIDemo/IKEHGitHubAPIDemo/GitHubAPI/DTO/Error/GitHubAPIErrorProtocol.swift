@@ -8,5 +8,5 @@
 import Foundation
 
 protocol GitHubAPIErrorProtocol: Sendable, Decodable, Error, LocalizedError {
-    var statusCode: Int? { set get }
+    var statusCode: Int? { get set }
 }

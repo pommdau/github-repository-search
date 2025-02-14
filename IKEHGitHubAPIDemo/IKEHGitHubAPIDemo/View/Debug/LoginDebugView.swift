@@ -14,6 +14,7 @@ struct LoginDebugView: View {
     
     private let gitHubAPIClient: GitHubAPIClient
     
+    // swiftlint:disable:next type_contents_order
     init(gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared) {
         self.gitHubAPIClient = gitHubAPIClient
     }

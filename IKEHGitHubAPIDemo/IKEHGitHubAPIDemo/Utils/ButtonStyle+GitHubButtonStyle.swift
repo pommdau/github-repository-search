@@ -16,7 +16,7 @@ struct GitHubButtonStyle: ButtonStyle {
         var backgroundColor: Color {
             switch self {
             case .logIn:
-                Color(red: 46/255, green: 164/255, blue: 79/255)
+                Color(red: 46 / 255, green: 164 / 255, blue: 79 / 255)
             case .logOut:
                 Color(uiColor: .systemRed)
             }

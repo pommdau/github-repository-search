@@ -8,7 +8,7 @@
 import Foundation
 
 extension LoginUser {
-    struct Mock {
+    enum Mock {
         static let ikeh: LoginUser = .init(
             rawID: 29433103,
             login: "pommdau",

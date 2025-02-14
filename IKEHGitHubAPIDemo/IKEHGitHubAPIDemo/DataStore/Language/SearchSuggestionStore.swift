@@ -11,12 +11,12 @@ import SwiftUI
 struct SearchSuggestionStore {
     
     // MARK: - Property
-
-    private static let maxHistoryCount = 5
-    static let shared: SearchSuggestionStore = .init()
-    let recommendedSuggestions = ["SwiftUI", "Swift", "Python", "Apple", "Qiita"]
+            
+    private static let maxHistoryCount = 5 // 履歴の最大記憶数
+    static let recommendedSuggestions = ["SwiftUI", "Swift", "Python", "Apple", "Qiita"] // 固定のオススメ
     
-    // INFO: シングルトンでなくなった場合はIdentifiedなキーで保存すること
+    static let shared: SearchSuggestionStore = .init()
+    
     @AppStorage("history-suggestions")
     var historySuggestions: [String] = []
     

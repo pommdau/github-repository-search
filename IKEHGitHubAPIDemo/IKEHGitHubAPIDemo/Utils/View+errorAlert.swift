@@ -22,7 +22,7 @@ extension View {
     }
 }
 
-fileprivate struct LocalizedAlertError: LocalizedError {
+private struct LocalizedAlertError: LocalizedError {
     let underlyingError: LocalizedError
     var errorDescription: String? {
         underlyingError.errorDescription
@@ -32,7 +32,9 @@ fileprivate struct LocalizedAlertError: LocalizedError {
     }
     
     init?(error: Error?) {
-        guard let localizedError = error as? LocalizedError else { return nil }
+        guard let localizedError = error as? LocalizedError else {
+            return nil
+        }
         underlyingError = localizedError
     }
 }
@@ -76,4 +78,3 @@ private enum SampleError: LocalizedError {
     }
     .errorAlert(error: $viewError)
 }
-

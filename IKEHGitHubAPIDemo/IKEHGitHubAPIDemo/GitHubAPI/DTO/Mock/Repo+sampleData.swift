@@ -11,7 +11,7 @@ import Foundation
 extension Repo {
 
     @MainActor
-    struct Mock {
+    enum Mock {
         
         static func random(count: Int) -> [Repo] {
             (0..<count).map { _ in random() }
@@ -19,7 +19,7 @@ extension Repo {
         
         static func random() -> Repo {
             let randomID = Int.random(in: 1000...9999)
-            let randomName = ["Tetris", "Chess", "Snake", "Pong", "Breakout"].randomElement()!
+            let randomName = ["Tetris", "Chess", "Snake", "Pong", "Breakout"].randomElement() ?? ""
             let randomOwner = User.createRandom()
             let randomLanguage = ["Swift", "Python", "JavaScript", "C++", "Rust"].randomElement()
             

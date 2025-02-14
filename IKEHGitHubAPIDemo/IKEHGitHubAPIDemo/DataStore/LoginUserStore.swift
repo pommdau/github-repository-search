@@ -7,7 +7,8 @@
 
 import Foundation
 
-@MainActor @Observable
+@MainActor
+@Observable
 final class LoginUserStore {
     
     // MARK: - Property

@@ -21,22 +21,3 @@ struct FetchInitialTokenResponse: Decodable, Sendable {
     var tokenType: String
     var scope: String // e.g. "bearer"
 }
-
-//struct RequestTokenResponse: Decodable, Sendable {
-//    
-//    enum CodingKeys: String, CodingKey {
-//        case accessToken = "access_token"
-//        case accessTokenExpiresIn = "expires_in"
-//        case refreshToken = "refresh_token"
-//        case refreshTokenExpiresIn = "refresh_token_expires_in"
-//        case tokenType = "token_type"
-//        case scope
-//    }
-//    
-//    let accessToken: String
-//    let accessTokenExpiresIn: Int
-//    let refreshToken: String
-//    let refreshTokenExpiresIn: Int
-//    let tokenType: String // e.g. "bearer"
-//    let scope: String
-//}

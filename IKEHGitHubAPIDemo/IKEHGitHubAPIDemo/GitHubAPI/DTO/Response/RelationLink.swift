@@ -88,7 +88,7 @@ extension RelationLink {
             case "last":
                 relationLink.last = .init(id: "\(relationKey)", url: url, queryItems: queryItems)
             case "first":
-                relationLink.first = .init(id: "\(relationKey)", url: url,queryItems: queryItems)
+                relationLink.first = .init(id: "\(relationKey)", url: url, queryItems: queryItems)
             default:
                 preconditionFailure()
             }
@@ -110,9 +110,7 @@ import SwiftUI
 
 extension RelationLink {
     static func test() {
-//        let testString = """
-////// <https://api.github.com/search/repositories?q=swift&page=2>; rel="next", <https://api.github.com/search/repositories?q=swift&page=34>; rel="last"
-//"""
+/// <https://api.github.com/search/repositories?q=swift&page=2>; rel="next", <https://api.github.com/search/repositories?q=swift&page=34>; rel="last"
         let testString = """
      <https://api.github.com/user/29433103/starred?sort=created&direction=desc&per_page=5&page=2>; rel=\"next\", <https://api.github.com/user/29433103/starred?sort=created&direction=desc&per_page=5&page=12>; rel=\"last\"
 """

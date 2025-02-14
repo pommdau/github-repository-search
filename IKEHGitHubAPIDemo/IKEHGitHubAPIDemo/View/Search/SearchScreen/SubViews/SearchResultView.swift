@@ -53,10 +53,19 @@ struct SearchResultView: View {
         List {
             switch asyncRepos {
             case .initial:
-                Text("Search GitHub Repositories!")
-                    .foregroundStyle(.secondary)
-                    .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                VStack {
+                    Image(systemName: "magnifyingglass")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.secondary)
+                        .frame(width: 36)
+                    Text("Search GitHub Repositories!")
+                        .foregroundStyle(.secondary)
+                        .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                }
+                .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             case .loading:
                 ForEach(0..<3, id: \.self) { _ in
                     RepoCell(repo: Repo.Mock.sampleDataForReposCellSkelton)

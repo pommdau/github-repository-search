@@ -13,7 +13,6 @@ struct SearchScreen: View {
 
     var body: some View {
         NavigationStack {
-//            searchTypePicker()
             SearchResultView(
                 asyncRepos: state.asyncRepos,
                 cancelSearching: {
@@ -31,6 +30,9 @@ struct SearchScreen: View {
             }
         }
         .searchable(text: $state.searchText, prompt: "Enter Keyword")
+        .searchSuggestions {
+            SearchSuggestionView()
+        }
         .onSubmit(of: .search) {
             state.handleSearch()
         }

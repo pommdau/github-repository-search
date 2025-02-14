@@ -66,7 +66,7 @@ extension User {
 extension User {
     static func createRandom() -> User {
         let randomID = Int.random(in: 1000...9999)
-        let randomName = ["alice", "bob", "charlie", "dave", "eve"].randomElement()!
+        let randomName = ["alice", "bob", "charlie", "dave", "eve"].randomElement() ?? ""
 
         return User(
             rawID: randomID,

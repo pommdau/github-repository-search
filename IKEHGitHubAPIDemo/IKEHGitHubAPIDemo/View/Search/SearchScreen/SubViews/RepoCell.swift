@@ -115,12 +115,12 @@ struct RepoCell: View {
         .padding()
 }
 
-#Preview("長い語句を含む場合", traits: .sizeThatFitsLayout) {
+#Preview("長文あり", traits: .sizeThatFitsLayout) {
     RepoCell(repo: Repo.Mock.sampleDataWithLongWord)
         .padding()
 }
 
-#Preview("空の情報がある場合", traits: .sizeThatFitsLayout) {
+#Preview("空情報あり(言語/bio)", traits: .sizeThatFitsLayout) {
     RepoCell(repo: Repo.Mock.sampleDataWithoutSomeInfo)
         .padding()
 }
