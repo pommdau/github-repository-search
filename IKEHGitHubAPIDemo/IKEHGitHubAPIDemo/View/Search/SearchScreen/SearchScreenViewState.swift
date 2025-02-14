@@ -17,7 +17,7 @@ final class SearchScreenViewState {
     
     var searchText: String = "Swift"
     var sortedBy: GitHubAPIRequest.SearchReposRequest.SortBy = .bestMatch
-    
+                
     // MARK: 検索結果
     
     private var asyncRepoIDs: AsyncValues<Repo.ID, Error> = .initial
@@ -37,6 +37,7 @@ final class SearchScreenViewState {
             return .error(error, repos)
         }
     }
+    
     private var relationLink: RelationLink?
     var error: Error?
     
@@ -47,16 +48,19 @@ final class SearchScreenViewState {
     let gitHubAPIClient: GitHubAPIClient
     let repoStore: RepoStore
     let loginUserStore: LoginUserStore
+    let searchSuggestionStore: SearchSuggestionStore
     
     // MARK: - LifeCycle
     
     init(gitHubAPIClient: GitHubAPIClient = .shared,
          repoStore: RepoStore = .shared,
-         loginUserStore: LoginUserStore = .shared
+         loginUserStore: LoginUserStore = .shared,
+         searchSuggestionStore: SearchSuggestionStore = .shared
     ) {
         self.gitHubAPIClient = gitHubAPIClient
         self.repoStore = repoStore
         self.loginUserStore = loginUserStore
+        self.searchSuggestionStore = searchSuggestionStore
     }
 }
 
@@ -66,7 +70,6 @@ extension SearchScreenViewState {
     
     /// 通常の語句検索
     func handleSearch() {
-        
         // すでに検索中であれば何もしない
         if case .loading = asyncRepos {
             return
@@ -76,6 +79,7 @@ extension SearchScreenViewState {
         if searchText.isEmpty {
             return
         }
+        searchSuggestionStore.addHistory(searchText) // 検索履歴の保存
         
         asyncRepoIDs = .loading(asyncRepoIDs.values)
         relationLink = nil

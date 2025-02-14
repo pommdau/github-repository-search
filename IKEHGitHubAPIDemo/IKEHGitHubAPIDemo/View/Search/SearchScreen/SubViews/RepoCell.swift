@@ -25,9 +25,9 @@ struct RepoCell: View {
             userLabel()
             repoNameLabel()
             descriptionLabel()
-            HStack(spacing: 18) {
-                starsLabel()
+            HStack(spacing: 10) {
                 languageLabel()
+                starsLabel()
                 Text(updateAt)
                     .foregroundStyle(.secondary)
                     .font(.footnote)
@@ -83,7 +83,7 @@ struct RepoCell: View {
 
     @ViewBuilder
     private func starsLabel() -> some View {
-        HStack(spacing: 2) {
+        HStack(spacing: 0) {
             Image(systemName: "star")
                 .accessibilityLabel(Text("Star Image"))
             Text("\(repo.starsCount)")
@@ -96,7 +96,7 @@ struct RepoCell: View {
     private func languageLabel() -> some View {
         if let languageName = repo.language,
            let language = LanguageStore.shared.get(name: languageName) {
-            HStack(spacing: 4) {
+            HStack(spacing: 2) {
                 Circle()
                     .frame(width: 12, height: 12)
                     .foregroundStyle(language.color)

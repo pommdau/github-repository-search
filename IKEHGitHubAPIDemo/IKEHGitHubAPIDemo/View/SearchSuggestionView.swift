@@ -9,31 +9,36 @@ import SwiftUI
 
 struct SearchSuggestionView: View {
     
-    @State private var searchSuggestionRepository = SearchSuggestionStore.shared
+    @State private var searchSuggestionStore = SearchSuggestionStore.shared
     
     var body: some View {
-        Section("検索履歴") {
-            if searchSuggestionRepository.historySuggestions.isEmpty {
-                Text("(なし)")
-                    .foregroundStyle(.secondary)
-            } else {
-                ForEach(searchSuggestionRepository.historySuggestions, id: \.self) { history in
-                    Label(history, systemImage: "clock")
-                        .searchCompletion(history)
-                        .foregroundStyle(.primary)
-                    
+        Group {
+            Section("検索履歴") {
+                if searchSuggestionStore.historySuggestions.isEmpty {
+                    Text("(なし)")
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(searchSuggestionStore.historySuggestions, id: \.self) { history in
+                        Label(history, systemImage: "clock")
+                            .searchCompletion(history)
+                            .foregroundStyle(.primary)
+                        
+                    }
+                    /* TODO: クリア時に候補のViewが閉じてしまう
+                    Button("履歴のクリア") {
+                        searchSuggestionStore.removeAllHistories()
+                    }
+                    .frame(alignment: .trailing)
+                     */
                 }
-                Button("履歴のクリア") {
-                    searchSuggestionRepository.removeAllHistories()
-                }
-                .frame(alignment: .trailing)
             }
-        }
-        Section("おすすめ") {
-            ForEach(SearchSuggestionStore.recommendedSuggestions, id: \.self) { suggestion in
-                Label(suggestion, systemImage: "magnifyingglass")
-                    .searchCompletion(suggestion)
-                    .foregroundStyle(.primary)
+            
+            Section("おすすめ") {
+                ForEach(SearchSuggestionStore.recommendedSuggestions, id: \.self) { suggestion in
+                    Label(suggestion, systemImage: "magnifyingglass")
+                        .searchCompletion(suggestion)
+                        .foregroundStyle(.primary)
+                }
             }
         }
     }

@@ -8,7 +8,9 @@
 
 import SwiftUI
 
-struct SearchSuggestionStore {
+@MainActor
+@Observable
+final class SearchSuggestionStore {
     
     // MARK: - Property
             
@@ -17,12 +19,18 @@ struct SearchSuggestionStore {
     
     static let shared: SearchSuggestionStore = .init()
     
-    @AppStorage("history-suggestions")
-    var historySuggestions: [String] = []
+    var historySuggestions: [String] {
+        didSet {
+            UserDefaults.standard.setCodableItem(historySuggestions, forKey: "suggestions-history")
+        }
+    }
     
     // MARK: - LifeCycle
     
-    private init() {}
+    private init() {
+        // 保存されている値の読込
+        self.historySuggestions = UserDefaults.standard.codableItem(forKey: "suggestions-history") ?? []
+    }
 }
 
 // MARK: - CRUD
