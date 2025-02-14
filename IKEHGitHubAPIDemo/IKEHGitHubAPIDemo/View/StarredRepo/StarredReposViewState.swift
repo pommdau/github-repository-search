@@ -75,7 +75,21 @@ final class StarredReposViewState {
     }
 }
 
-// MARK: - Fetch Starred Repository
+// MARK: - Login
+
+extension StarredReposViewState {
+    func handleLogInButtonTapped() {
+        Task {
+            do {
+                try await githubAPIClient.openLoginPageInBrowser()
+            } catch {
+                self.error = error
+            }
+        }
+    }
+}
+
+// MARK: - Fetch Starred Repos
 
 extension StarredReposViewState {
     
@@ -84,9 +98,9 @@ extension StarredReposViewState {
             do {
                 // 検索: 成功
                 let response = try await githubAPIClient.fetchStarredRepos(userName: userName, sortedBy: sortedBy)
-                try await repoStore.addValues(response.repos)
+                try await repoStore.addValues(response.repos) // ローカルDBを更新
                 withAnimation {
-                    asyncRepoIDs = .loaded(response.repos.map { $0.id })
+                    asyncRepoIDs = .loaded(response.repos.map { $0.id }) // Viewで表示するリポジトリの情報更新
                 }
                 relationLink = response.relationLink
             } catch {
@@ -109,20 +123,6 @@ extension StarredReposViewState {
 //
 //    }
     
-}
-
-// MARK: - LoginView
-
-extension StarredReposViewState {
-    func handleLogInButtonTapped() {
-        Task {
-            do {
-                try await githubAPIClient.openLoginPageInBrowser()
-            } catch {
-                self.error = error
-            }
-        }
-    }
 }
 
 // MARK: - Actions

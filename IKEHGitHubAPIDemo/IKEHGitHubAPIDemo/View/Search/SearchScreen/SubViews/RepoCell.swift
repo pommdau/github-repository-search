@@ -94,11 +94,16 @@ struct RepoCell: View {
 
     @ViewBuilder
     private func languageLabel() -> some View {
-        if let language = repo.language,
-           !language.isEmpty {
-            Text(language)
-                .foregroundStyle(.secondary)
-                .font(.footnote)
+        if let languageName = repo.language,
+           let language = LanguageStore.shared.get(name: languageName) {
+            HStack(spacing: 4) {
+                Circle()
+                    .frame(width: 12, height: 12)
+                    .foregroundStyle(language.color)
+                Text(language.name)
+                    .foregroundStyle(.secondary)
+                    .font(.footnote)
+            }
         }
     }
 }

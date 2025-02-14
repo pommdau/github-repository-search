@@ -11,12 +11,12 @@ import SwiftID
 struct RelationLink: Sendable {
     
     struct Link: Identifiable, Equatable, Sendable {
+
+        // swiftlint:disable:next type_name
         struct ID: StringIDProtocol {
-            let rawValue:  String
-            init(rawValue: String) {
-                self.rawValue = rawValue
-            }
+            let rawValue: String
         }
+
         var id: ID
         var url: URL
         var queryItems: [URLQueryItem]

@@ -10,12 +10,9 @@ import SwiftUI
 struct StarredReposView: View {
     
     // MARK: - Property
-    
-    @Namespace private var namespace
+
     @State private var state: StarredReposViewState = .init()
-    
-    // MARK: - LifeCycle
-    
+        
     // MARK: - View
     
     var body: some View {
@@ -26,11 +23,19 @@ struct StarredReposView: View {
     }
 }
 
+// MARK: - StarredReposView+Content
+
 extension StarredReposView {
-    fileprivate struct Content: View {
+    
+    struct Content: View {
+        
+        // MARK: - Helpers
+        
         @Namespace var namespace
         let loginUser: LoginUser?
         var handleLogInButtonTapped: () -> Void = {}
+        
+        // MARK: - View
         
         var body: some View {
             Group {
@@ -45,36 +50,6 @@ extension StarredReposView {
         }
     }
 }
-
-// MARK: - StarredReposResult
-
-//extension StarredReposView {
-//    @ViewBuilder
-//    private func starredReposResult() -> some View {
-//        List {
-//            switch state.asyncRepos {
-//            case .initial, .loading:
-//                skeltonView()
-//            case .loaded, .loadingMore, .error:
-//                if state.showNoResultView {
-//                    noResultView()
-//                } else {
-//                    starredReposList()
-//                    if case .loadingMore = state.asyncRepos {
-//                        lodingMoreProgressView()
-//                    }
-//                }
-//            }
-//        }
-////        .matchedGeometryEffect(id: ProfileView.NamespaceID.image1, in: namespace)
-//        .navigationBarTitleDisplayMode(.inline)
-//        .navigationTitle("Starred Repositories")
-//        .toolbar {
-//            ToolbarItem(placement: .topBarTrailing) {
-//                toolbarItemContentSortedBy()
-//            }
-//        }
-//    }
 
 // MARK: - Preview
 

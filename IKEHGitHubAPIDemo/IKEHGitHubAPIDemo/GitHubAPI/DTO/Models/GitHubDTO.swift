@@ -11,9 +11,6 @@ import SwiftID
 // 汎用のID型
 struct SwiftID<T>: StringIDProtocol {
     let rawValue: String
-    init(rawValue: String) {
-        self.rawValue = rawValue
-    }
 }
 
 protocol GitHubDTO: Identifiable, Codable, Sendable, Hashable, Equatable {
