@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
+import Shimmer
 
 struct StarredReposResultView: View {
     
     @State private var state: StarredRepoResultViewState = .init()
-    @State private var taskId: UUID = .init()
     
     var body: some View {
         NavigationStack {
@@ -18,10 +18,11 @@ struct StarredReposResultView: View {
                 print("load more!")
             })
             .refreshable {
-//                await Task {
-//                    state.handleRefresh()
-//                }.value
-                await state.handleRefresh()
+                await state.handlePullToRefresh()
+                // クロージャを抜けるとインジケータが消えてしまうので、Sleepで生存期間を管理する
+                while state.isFetchingRepos {
+                    try? await Task.sleep(for: .milliseconds(100))
+                }
             }
             .toolbar {
                 ToolbarItem {
@@ -107,12 +108,14 @@ extension StarredReposResultView.Content {
             
     @ViewBuilder
     private func skeltonView() -> some View {
-        ForEach(0..<3, id: \.self) { _ in
-            RepoCell(repo: Repo.Mock.sampleDataForReposCellSkelton)
-                .redacted(reason: .placeholder)
-                .shimmering()
-                .id(UUID())
+        Group {
+            ForEach(0..<3, id: \.self) { _ in
+                RepoCell(repo: Repo.Mock.sampleDataForReposCellSkelton)
+                    .redacted(reason: .placeholder)
+                    .shimmering()
+            }
         }
+        .id(UUID())
     }
     
     @ViewBuilder
@@ -138,8 +141,8 @@ extension StarredReposResultView.Content {
                 RepoDetailsView(repoID: repo.id)
                     .navigationTransition(.zoom(sourceID: "\(repo.id)", in: namespace))
             } label: {
-                RepoCell(repo: repo)
-                    .matchedTransitionSource(id:"\(repo.id)", in: namespace)
+                RepoCell(repo: repo, statusType: .starredAt)
+                    .matchedTransitionSource(id: "\(repo.id)", in: namespace)
                     .onAppear {
                         if let bottomRepoID = asyncRepos.values.last?.id,
                            repo.id == bottomRepoID {

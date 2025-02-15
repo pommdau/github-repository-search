@@ -7,17 +7,39 @@
 
 import SwiftUI
 //import SDWebImageSwiftUI
-//import Shimmer
+import Shimmer
 
 struct RepoCell: View {
+    
+    enum StatusType {
+        case updatedAt
+        case starredAt
+    }
 
     let repo: Repo
-    
-    var updateAt: String {
-        guard let date = ISO8601DateFormatter.shared.date(from: repo.updatedAt) else {
-            return ""
+    let statusType: StatusType
+
+    var statusText: String {
+        switch statusType {
+        case .updatedAt:
+            guard let date = ISO8601DateFormatter.shared.date(from: repo.updatedAt) else {
+                return ""
+            }
+            return date.convertToUpdatedAtText()
+        case .starredAt:
+            guard
+                let starredAtString = repo.starredAt,
+                let date = ISO8601DateFormatter.shared.date(from: starredAtString) else {
+                return ""
+            }
+            return date.convertToStarredAtText()
         }
-        return date.convertToUpdatedAtText()
+    }
+    
+    // swiftlint:disable:next type_contents_order
+    init(repo: Repo, statusType: StatusType = .updatedAt) {
+        self.repo = repo
+        self.statusType = statusType
     }
 
     var body: some View {
@@ -28,7 +50,7 @@ struct RepoCell: View {
             HStack(spacing: 10) {
                 languageLabel()
                 starsLabel()
-                Text(updateAt)
+                Text(statusText)
                     .foregroundStyle(.secondary)
                     .font(.footnote)
                     .lineLimit(1)

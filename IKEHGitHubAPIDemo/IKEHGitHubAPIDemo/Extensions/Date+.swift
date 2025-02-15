@@ -22,21 +22,35 @@ extension Date {
         return self.addingTimeInterval(TimeInterval(expiresIn))
     }
     
+    /// e.g.
+    /// "on Nov 16, 2024"
+    /// "in 11 months"
+    /// "2 days ago"
     @MainActor
-    func convertToUpdatedAtText() -> String {
+    private func convertToRelativeDateText() -> String {
         let now = Date()
         let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: self, to: now)        
+        let components = calendar.dateComponents([.day], from: self, to: now)
         guard let days = components.day else {
-            return "(nil)"
+            return "" // 通常通らない
         }
         if days > 30 {
             // 30日より前
-            return "Updated on \(DateFormatter.shortYearMonthDate.string(from: self))"
+            return "on \(DateFormatter.shortYearMonthDate.string(from: self))"
         } else {
             // 30日以内
-            return "Updated \(RelativeDateTimeFormatter.shared.localizedString(for: self, relativeTo: .now) )"
+            return "\(RelativeDateTimeFormatter.shared.localizedString(for: self, relativeTo: .now) )"
         }
+    }
+    
+    @MainActor
+    func convertToUpdatedAtText() -> String {
+        return "Updated \(self.convertToRelativeDateText())"
+    }
+    
+    @MainActor
+    func convertToStarredAtText() -> String {
+        return "Starred \(self.convertToRelativeDateText())"
     }
     
     static func dateFromNow(years: Int = 0, months: Int = 0, days: Int = 0, hours: Int = 0) -> Date {
@@ -53,29 +67,29 @@ extension Date {
 
 // MARK: - Debug
 
-//import SwiftUI
-//
-//fileprivate struct SampleView: View {
-//    
-//    var text: String {
-//        let testDates = [
-//            Date.dateFromNow(years: 1), // 未来（1年後）
-//            Date.dateFromNow(months: -3), // 数ヶ月前（3ヶ月前）
-//            Date.dateFromNow(days: -30), // 約30日前
-//            Date.dateFromNow(days: -2), // 2日前
-//            Date.dateFromNow(hours: -5), // 数時間前（5時間前）
-//        ]
-//        
-//        return testDates.reduce(into: "") { result, date in
-//            result += "\n\(date.convertToUpdatedAtText())"
-//        }
-//    }
-//    
-//    var body: some View {
-//        Text(text)
-//    }
-//}
-//
-//#Preview {
-//    SampleView()
-//}
+import SwiftUI
+
+fileprivate struct SampleView: View {
+    
+    var text: String {
+        let testDates = [
+            Date.dateFromNow(years: 1), // 未来（1年後）
+            Date.dateFromNow(months: -3), // 数ヶ月前（3ヶ月前）
+            Date.dateFromNow(days: -30), // 約30日前
+            Date.dateFromNow(days: -2), // 2日前
+            Date.dateFromNow(hours: -5), // 数時間前（5時間前）
+        ]
+        
+        return testDates.reduce(into: "") { result, date in
+            result += "\n\(date.convertToUpdatedAtText())"
+        }
+    }
+    
+    var body: some View {
+        Text(text)
+    }
+}
+
+#Preview {
+    SampleView()
+}

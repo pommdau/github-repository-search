@@ -11,26 +11,29 @@ import SwiftUI
 @Observable
 final class StarredRepoResultViewState {
     
-    // MARK: - Property
+    // MARK: - Property(Private)
     
-    // MARK: Property
+    private let loginUserStore: LoginUserStore
+    private let repoStore: RepoStore
+    private let githubAPIClient: GitHubAPIClient
     
-    let loginUserStore: LoginUserStore
-    let githubAPIClient: GitHubAPIClient
-    let repoStore: RepoStore
-    var error: Error?
-    var sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy = .recentryStarred
-
-    private(set) var asyncRepoIDs: AsyncValues<Repo.ID, Error> = .initial
     private var fetchStarredReposTask: Task<(), Never>?
+    private var asyncRepoIDs: AsyncValues<Repo.ID, Error> = .initial
     private var relationLink: RelationLink?
     
-    // MARK: Computed Property
+    // MARK: - Property(Public)
     
+    var error: Error?
+    var sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy = .recentryStarred
+        
     var loginUser: LoginUser? {
         loginUserStore.value
     }
     
+    var loginUserName: String? {
+        loginUser?.login
+    }
+        
     var asyncRepos: AsyncValues<Repo, Error> {
         let repos = asyncRepoIDs.values.compactMap { repoStore.valuesDic[$0] }
         switch asyncRepoIDs {
@@ -46,7 +49,17 @@ final class StarredRepoResultViewState {
             return .error(error, repos)
         }
     }
+        
+    var isFetchingRepos: Bool {
+        switch asyncRepoIDs {
+        case .loading, .loadingMore:
+            return true
+        default:
+            return false
+        }
+    }
     
+    /// 検索結果が見つからなかった旨のViewを表示するかどうか
     var showNoResultView: Bool {
         // 検索結果が0であることが前提
         if !asyncRepos.values.isEmpty {
@@ -66,83 +79,91 @@ final class StarredRepoResultViewState {
     
     init(
         loginUserStore: LoginUserStore = .shared,
-        githubAPIClient: GitHubAPIClient = .shared,
-        repoStore: RepoStore = .shared
+        repoStore: RepoStore = .shared,
+        githubAPIClient: GitHubAPIClient = .shared
     ) {
         self.loginUserStore = loginUserStore
-        self.githubAPIClient = githubAPIClient
         self.repoStore = repoStore
+        self.githubAPIClient = githubAPIClient
     }
 }
+
+// MARK: - Actions
 
 // MARK: - Fetch Starred Repository
 
 extension StarredRepoResultViewState {
     
-    func fetchStarredRepos(userName: String) {
+    func fetchStarredRepos(page: Int? = nil, isLoadingMore: Bool = false) {
+        guard let loginUserName else {
+            return
+        }
+//        fetchStarredReposTask?.cancel() // 既に実行中のtaskがあれば終了
+//        await fetchStarredReposTask?.cancel()
+        
+        
+                            
+        // 状態の変更
+        if isLoadingMore {
+            asyncRepoIDs = .loadingMore(asyncRepoIDs.values)
+        } else {
+            asyncRepoIDs = .loading(asyncRepoIDs.values)
+        }
+        
+        relationLink = nil // TODO 見直し
+                                        
         fetchStarredReposTask = Task {
-            try? await Task.sleep(seconds: 3)
+            try? await Task.sleep(for: .seconds(1))
             do {
-                // 検索: 成功
-                let response = try await githubAPIClient.fetchStarredRepos(userName: userName, sortedBy: sortedBy)
-                try await repoStore.addValues(response.repos)
-                withAnimation {
-                    asyncRepoIDs = .loaded(response.repos.map { $0.id })
-                }
+                // 検索の実行
+                let response = try await githubAPIClient.fetchStarredRepos(userName: loginUserName, sortedBy: sortedBy, page: page)
+
+                // 検索に成功
+                try await repoStore.addValues(response.repos) // Storeに検索結果を保存
+                // ViewStateに検索結果を保存
                 relationLink = response.relationLink
+                withAnimation {
+                    if isLoadingMore {
+                        asyncRepoIDs = .loaded(asyncRepoIDs.values + response.repos.map { $0.id })
+                    } else {
+                        asyncRepoIDs = .loaded(response.repos.map { $0.id })
+                    }
+                }
+                
             } catch {
-                // 検索: 失敗
+                // 検索に失敗
                 if Task.isCancelled {
+                    // 検索が明示的にキャンセルされた
                     if asyncRepos.values.isEmpty {
                         asyncRepoIDs = .initial
                     } else {
                         asyncRepoIDs = .loaded(asyncRepoIDs.values)
                     }
                 } else {
+                    // エラーが発生した
                     asyncRepoIDs = .error(error, asyncRepoIDs.values)
                     self.error = error
                 }
             }
         }
     }
-    
-//    func fetchStarredReposMore() {
-//
-//    }
-    
 }
 
 // MARK: - Actions
 
 extension StarredRepoResultViewState {
-    func handleLogInButtonTapped() {
-        Task {
-            do {
-                try await githubAPIClient.openLoginPageInBrowser()
-            } catch {
-                self.error = error
-            }
-        }
-    }
-    
+        
     func handleFetchingStarredRepos() {
         // すでに検索中であれば何もしない
         if case .loading = asyncRepoIDs {
             return
         }
-        guard let userName = loginUser?.login else {
-            return
-        }
-        asyncRepoIDs = .loading(asyncRepoIDs.values)
-        relationLink = nil
-        
-        fetchStarredRepos(userName: userName)
+        fetchStarredRepos()
     }
     
     /// 検索結果の続きの読み込み
-    func fetchStarredReposMore() {
-        
-        // 他でダウンロード処理中であればキャンセル
+    func handleFetchStarredReposMore() {
+        // すでに検索中であれば何もしない
         switch asyncRepos {
         case .loading, .loadingMore:
             return
@@ -150,71 +171,34 @@ extension StarredRepoResultViewState {
             break
         }
         
-        guard
-            let userName = loginUser?.login,
-            let nextLink = relationLink?.next // リンク情報がなければ何もしない
-        else {
+        // リンク情報がなければ何もしない
+        guard let nextLink = relationLink?.next else {
             return
         }
         
         // 検索開始
         asyncRepoIDs = .loadingMore(asyncRepoIDs.values)
-        fetchStarredReposTask = Task {
-            do {
-                // 検索に成功
-                let response = try await githubAPIClient.fetchStarredRepos(userName: userName, sortedBy: sortedBy, page: nextLink.page)
-                try await repoStore.addValues(response.repos)
-                withAnimation {
-                    asyncRepoIDs = .loaded(asyncRepoIDs.values + response.repos.map { $0.id })
-                }
-                relationLink = response.relationLink
-            } catch {
-                // 検索に失敗
-                if Task.isCancelled {
-                    asyncRepoIDs = .loaded(asyncRepoIDs.values)
-                } else {
-                    asyncRepoIDs = .error(error, asyncRepoIDs.values)
-                    self.error = error
-                }
-            }
-        }
+        fetchStarredRepos(page: nextLink.page, isLoadingMore: true)
     }
     
-    func handleRefresh() async {
+    /// Pull to refresh時の処理
+    func handlePullToRefresh() async {
         // 検索済み以外は何もしない
-        // 有効な検索結果がなければ何もしない
-        // リンク情報がなければ何もしない(=検索結果がこれ以上無いので並び替えだけでOK)(TODO: 見直せるかも)
-        guard case .loaded = asyncRepos,
-              !asyncRepoIDs.values.isEmpty,
-              let userName = loginUser?.login
-        else {
+        guard case .loaded = asyncRepos else {
             return
         }
-        // TODO: Viewの構造を買えないほうがいい？
-        // https://qiita.com/uhooi/items/c0bff1724856f0eef226#refreshable%E6%99%82%E3%81%AB%E3%83%93%E3%83%A5%E3%83%BC%E3%81%AE%E6%A7%8B%E9%80%A0%E3%82%92%E5%A4%89%E3%81%88%E3%81%AA%E3%81%84
-        asyncRepoIDs = .loading(asyncRepoIDs.values)
-        fetchStarredRepos(userName: userName)
-//        try? await Task.sleep(seconds: 2)
-//        asyncRepoIDs = .loaded(asyncRepoIDs.values)
+        fetchStarredRepos()
     }
     
     /// ソート順が変更された際の再検索
     func handleSortedByChanged() {
-        
-        // 検索済み以外は何もしない
-        // 有効な検索結果がなければ何もしない
-        // リンク情報がなければ何もしない(=検索結果がこれ以上無いので並び替えだけでOK)(TODO: 見直せるかも)
         guard case .loaded = asyncRepos,
               !asyncRepoIDs.values.isEmpty,
-              let _ = relationLink?.next,
-              let userName = loginUser?.login
+              let _ = relationLink?.next
         else {
             return
         }
-        
-        asyncRepoIDs = .loading(asyncRepoIDs.values)
-        
-        fetchStarredRepos(userName: userName)
+        fetchStarredRepos()
     }
     
     func onAppearRepoCell(id: Repo.ID) {
@@ -229,87 +213,10 @@ extension StarredRepoResultViewState {
     }
         
     func onAppear() {
-        // 前提処理
-        guard let userName = loginUser?.login else {
-            return
-        }
-        
         // 初回読み込み時のみ実行
         if asyncRepoIDs != .initial {
             return
         }
-        
-        // 読込中に更新
-        asyncRepoIDs = .loading(asyncRepoIDs.values)
-        relationLink = nil
-        
-        // スター済みリポジトリを取得
-        fetchStarredReposTask = Task {
-            do {
-                // 検索: 成功
-                let response = try await githubAPIClient.fetchStarredRepos(userName: userName, sortedBy: sortedBy)
-                try await repoStore.addValues(response.repos)
-                withAnimation {
-                    asyncRepoIDs = .loaded(response.repos.map { $0.id })
-                }
-                relationLink = response.relationLink
-            } catch {
-                // 検索: 失敗
-                if Task.isCancelled {
-                    if asyncRepos.values.isEmpty {
-                        asyncRepoIDs = .initial
-                    } else {
-                        asyncRepoIDs = .loaded(asyncRepoIDs.values)
-                    }
-                } else {
-                    asyncRepoIDs = .error(error, asyncRepoIDs.values)
-                    self.error = error
-                }
-            }
-        }
+        fetchStarredRepos()
     }
 }
-
-
-////
-////  StarredRepoListView.swift
-////  IKEHGitHubAPIDemo
-////
-////  Created by HIROKI IKEUCHI on 2025/02/02.
-////
-//
-//import SwiftUI
-//
-//@MainActor @Observable
-//final class StarredRepoResultViewState {
-//    
-//    // MARK: - Property
-//    
-//    let asyncRepos: AsyncValues<Repo, Error>
-//    
-//    var showNoResultView: Bool {
-//        // 検索結果が0であることが前提
-//        if !asyncRepos.values.isEmpty {
-//            return false
-//        }
-//        
-//        // 検索済み or エラーのとき
-//        switch asyncRepos {
-//        case .loaded, .error:
-//            return true
-//        default:
-//            return false
-//        }
-//    }
-//    
-//    // MARK: - LifeCycle
-//    
-//    init(asyncRepos: AsyncValues<Repo, Error>) {
-//        self.asyncRepos = asyncRepos
-//    }
-//}
-
-
-
-
-

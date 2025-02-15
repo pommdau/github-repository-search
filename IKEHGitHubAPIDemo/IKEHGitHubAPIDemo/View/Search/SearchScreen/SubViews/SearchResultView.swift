@@ -67,10 +67,12 @@ struct SearchResultView: View {
                 .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             case .loading:
-                ForEach(0..<3, id: \.self) { _ in
-                    RepoCell(repo: Repo.Mock.sampleDataForReposCellSkelton)
-                        .redacted(reason: .placeholder)
-                        .shimmering()
+                Group {
+                    ForEach(0..<3, id: \.self) { _ in
+                        RepoCell(repo: Repo.Mock.sampleDataForReposCellSkelton)
+                            .redacted(reason: .placeholder)
+                            .shimmering()
+                    }
                 }
                 .id(UUID())
             case .loaded, .loadingMore, .error:
