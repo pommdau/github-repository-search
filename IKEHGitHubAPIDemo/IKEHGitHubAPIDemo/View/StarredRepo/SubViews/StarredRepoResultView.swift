@@ -10,12 +10,19 @@ import SwiftUI
 struct StarredReposResultView: View {
     
     @State private var state: StarredRepoResultViewState = .init()
+    @State private var taskId: UUID = .init()
     
     var body: some View {
         NavigationStack {
             Content(asyncRepos: state.asyncRepos, bottomRepoCellOnAppear: {
                 print("load more!")
             })
+            .refreshable {
+//                await Task {
+//                    state.handleRefresh()
+//                }.value
+                await state.handleRefresh()
+            }
             .toolbar {
                 ToolbarItem {
                     toolbarItemContentSortedBy()

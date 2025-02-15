@@ -29,7 +29,7 @@ extension StarredReposView {
     
     struct Content: View {
         
-        // MARK: - Helpers
+        // MARK: - Property
         
         @Namespace var namespace
         let loginUser: LoginUser?
@@ -53,30 +53,32 @@ extension StarredReposView {
 
 // MARK: - Preview
 
-private struct PreviewView: View {
-    
-    @State private var loginUser: LoginUser?
-    
-    private var loggedIn: Bool {
-        loginUser != nil
-    }
-    
-    var body: some View {
-        ZStack {
-            Toggle("Login: ", isOn: .bind(loggedIn, with: { loggedIn in
-                withAnimation {
-                    loginUser = loggedIn ? LoginUser.Mock.ikeh : nil
-                }
-            }))
-            .frame(width: 120)
-            .offset(y: -300)
-            
-            StarredReposView.Content(loginUser: loginUser)
-                .zIndex(-1)
+private extension StarredReposView {
+    struct PreviewView: View {
+        
+        @State private var loginUser: LoginUser?
+        
+        private var loggedIn: Bool {
+            loginUser != nil
+        }
+        
+        var body: some View {
+            ZStack {
+                Toggle("Login: ", isOn: .bind(loggedIn, with: { loggedIn in
+                    withAnimation {
+                        loginUser = loggedIn ? LoginUser.Mock.ikeh : nil
+                    }
+                }))
+                .frame(width: 120)
+                .offset(y: -300)
+                
+                StarredReposView.Content(loginUser: loginUser)
+                    .zIndex(-1)
+            }
         }
     }
 }
 
 #Preview {
-    PreviewView()
+    StarredReposView.PreviewView()
 }

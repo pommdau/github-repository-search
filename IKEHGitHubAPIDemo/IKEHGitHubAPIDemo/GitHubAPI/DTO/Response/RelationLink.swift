@@ -12,12 +12,7 @@ struct RelationLink: Sendable {
     
     struct Link: Identifiable, Equatable, Sendable {
 
-        // swiftlint:disable:next type_name
-        struct ID: StringIDProtocol {
-            let rawValue: String
-        }
-
-        var id: ID
+        var id: SwiftID<Self>
         var url: URL
         var queryItems: [URLQueryItem]
         

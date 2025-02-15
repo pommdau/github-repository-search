@@ -15,10 +15,7 @@ struct LoginUserView: View {
     
     // swiftlint:disable:next type_contents_order
     init(loginUser: LoginUser, namespace: Namespace.ID? = nil) {
-        _state = .init(
-            wrappedValue:
-                LoginUserViewState(loginUser: loginUser, namespace: namespace)
-        )
+        _state = .init(wrappedValue: LoginUserViewState(loginUser: loginUser, namespace: namespace))
     }
     
     // MARK: - View

@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-@MainActor @Observable
+@MainActor
+@Observable
 final class StarredRepoResultViewState {
     
     // MARK: - Property
@@ -80,6 +81,7 @@ extension StarredRepoResultViewState {
     
     func fetchStarredRepos(userName: String) {
         fetchStarredReposTask = Task {
+            try? await Task.sleep(seconds: 3)
             do {
                 // 検索: 成功
                 let response = try await githubAPIClient.fetchStarredRepos(userName: userName, sortedBy: sortedBy)
@@ -176,6 +178,24 @@ extension StarredRepoResultViewState {
                 }
             }
         }
+    }
+    
+    func handleRefresh() async {
+        // 検索済み以外は何もしない
+        // 有効な検索結果がなければ何もしない
+        // リンク情報がなければ何もしない(=検索結果がこれ以上無いので並び替えだけでOK)(TODO: 見直せるかも)
+        guard case .loaded = asyncRepos,
+              !asyncRepoIDs.values.isEmpty,
+              let userName = loginUser?.login
+        else {
+            return
+        }
+        // TODO: Viewの構造を買えないほうがいい？
+        // https://qiita.com/uhooi/items/c0bff1724856f0eef226#refreshable%E6%99%82%E3%81%AB%E3%83%93%E3%83%A5%E3%83%BC%E3%81%AE%E6%A7%8B%E9%80%A0%E3%82%92%E5%A4%89%E3%81%88%E3%81%AA%E3%81%84
+        asyncRepoIDs = .loading(asyncRepoIDs.values)
+        fetchStarredRepos(userName: userName)
+//        try? await Task.sleep(seconds: 2)
+//        asyncRepoIDs = .loaded(asyncRepoIDs.values)
     }
     
     /// ソート順が変更された際の再検索

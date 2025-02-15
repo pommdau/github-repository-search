@@ -12,8 +12,8 @@ enum AsyncValues<T: Equatable, E: Error>: Equatable {
     case initial /// 読み込み開始前
     case loading([T]) /// 読み込み中 or リフレッシュ中
     case loaded([T]) /// 読み込み成功
-    case loadingMore([T]) ///追加読み込み中
-    case error(E, [T]) ///エラー
+    case loadingMore([T]) /// 追加読み込み中
+    case error(E, [T]) /// エラー
 
     var values: [T] {
         switch self {
