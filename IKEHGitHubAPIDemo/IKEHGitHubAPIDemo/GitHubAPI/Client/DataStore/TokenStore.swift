@@ -28,9 +28,8 @@ final actor TokenStore {
     let keychain = Keychain(service: KeychainConstant.Service.oauth)
     
     // 最新のログインセッションID
-    @MainActor
-    @AppStorage("ikehgithubapi-last-login-state-id")
-    var lastLoginStateID: String = ""
+    @AppStorage("ikehgithubapi-last-login-state-id") 
+    @MainActor var lastLoginStateID: String = ""
 
     var accessToken: String? {
         didSet {
@@ -50,19 +49,14 @@ final actor TokenStore {
     
     // MARK: - Computed Properry
     
+    /// 有効なアクセストークンがあるか
     var isAccessTokenValid: Bool {
-        guard let _ = accessToken,
-              let accessTokenExpiresAt else {
-            return false
+        if accessToken != nil,
+           let accessTokenExpiresAt {
+            return accessTokenExpiresAt.compare(.now) == .orderedDescending // トークンが有効期限内か
         }
-        // トークンが有効期限内か
-        return accessTokenExpiresAt.compare(.now) == .orderedDescending
-    }
-
-    
-    /// ログインしているかどうか(アクセストークンの有無で判断)
-    var isLoggedIn: Bool {
-        return accessToken != nil
+        
+        return false
     }
     
     // MARK: - LifeCycle
@@ -96,10 +90,6 @@ extension TokenStore {
     func addLastLoginStateID(_ setLastLoginStateID: String) {
         self.lastLoginStateID = setLastLoginStateID
     }
-    
-//    func addLoginUser(_ loginUser: LoginUser) {
-//        self.loginUser = loginUser
-//    }
     
     // MARK: - Delete
     

@@ -12,7 +12,7 @@ import Foundation
 extension GitHubAPIClient {
     
     /// ログアウト処理
-    func logout() async throws  {
+    func logout() async throws {
         do {            
             // サーバ上の認証情報の削除
             guard let accessToken = await tokenStore.accessToken else {
