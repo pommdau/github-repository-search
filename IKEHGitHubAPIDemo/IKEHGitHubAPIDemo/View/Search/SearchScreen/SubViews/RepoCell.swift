@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-//import SDWebImageSwiftUI
 import Shimmer
 
 struct RepoCell: View {
@@ -25,14 +24,14 @@ struct RepoCell: View {
             guard let date = ISO8601DateFormatter.shared.date(from: repo.updatedAt) else {
                 return ""
             }
-            return date.convertToUpdatedAtText()
+            return "Updated \(date.convertToRelativeDateText())"
         case .starredAt:
             guard
                 let starredAtString = repo.starredAt,
                 let date = ISO8601DateFormatter.shared.date(from: starredAtString) else {
                 return ""
             }
-            return date.convertToStarredAtText()
+            return "Starred \(date.convertToRelativeDateText())"
         }
     }
     

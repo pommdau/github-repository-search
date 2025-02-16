@@ -27,7 +27,7 @@ extension Date {
     /// "in 11 months"
     /// "2 days ago"
     @MainActor
-    private func convertToRelativeDateText() -> String {
+    func convertToRelativeDateText() -> String {
         let now = Date()
         let calendar = Calendar.current
         let components = calendar.dateComponents([.day], from: self, to: now)
@@ -41,16 +41,6 @@ extension Date {
             // 30日以内
             return "\(RelativeDateTimeFormatter.shared.localizedString(for: self, relativeTo: .now) )"
         }
-    }
-    
-    @MainActor
-    func convertToUpdatedAtText() -> String {
-        return "Updated \(self.convertToRelativeDateText())"
-    }
-    
-    @MainActor
-    func convertToStarredAtText() -> String {
-        return "Starred \(self.convertToRelativeDateText())"
     }
     
     static func dateFromNow(years: Int = 0, months: Int = 0, days: Int = 0, hours: Int = 0) -> Date {
@@ -81,7 +71,7 @@ fileprivate struct SampleView: View {
         ]
         
         return testDates.reduce(into: "") { result, date in
-            result += "\n\(date.convertToUpdatedAtText())"
+            result += "\n\(date.convertToRelativeDateText())"
         }
     }
     

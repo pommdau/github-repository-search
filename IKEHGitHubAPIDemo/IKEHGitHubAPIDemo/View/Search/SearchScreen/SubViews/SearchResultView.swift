@@ -113,7 +113,7 @@ struct SearchResultView: View {
             } label: {
                 RepoCell(repo: repo)
                     .padding(.vertical, 4)
-                    .matchedTransitionSource(id:"\(repo.id)", in: namespace)
+                    .matchedTransitionSource(id: "\(repo.id)", in: namespace)
                     .onAppear {
                         guard let lastRepo = asyncRepos.values.last else {
                             return
