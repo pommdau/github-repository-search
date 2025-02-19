@@ -25,7 +25,6 @@ struct LoginUserView: View {
             userLabel()
             locationAndTwitterLabel()
             followLabel()
-                .padding(.bottom, 60)
             logoutButton()
         }
         .padding(.vertical, 20)
@@ -119,6 +118,7 @@ struct LoginUserView: View {
             Text("following")
                 .foregroundStyle(.secondary)
         }
+        .padding(.bottom, 60)
     }
     
     @ViewBuilder

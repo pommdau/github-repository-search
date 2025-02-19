@@ -8,11 +8,12 @@
 import Foundation
 import SwiftID
 
-// 汎用のID型
+// そのクラスに対応したID型を定義する汎用型
 struct SwiftID<T>: StringIDProtocol {
     let rawValue: String
 }
 
+/// GitHubAPIで扱うDTOモデル用のプロトコル
 protocol GitHubDTO: Identifiable, Codable, Sendable, Hashable, Equatable {
     associatedtype Model
     var id: SwiftID<Model> { get } // 各DTOにユニークな型のIDを定義

@@ -31,15 +31,15 @@ struct LoginUser: GitHubDTO {
     }
             
     let rawID: Int
-    var login: String
+    var login: String // e.g. "pommdau"
     var avatarURL: String
     var url: String
     var htmlURL: String
-    var name: String?
+    var name: String? // e.g. "IKEH"
     var location: String?
     var email: String?
     var bio: String?
-    var twitterUsername: String?
+    var twitterUsername: String? // e.g. "ikeh1024"
     var publicRepos: Int
     var publicGists: Int
     var followers: Int
