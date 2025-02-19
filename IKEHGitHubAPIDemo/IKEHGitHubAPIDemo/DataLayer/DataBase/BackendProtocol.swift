@@ -78,21 +78,3 @@ extension BackendProtocol {
         values.removeAll()
     }
 }
-
-// MARK: Backend+Error
-
-enum BackendProtocolError: Error {
-    case writeFailed(String)
-    case readFailed(String)
-}
-
-extension BackendProtocolError: LocalizedError {
-    var errorDescription: String? {
-        switch self {
-        case .writeFailed(let message):
-            return "Backend Write Failed: \(message)"
-        case .readFailed(let message):
-            return "Bacnend Read Failed: \(message)"
-        }
-    }
-}

@@ -25,11 +25,6 @@ final class RepoRepository: RepositoryProtocol, Sendable {
     
 }
 
-final actor RepoBackend: BackendProtocol {
-    typealias Item = Repo
-    static let shared: RepoBackend = .init()
-}
-
 //
 //protocol RepoRepositoryProtocol: Sendable {
 //    

@@ -47,7 +47,7 @@ struct LanguageStore {
     
     // MARK: - Read
     
-    func get(name: String) -> Language? {
+    func get(with name: String) -> Language? {
         return languages.first(where: { $0.name == name })
     }
 }

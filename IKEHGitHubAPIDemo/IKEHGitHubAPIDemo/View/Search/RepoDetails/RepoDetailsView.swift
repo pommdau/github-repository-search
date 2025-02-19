@@ -227,7 +227,7 @@ extension RepoDetailsView {
         @ViewBuilder
         private func languageSection() -> some View {
             if let languageName = repo.language,
-               let language = LanguageStore.shared.get(name: languageName) {
+               let language = LanguageStore.shared.get(with: languageName) {
                 Divider()
                 VStack(alignment: .leading) {
                     Text("Language")

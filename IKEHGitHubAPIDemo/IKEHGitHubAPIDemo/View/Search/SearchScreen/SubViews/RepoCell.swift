@@ -116,7 +116,7 @@ struct RepoCell: View {
     @ViewBuilder
     private func languageLabel() -> some View {
         if let languageName = repo.language,
-           let language = LanguageStore.shared.get(name: languageName) {
+           let language = LanguageStore.shared.get(with: languageName) {
             HStack(spacing: 2) {
                 Circle()
                     .frame(width: 12, height: 12)
