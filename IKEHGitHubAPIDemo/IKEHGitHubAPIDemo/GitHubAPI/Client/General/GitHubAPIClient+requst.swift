@@ -31,7 +31,7 @@ extension GitHubAPIClient {
 
 extension GitHubAPIClient {
     
-    
+    /// Responseに対して、HTTPResponseがページング情報を含んでいればそれを付与する
     static private func attachRelationLink<Response>(to response: Response, from httpResponse: HTTPResponse) throws -> Response {
         if var responseWithRelationLink = response as? ResponseWithRelationLinkProtocol,
            let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {

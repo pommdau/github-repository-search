@@ -58,7 +58,6 @@ final class RepoDetailsViewState {
         guard var repo, let loginUser else {
             return
         }
-        let isStarred = repo.isStarred
                 
         starredTask = Task {
             // UI更新
@@ -69,7 +68,7 @@ final class RepoDetailsViewState {
             
             // API通信
             do {
-                if isStarred {
+                if repo.isStarred {
                     try await gitHubAPIClient.unstarRepo(ownerName: repo.owner.name, repoName: repo.name)
                 } else {
                     try await gitHubAPIClient.starRepo(ownerName: repo.owner.name, repoName: repo.name)
@@ -81,9 +80,11 @@ final class RepoDetailsViewState {
             }
             
             // ローカルの情報の更新
-            repo.isStarred.toggle()
-            // スター日時の更新
-            repo.starredAt = repo.isStarred ? ISO8601DateFormatter.shared.string(from: .now) : nil
+            let isStarred = !repo.isStarred
+            repo.update(
+                isStarred: isStarred,
+                starredAt: isStarred ? ISO8601DateFormatter.shared.string(from: .now) : nil
+            )            
             do {
                 try await repoStore.addValue(repo)
             } catch {

@@ -47,18 +47,25 @@ struct Repo: GitHubDTO, Equatable {
     var createdAt: String // e.g. "2015-10-23T21:15:07Z",
     var updatedAt: String // e.g. "2025-02-02T06:17:34Z",
     
-    // MARK: その他補完されて取得される情報
+    // MARK: その他の補完されて取得される情報
     
+    // 詳細情報
     var subscribersCount: Int?
         
-    // MARK: Starred
-    
+    // スター情報
     var starredAt: String? // e.g. "2024-12-17T01:54:20Z"
     var isStarred: Bool = false
-            
+}
+
+extension Repo {
+
     // MARK: - Computed Property
 
+    // MARK: Identifiable
+    
     var id: SwiftID<Self> { "\(rawID)" }
+    
+    // MARK: URL
     
     var htmlURL: URL? {
         URL(string: htmlPath)
@@ -70,12 +77,15 @@ struct Repo: GitHubDTO, Equatable {
         }
         return URL(string: websitePath)
     }
+    
+    // MARK: - Update
 
     mutating func update(_ detail: RepoDetails) {
         self.subscribersCount = detail.subscribersCount
     }
-}
-
-extension Repo {
     
+    mutating func update(isStarred: Bool, starredAt: String? = nil) {
+        self.isStarred = isStarred
+        self.starredAt = starredAt
+    }
 }

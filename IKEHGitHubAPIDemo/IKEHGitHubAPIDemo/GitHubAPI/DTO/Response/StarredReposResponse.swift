@@ -7,7 +7,18 @@
 
 import Foundation
 
-private extension StarredReposResponse {
+struct StarredReposResponse: Sendable, ResponseWithRelationLinkProtocol {
+    
+    var repos: [Repo]
+    
+    // MARK: - レスポンスのHeaderから所得される情報
+    var relationLink: RelationLink? // ページング情報
+}
+
+// MARK: - StarredReposResponse + Decodable
+
+extension StarredReposResponse: Decodable {
+    
     struct StarredRepo: Decodable {
         private enum CodingKeys: String, CodingKey {
             case starredAt = "starred_at"
@@ -24,23 +35,15 @@ private extension StarredReposResponse {
             return repo
         }
     }
-}
-
-struct StarredReposResponse: Sendable, ResponseWithRelationLinkProtocol {
     
-    var repos: [Repo]
-    
-    // MARK: - レスポンスのHeaderから所得される情報
-    var relationLink: RelationLink? // ページング情報
-}
-
-extension StarredReposResponse: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let response = try container.decode(ListResponse<StarredRepo>.self)
         self.repos = response.items.map { $0.convertToRepo() }
     }
 }
+
+// MARK: - Debug
 
 private let json = #"""
 [
