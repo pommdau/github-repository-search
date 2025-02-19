@@ -65,7 +65,7 @@ extension GitHubAPIRequest.StarredReposRequest {
     }
 }
 
-extension GitHubAPIRequest.StarredReposRequest : GitHubAPIRequestProtocol {
+extension GitHubAPIRequest.StarredReposRequest: GitHubAPIRequestProtocol {
 
     typealias Response = StarredReposResponse
     

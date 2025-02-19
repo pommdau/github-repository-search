@@ -28,9 +28,9 @@ struct RootTabView: View {
                 StarredReposView()
             }
             
-            Tab(RootTabType.debug.title, systemImage: RootTabType.debug.icon, value: RootTabType.debug) {
-                LoginDebugView()
-            }
+//            Tab(RootTabType.debug.title, systemImage: RootTabType.debug.icon, value: RootTabType.debug) {
+//                LoginDebugView()
+//            }
         }
         .onOpenURL { url in
             state.handleOnCallbackURL(url)

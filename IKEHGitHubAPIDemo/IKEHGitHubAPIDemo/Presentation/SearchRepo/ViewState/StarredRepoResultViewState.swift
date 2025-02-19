@@ -190,10 +190,7 @@ extension StarredRepoResultViewState {
     
     /// ソート順が変更された際の再検索
     func handleSortedByChanged() {
-        guard case .loaded = asyncRepos,
-              !asyncRepoIDs.values.isEmpty,
-              let _ = relationLink?.next
-        else {
+        guard case .loaded = asyncRepos else {
             return
         }
         fetchStarredRepos()

@@ -82,7 +82,7 @@ extension GitHubAPIRequest.SearchReposRequest {
     }
 }
 
-extension GitHubAPIRequest.SearchReposRequest : GitHubAPIRequestProtocol {
+extension GitHubAPIRequest.SearchReposRequest: GitHubAPIRequestProtocol {
 
     typealias Response = SearchResponse<Repo>
     

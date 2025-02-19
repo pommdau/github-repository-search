@@ -32,7 +32,7 @@ extension GitHubAPIClient {
 extension GitHubAPIClient {
     
     /// Responseに対して、HTTPResponseがページング情報を含んでいればそれを付与する
-    static private func attachRelationLink<Response>(to response: Response, from httpResponse: HTTPResponse) throws -> Response {
+    private static func attachRelationLink<Response>(to response: Response, from httpResponse: HTTPResponse) throws -> Response {
         if var responseWithRelationLink = response as? ResponseWithRelationLinkProtocol,
            let link = httpResponse.headerFields.first(where: { $0.name.rawName == "Link" }) {
             // Responseにページング情報を付与
@@ -52,7 +52,7 @@ extension GitHubAPIClient {
         do {
             response = try JSONDecoder().decode(Response.self, from: data)
         } catch {
-            print(String(data: data, encoding: .utf8)!)
+//            print(String(data: data, encoding: .utf8)!)
             throw GitHubAPIClientError.responseParseError(error)
         }
         response = try Self.attachRelationLink(to: response, from: httpResponse)
@@ -111,7 +111,7 @@ extension GitHubAPIClient {
             errorResponse = try JSONDecoder().decode(GitHubAPIError.self, from: data)
         } catch {
             // 未対応のエラーレスポンス、もしくはデータが空
-            print(String(data: data, encoding: .utf8)!)
+//            print(String(data: data, encoding: .utf8)!)
             throw GitHubAPIClientError.responseParseError(error)
         }
         errorResponse.statusCode = httpResponse.status.code

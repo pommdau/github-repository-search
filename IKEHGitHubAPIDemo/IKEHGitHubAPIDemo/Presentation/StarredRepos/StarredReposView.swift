@@ -40,7 +40,7 @@ extension StarredReposView {
         var body: some View {
             Group {
                 if loginUser == nil {
-                    NewLoginView(namespace: namespace) {
+                    LoginView(namespace: namespace) {
                         handleLogInButtonTapped()
                     }
                 } else {

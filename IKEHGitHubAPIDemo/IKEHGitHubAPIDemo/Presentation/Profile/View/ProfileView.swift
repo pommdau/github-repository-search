@@ -1,5 +1,5 @@
 //
-//  AccountView.swift
+//  ProfileView.swift
 //  IKEHGitHubAPIDemo
 //
 //  Created by HIROKI IKEUCHI on 2025/01/23.
@@ -22,9 +22,9 @@ struct ProfileView: View {
     }
 }
 
-extension ProfileView {
+private extension ProfileView {
     
-    fileprivate struct Content: View {
+    struct Content: View {
         
         @Namespace var namespace
         let loginUser: LoginUser?
@@ -34,7 +34,7 @@ extension ProfileView {
             if let loginUser {
                 LoginUserView(loginUser: loginUser, namespace: namespace)
             } else {
-                NewLoginView(namespace: namespace) {
+                LoginView(namespace: namespace) {
                     logInButtonTapped()
                 }
             }
@@ -44,6 +44,7 @@ extension ProfileView {
 
 // MARK: - Preview
 
+// swiftlint:disable:next file_types_order
 private struct PreviewView: View {
     
     @State private var loginUser: LoginUser?

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NewLoginView: View {
+struct LoginView: View {
     
     // MARK: - Property
         
@@ -44,5 +44,5 @@ struct NewLoginView: View {
 }
 
 #Preview {
-    NewLoginView()
+    LoginView()
 }

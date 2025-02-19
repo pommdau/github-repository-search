@@ -36,7 +36,8 @@ struct SearchResultView: View {
     }
     
     let repoStore: RepoStore
-        
+    
+    // swiftlint:disable:next type_contents_order
     init(
         asyncRepos: AsyncValues<Repo, Error>,
         cancelSearching: @escaping () -> Void = {},
@@ -53,44 +54,12 @@ struct SearchResultView: View {
         List {
             switch asyncRepos {
             case .initial:
-                VStack {
-                    Image(systemName: "magnifyingglass")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundStyle(.secondary)
-                        .frame(width: 36)
-                    Text("Search GitHub Repositories!")
-                        .foregroundStyle(.secondary)
-                        .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                }
-                .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                initialLabel()
             case .loading:
-                Group {
-                    ForEach(0..<3, id: \.self) { _ in
-                        RepoCell(repo: Repo.Mock.sampleDataForReposCellSkelton)
-                            .redacted(reason: .placeholder)
-                            .shimmering()
-                    }
-                }
-                .id(UUID())
+                loadingView()
             case .loaded, .loadingMore, .error:
                 if showNoResultLabel {
-                    VStack {
-                        Image(systemName: "magnifyingglass")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundStyle(.secondary)
-                            .frame(width: 36)
-                        Text("No Results")
-                            .font(.title)
-                            .bold()
-                        Text("Check the spelling or try a new search")
-                            .foregroundStyle(.secondary)
-                    }
-                    .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    noResultLabel()
                 } else {
                     reposList(asyncRepos: asyncRepos)
                 }
@@ -102,6 +71,37 @@ struct SearchResultView: View {
                 cancelSearching()
             }
         }
+    }
+    
+    // MARK: - UI Parts
+    
+    @ViewBuilder
+    private func initialLabel() -> some View {
+        VStack {
+            Image(systemName: "magnifyingglass")
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(.secondary)
+                .frame(width: 36)
+            Text("Search GitHub Repositories!")
+                .foregroundStyle(.secondary)
+                .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        }
+        .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+    }
+    
+    @ViewBuilder
+    private func loadingView() -> some View {
+        Group {
+            ForEach(0..<3, id: \.self) { _ in
+                RepoCell(repo: Repo.Mock.sampleDataForReposCellSkelton)
+                    .redacted(reason: .placeholder)
+                    .shimmering()
+            }
+        }
+        .id(UUID())
     }
     
     @ViewBuilder
@@ -136,6 +136,24 @@ struct SearchResultView: View {
             .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
             .frame(maxWidth: .infinity, alignment: .center)
             .id(UUID())
+    }
+    
+    @ViewBuilder
+    private func noResultLabel() -> some View {
+        VStack {
+            Image(systemName: "magnifyingglass")
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(.secondary)
+                .frame(width: 36)
+            Text("No Results")
+                .font(.title)
+                .bold()
+            Text("Check the spelling or try a new search")
+                .foregroundStyle(.secondary)
+        }
+        .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
 }
 

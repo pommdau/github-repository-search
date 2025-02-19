@@ -8,20 +8,6 @@
 
 import SwiftUI
 
-extension View {
-    // TODO:GitHubAPIErrorとの統合
-    func errorAlert(error: Binding<Error?>, buttonTitle: String = "OK") -> some View {
-        let localizedAlertError = LocalizedAlertError(error: error.wrappedValue)
-        return self.alert(isPresented: .constant(localizedAlertError != nil), error: localizedAlertError) { _ in
-            Button(buttonTitle) {
-                error.wrappedValue = nil
-            }
-        } message: { error in
-            Text(error.recoverySuggestion ?? "")
-        }
-    }
-}
-
 private struct LocalizedAlertError: LocalizedError {
     let underlyingError: LocalizedError
     var errorDescription: String? {
@@ -39,8 +25,22 @@ private struct LocalizedAlertError: LocalizedError {
     }
 }
 
-// MARK: - Preview
+extension View {
+    // TODO: GitHubAPIClientErrorとの統合
+    func errorAlert(error: Binding<Error?>, buttonTitle: String = "OK") -> some View {
+        let localizedAlertError = LocalizedAlertError(error: error.wrappedValue)
+        return self.alert(isPresented: .constant(localizedAlertError != nil), error: localizedAlertError) { _ in
+            Button(buttonTitle) {
+                error.wrappedValue = nil
+            }
+        } message: { error in
+            Text(error.recoverySuggestion ?? "")
+        }
+    }
+}
 
+// MARK: - Preview
+/*
 private enum SampleError: LocalizedError {
     case networkError
     case dataCorruption
@@ -78,3 +78,4 @@ private enum SampleError: LocalizedError {
     }
     .errorAlert(error: $viewError)
 }
+*/

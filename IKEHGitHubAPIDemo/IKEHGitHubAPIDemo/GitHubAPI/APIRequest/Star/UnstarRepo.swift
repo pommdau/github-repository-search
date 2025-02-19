@@ -16,7 +16,7 @@ extension GitHubAPIRequest {
     }
 }
 
-extension GitHubAPIRequest.UnstarRepo : GitHubAPIRequestProtocol {
+extension GitHubAPIRequest.UnstarRepo: GitHubAPIRequestProtocol {
 
     typealias Response = String // unused
     

@@ -36,8 +36,6 @@ struct SearchScreen: View {
         .onSubmit(of: .search) {
             state.handleSearch()
         }
-        .onAppear() {
-        }
         .errorAlert(error: $state.error)
     }
     

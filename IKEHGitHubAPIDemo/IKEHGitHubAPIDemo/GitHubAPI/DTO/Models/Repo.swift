@@ -9,8 +9,7 @@
 import Foundation
 
 // アーキテクチャのRepositoryと区別するためRepoの名称を使う
-// TODO: remove Equatable
-struct Repo: GitHubDTO, Equatable {
+struct Repo: GitHubDTO {
     
     // MARK: - Decode Result
     

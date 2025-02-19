@@ -35,15 +35,15 @@ extension GitHubAPIClientError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .loginError(let message):
-            return "ログインに失敗しました: \(message)";
+            return "ログインに失敗しました: \(message)"
         case .oauthError(let message):
             return "APIの認証でエラーが発生しました: \(message)"
         case .invalidRequest:
-            return "APIリクエストの作成に失敗しました";
+            return "APIリクエストの作成に失敗しました"
         case .connectionError:
-            return "通信エラー";
+            return "通信エラー"
         case .responseParseError:
-            return "データの取得に失敗しました";
+            return "データの取得に失敗しました"
         case .apiError(let gitHubAPIError):
             return "APIでエラーが発生しました: \(gitHubAPIError.localizedDescription)"
         }

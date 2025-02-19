@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-public extension Binding {
+extension Binding {
     static func bind<T: Sendable>(
         _ value: T,
         with action: @MainActor @escaping (T) -> Void
