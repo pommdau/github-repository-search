@@ -10,7 +10,7 @@
 import Foundation
 
 struct GitHubAPIError: GitHubAPIErrorProtocol {
-    
+        
     struct Error: Decodable {
         var resource: String
         var field: String
@@ -20,7 +20,7 @@ struct GitHubAPIError: GitHubAPIErrorProtocol {
     var message: String  // レスポンスのJSONに必ず含まれる
     var errors: [Error?]?
 
-    // デコード外で後から付与されるパラメータ
+    // MARK: デコード後に別途付与するパラメータ
     
     var statusCode: Int?
     

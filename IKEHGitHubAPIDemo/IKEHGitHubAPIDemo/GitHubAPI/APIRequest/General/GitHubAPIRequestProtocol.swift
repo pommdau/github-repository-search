@@ -8,10 +8,10 @@
 import Foundation
 import HTTPTypes
 
-
+/// レスポンスのエラー判定のタイプ
 enum ResponseFailType {
     case statusCode // ステータスコードが200番台でなければ失敗
-    case responseBody // レスポンスボディがエラー形式であれば失敗
+    case responseBody // レスポンスボディがエラー形式であれば失敗(OAuth2.0認証など)
 }
 
 // MARK: - GitHubAPIRequestProtocol
@@ -19,24 +19,18 @@ enum ResponseFailType {
 protocol GitHubAPIRequestProtocol {
     
     // MARK: Response
-    
-    associatedtype Response: Decodable
-    
-//    var allowResponseBodyIsEmpty: Bool { get }
+    associatedtype Response: Decodable // レスポンスのデータモデル
     var responseFailType: ResponseFailType { get }
-    
-    // MARK: General
-    
-    var method: HTTPRequest.Method { get }
-    
+            
     // MARK: URL
     
-    var baseURL: URL? { get }
+    var baseURL: URL? { get } // e.g. "https://api.github.com"
     var path: String { get } // e.g. "/search/repositories"
     var queryItems: [URLQueryItem] { get }
     
     // MARK: Data
     
+    var method: HTTPRequest.Method { get }
     var header: HTTPTypes.HTTPFields { get }
     var body: Data? { get }
 }
@@ -44,10 +38,6 @@ protocol GitHubAPIRequestProtocol {
 // MARK: - 共通処理
 
 extension GitHubAPIRequestProtocol {
-    
-//    var allowResponseBodyIsEmpty: Bool {
-//        false
-//    }
     
     var responseFailType: ResponseFailType {
         .statusCode

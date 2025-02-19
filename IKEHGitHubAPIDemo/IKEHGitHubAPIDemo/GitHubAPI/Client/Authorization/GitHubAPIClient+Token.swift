@@ -16,9 +16,11 @@ extension GitHubAPIClient {
     
     /// 初回ログイン時のトークン取得
     func fetchInitialToken(sessionCode: String) async throws {
-        let request = GitHubAPIRequest.FetchInitialToken(clientID: GitHubAPIClient.PrivateConstant.clientID,
-                                                         clientSecret: GitHubAPIClient.PrivateConstant.clientSecret,
-                                                         sessionCode: sessionCode)
+        let request = GitHubAPIRequest.FetchInitialToken(
+            clientID: clientID,
+            clientSecret: clientSecret,
+            sessionCode: sessionCode
+        )
         let response = try await self.sendRequest(with: request)
         await tokenStore.updateTokens(
             accessToken: response.accessToken,

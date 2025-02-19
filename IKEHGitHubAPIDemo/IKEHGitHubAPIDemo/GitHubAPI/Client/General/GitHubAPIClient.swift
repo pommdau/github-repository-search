@@ -9,17 +9,21 @@ import Foundation
 import SwiftUI
 
 final actor GitHubAPIClient {
-
-    static let shared: GitHubAPIClient = .init()
     
+    let clientID: String
+    let clientSecret: String
     private(set) var urlSession: URLSession
     private(set) var tokenStore: TokenStore
             
-    init(urlSession: URLSession = URLSession.shared,
-         tokenManager: TokenStore = TokenStore.shared) {
-        
+    init(
+        clientID: String,
+        clientSecret: String,
+        urlSession: URLSession = URLSession.shared,
+        tokenManager: TokenStore = TokenStore.shared
+    ) {        
         printUserDefaultsPath()
-        
+        self.clientID = clientID
+        self.clientSecret = clientSecret
         self.urlSession = urlSession
         self.tokenStore = tokenManager
     }

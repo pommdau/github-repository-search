@@ -9,7 +9,7 @@ import Foundation
 import HTTPTypes
 
 extension GitHubAPIRequest {
-    struct StarredReposRequest {
+    struct FetchStarredRepos {
         var accessToken: String?
         var userName: String
         var page: Int?
@@ -20,7 +20,7 @@ extension GitHubAPIRequest {
 
 // MARK: - 検索タイプ
 
-extension GitHubAPIRequest.StarredReposRequest {
+extension GitHubAPIRequest.FetchStarredRepos {
     enum SortBy: String, CaseIterable, Identifiable, Equatable, Codable {
         case recentlyStarred = "recently_starred" // クエリで指定しない場合のデフォルト
         case recentlyActive = "recently_active"
@@ -65,7 +65,7 @@ extension GitHubAPIRequest.StarredReposRequest {
     }
 }
 
-extension GitHubAPIRequest.StarredReposRequest: GitHubAPIRequestProtocol {
+extension GitHubAPIRequest.FetchStarredRepos: GitHubAPIRequestProtocol {
 
     typealias Response = StarredReposResponse
     

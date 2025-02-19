@@ -19,8 +19,8 @@ extension GitHubAPIClient {
                 return
             }
             let request = GitHubAPIRequest.DeleteAppAuthorization(
-                clientID: GitHubAPIClient.PrivateConstant.clientID,
-                clientSecret: GitHubAPIClient.PrivateConstant.clientSecret,
+                clientID: clientID,
+                clientSecret: clientSecret,
                 accessToken: accessToken
             )
             try await self.sendRequestWithoutResponseData(with: request)

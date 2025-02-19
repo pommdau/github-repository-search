@@ -24,7 +24,7 @@ final class StarredRepoResultViewState {
     // MARK: - Property(Public)
     
     var error: Error?
-    var sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy = .recentlyStarred
+    var sortedBy: GitHubAPIRequest.FetchStarredRepos.SortBy = .recentlyStarred
         
     var loginUser: LoginUser? {
         loginUserStore.value
