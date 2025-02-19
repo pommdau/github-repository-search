@@ -13,7 +13,7 @@ extension GitHubAPIRequest {
         var accessToken: String?
         var userName: String
         var page: Int?
-        var perPage: Int? = 5
+        var perPage: Int? = 10
         var sortedBy: SortBy
     }
 }
@@ -22,18 +22,18 @@ extension GitHubAPIRequest {
 
 extension GitHubAPIRequest.StarredReposRequest {
     enum SortBy: String, CaseIterable, Identifiable, Equatable, Codable {
-        case recentryStarred // クエリで指定しない場合のデフォルト
-        case recentryActive
-        case leastRecentlyStarred
-        case leastRecentlyActive
+        case recentlyStarred = "recently_starred" // クエリで指定しない場合のデフォルト
+        case recentlyActive = "recently_active"
+        case leastRecentlyStarred = "least_recently_starred"
+        case leastRecentlyActive = "least_recently_active"
         
         var id: String { rawValue }
         
         var title: String {
             switch self {
-            case .recentryStarred:
+            case .recentlyStarred:
                 return "Recently starred"
-            case .recentryActive:
+            case .recentlyActive:
                 return "Recentrly active"
             case .leastRecentlyStarred:
                 return "Least recently starred"
@@ -46,9 +46,9 @@ extension GitHubAPIRequest.StarredReposRequest {
         
         var sort: String? {
             switch self {
-            case .recentryStarred, .leastRecentlyStarred: // リポジトリへのスター日時
+            case .recentlyStarred, .leastRecentlyStarred: // リポジトリへのスター日時
                 return "created"
-            case .recentryActive, .leastRecentlyActive: // リポジトリへの最終Push日時
+            case .recentlyActive, .leastRecentlyActive: // リポジトリへの最終Push日時
                 return "updated"
                 
             }
@@ -56,7 +56,7 @@ extension GitHubAPIRequest.StarredReposRequest {
         
         var direction: String? {
             switch self {
-            case .recentryStarred, .recentryActive:
+            case .recentlyStarred, .recentlyActive:
                 return "desc"
             case .leastRecentlyStarred, .leastRecentlyActive:
                 return "asc"

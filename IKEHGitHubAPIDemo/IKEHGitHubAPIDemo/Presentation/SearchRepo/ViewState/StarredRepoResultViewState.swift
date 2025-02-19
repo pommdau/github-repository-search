@@ -24,7 +24,7 @@ final class StarredRepoResultViewState {
     // MARK: - Property(Public)
     
     var error: Error?
-    var sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy = .recentryStarred
+    var sortedBy: GitHubAPIRequest.StarredReposRequest.SortBy = .recentlyStarred
         
     var loginUser: LoginUser? {
         loginUserStore.value
@@ -100,9 +100,7 @@ extension StarredRepoResultViewState {
         }
 //        fetchStarredReposTask?.cancel() // 既に実行中のtaskがあれば終了
 //        await fetchStarredReposTask?.cancel()
-        
-        
-                            
+                                            
         // 状態の変更
         if isLoadingMore {
             asyncRepoIDs = .loadingMore(asyncRepoIDs.values)

@@ -15,7 +15,7 @@ struct StarredReposResultView: View {
     var body: some View {
         NavigationStack {
             Content(asyncRepos: state.asyncRepos, bottomRepoCellOnAppear: {
-                print("load more!")
+                state.handleFetchStarredReposMore()
             })
             .refreshable {
                 await state.handlePullToRefresh()

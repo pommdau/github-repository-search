@@ -69,6 +69,11 @@ private extension StarredReposView {
                         loginUser = loggedIn ? LoginUser.Mock.ikeh : nil
                     }
                 }))
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(.blue.opacity(0.4))
+                        .padding(-8)
+                )
                 .frame(width: 120)
                 .offset(y: -300)
                 
