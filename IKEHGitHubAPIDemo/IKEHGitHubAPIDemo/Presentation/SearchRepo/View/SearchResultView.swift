@@ -80,19 +80,9 @@ struct SearchResultView: View {
     
     @ViewBuilder
     private func initialLabel() -> some View {
-        VStack {
-            Image(systemName: "magnifyingglass")
-                .resizable()
-                .scaledToFit()
-                .foregroundStyle(.secondary)
-                .frame(width: 36)
-            Text("Search GitHub Repositories!")
-                .foregroundStyle(.secondary)
-                .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-        }
-        .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        ContentUnavailableView("Search GitHub Repositories!", systemImage: "magnifyingglass")
+            .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
     
     @ViewBuilder

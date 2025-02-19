@@ -12,7 +12,7 @@ enum AsyncValue<T, E: Error> {
     case initial /// 読み込み開始前
     case loading(T?) /// 読み込み中 or リフレッシュ中
     case loaded(T) /// 読み込み成功
-    case error(E, T?) ///エラー
+    case error(E, T?) /// エラー
 }
 
 /*
