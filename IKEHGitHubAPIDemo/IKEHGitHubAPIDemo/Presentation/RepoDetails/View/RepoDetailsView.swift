@@ -245,8 +245,10 @@ extension RepoDetailsView {
     }
 }
 
-#Preview {
+#Preview("main") {
     RepoDetailsView.Content(repo: Repo.Mock.random(), disableStarButton: false)
-//    RepoDetailsView.Content(repo: Repo.Mock.sampleDataWithoutSomeInfo, disableStarButton: false)
+}
 
+#Preview("no_bio_lang") {
+    RepoDetailsView.Content(repo: Repo.Mock.sampleDataWithoutSomeInfo, disableStarButton: false)
 }

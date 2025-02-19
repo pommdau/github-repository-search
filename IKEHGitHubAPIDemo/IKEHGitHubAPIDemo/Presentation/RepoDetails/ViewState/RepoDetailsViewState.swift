@@ -55,7 +55,7 @@ final class RepoDetailsViewState {
     }
     
     func handleStarButtonTapped() {
-        guard var repo, let loginUser else {
+        guard var repo else {
             return
         }
                 
