@@ -15,6 +15,7 @@ struct SearchScreen: View {
         NavigationStack {
             SearchResultView(
                 asyncRepos: state.asyncRepos,
+                searchText: state.searchText,
                 cancelSearching: {
                     state.cancelSearch()
                 },

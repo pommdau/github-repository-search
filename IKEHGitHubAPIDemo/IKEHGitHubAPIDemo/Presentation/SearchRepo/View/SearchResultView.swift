@@ -17,6 +17,7 @@ struct SearchResultView: View {
     @Namespace var namespace
     
     let asyncRepos: AsyncValues<Repo, Error>
+    let searchText: String
     var cancelSearching: () -> Void = {}
     var bottomCellOnAppear: (Repo.ID) -> Void = { _ in }
             
@@ -40,11 +41,13 @@ struct SearchResultView: View {
     // swiftlint:disable:next type_contents_order
     init(
         asyncRepos: AsyncValues<Repo, Error>,
+        searchText: String = "",
         cancelSearching: @escaping () -> Void = {},
         bottomCellOnAppear: @escaping (Repo.ID) -> Void = { _ in },
         repoStore: RepoStore = .shared
     ) {
         self.asyncRepos = asyncRepos
+        self.searchText = searchText
         self.cancelSearching = cancelSearching
         self.bottomCellOnAppear = bottomCellOnAppear
         self.repoStore = repoStore
@@ -59,7 +62,7 @@ struct SearchResultView: View {
                 loadingView()
             case .loaded, .loadingMore, .error:
                 if showNoResultLabel {
-                    noResultLabel()
+                    noResultView()
                 } else {
                     reposList(asyncRepos: asyncRepos)
                 }
@@ -139,21 +142,10 @@ struct SearchResultView: View {
     }
     
     @ViewBuilder
-    private func noResultLabel() -> some View {
-        VStack {
-            Image(systemName: "magnifyingglass")
-                .resizable()
-                .scaledToFit()
-                .foregroundStyle(.secondary)
-                .frame(width: 36)
-            Text("No Results")
-                .font(.title)
-                .bold()
-            Text("Check the spelling or try a new search")
-                .foregroundStyle(.secondary)
-        }
-        .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+    private func noResultView() -> some View {
+        ContentUnavailableView.search(text: searchText)
+            .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
 }
 
@@ -183,7 +175,7 @@ struct SearchResultView: View {
 
 #Preview("loaded_no_result") {
     NavigationStack {
-        SearchResultView(asyncRepos:.loaded([]))
+        SearchResultView(asyncRepos: .loaded([]), searchText: "Swift")
     }
 }
 

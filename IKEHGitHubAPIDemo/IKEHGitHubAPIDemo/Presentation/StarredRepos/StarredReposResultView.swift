@@ -120,20 +120,15 @@ extension StarredReposResultView.Content {
     
     @ViewBuilder
     private func noResultView() -> some View {
-        VStack {
-            Image(systemName: "star.slash")
-                .resizable()
-                .scaledToFit()
-                .foregroundStyle(.secondary)
-                .frame(width: 36)
-            Text("There are no starred repositories")
-                .lineLimit(1)
-                .bold()
-        }
+        ContentUnavailableView(
+            "No Results",
+            systemImage: "star",
+            description: Text("No starred repositories found.")
+        )
         .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
-    
+
     @ViewBuilder
     private func starredReposList() -> some View {
         ForEach(asyncRepos.values) { repo in
