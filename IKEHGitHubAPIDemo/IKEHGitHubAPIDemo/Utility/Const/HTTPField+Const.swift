@@ -8,7 +8,7 @@
 import HTTPTypes
 
 extension HTTPField {
-    enum ConstantValue {
+    enum ConstValue {
         static let applicationJSON = "application/json"
         static let applicationVndGitHubJSON = "application/vnd.github+json"
         static let xGitHubAPIVersion = "2022-11-28"

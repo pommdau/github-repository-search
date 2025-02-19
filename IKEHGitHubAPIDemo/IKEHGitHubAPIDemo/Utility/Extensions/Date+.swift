@@ -42,6 +42,13 @@ extension Date {
             return "\(RelativeDateTimeFormatter.shared.localizedString(for: self, relativeTo: .now) )"
         }
     }
+}
+
+// MARK: - Debug
+
+import SwiftUI
+
+fileprivate struct SampleView: View {
     
     static func dateFromNow(years: Int = 0, months: Int = 0, days: Int = 0, hours: Int = 0) -> Date {
         let now = Date()
@@ -53,21 +60,14 @@ extension Date {
         
         return Calendar.current.date(byAdding: components, to: now) ?? now
     }
-}
-
-// MARK: - Debug
-
-import SwiftUI
-
-fileprivate struct SampleView: View {
     
     var text: String {
         let testDates = [
-            Date.dateFromNow(years: 1), // 未来（1年後）
-            Date.dateFromNow(months: -3), // 数ヶ月前（3ヶ月前）
-            Date.dateFromNow(days: -30), // 約30日前
-            Date.dateFromNow(days: -2), // 2日前
-            Date.dateFromNow(hours: -5), // 数時間前（5時間前）
+            Self.dateFromNow(years: 1), // 未来（1年後）
+            Self.dateFromNow(months: -3), // 数ヶ月前（3ヶ月前）
+            Self.dateFromNow(days: -30), // 約30日前
+            Self.dateFromNow(days: -2), // 2日前
+            Self.dateFromNow(hours: -5), // 数時間前（5時間前）
         ]
         
         return testDates.reduce(into: "") { result, date in

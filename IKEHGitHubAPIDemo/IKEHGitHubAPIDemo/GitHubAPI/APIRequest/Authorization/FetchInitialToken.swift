@@ -43,8 +43,8 @@ extension GitHubAPIRequest.FetchInitialToken: GitHubAPIRequestProtocol {
     
     var header: HTTPTypes.HTTPFields {
         var headerFields = HTTPTypes.HTTPFields()
-        headerFields[.contentType] = HTTPField.ConstantValue.applicationJSON
-        headerFields[.accept] = HTTPField.ConstantValue.applicationJSON
+        headerFields[.contentType] = HTTPField.ConstValue.applicationJSON
+        headerFields[.accept] = HTTPField.ConstValue.applicationJSON
         
         return headerFields
     }

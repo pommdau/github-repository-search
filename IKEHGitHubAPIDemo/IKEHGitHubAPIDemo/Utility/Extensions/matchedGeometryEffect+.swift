@@ -7,9 +7,12 @@
 
 import SwiftUI
 
-// https://github.com/YusukeHosonuma/Effective-SwiftUI/discussions/31
-// https://zenn.dev/kntk/articles/4e3538f402d171
-fileprivate struct OptionalNamespaceMatchedGeometryEffectModifier<ID>: ViewModifier where ID: Hashable {
+/*
+ https://github.com/YusukeHosonuma/Effective-SwiftUI/discussions/31
+ https://zenn.dev/kntk/articles/4e3538f402d171
+ */
+
+private struct OptionalNamespaceMatchedGeometryEffectModifier<ID>: ViewModifier where ID: Hashable {
     @Namespace var defaultNameSpace
     let id: ID
     let namespace: Namespace.ID?

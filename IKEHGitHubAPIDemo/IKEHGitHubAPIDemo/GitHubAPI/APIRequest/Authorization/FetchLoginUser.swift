@@ -38,8 +38,8 @@ extension GitHubAPIRequest.FetchLoginUser: GitHubAPIRequestProtocol {
     var header: HTTPTypes.HTTPFields {
         var headerFields = HTTPTypes.HTTPFields()
         headerFields[.authorization] = "Bearer \(accessToken)"
-        headerFields[.accept] = HTTPField.ConstantValue.applicationVndGitHubJSON
-        headerFields[.xGithubAPIVersion] = HTTPField.ConstantValue.xGitHubAPIVersion
+        headerFields[.accept] = HTTPField.ConstValue.applicationVndGitHubJSON
+        headerFields[.xGithubAPIVersion] = HTTPField.ConstValue.xGitHubAPIVersion
         return headerFields
     }
     

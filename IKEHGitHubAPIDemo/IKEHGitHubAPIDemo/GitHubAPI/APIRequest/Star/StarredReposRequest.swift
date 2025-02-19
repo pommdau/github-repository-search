@@ -107,7 +107,7 @@ extension GitHubAPIRequest.StarredReposRequest : GitHubAPIRequestProtocol {
         if let accessToken {
             headerFields[.authorization] = "Bearer \(accessToken)"
         }
-        headerFields[.xGithubAPIVersion] = HTTPField.ConstantValue.xGitHubAPIVersion
+        headerFields[.xGithubAPIVersion] = HTTPField.ConstValue.xGitHubAPIVersion
         return headerFields
     }
     

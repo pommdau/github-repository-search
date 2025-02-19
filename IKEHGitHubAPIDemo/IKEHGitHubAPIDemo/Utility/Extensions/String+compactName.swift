@@ -13,6 +13,8 @@ extension String {
     }
 }
 
+// MARK: - Preview
+
 // refs: [SwiftUIで多言語化に対応してプレビューで確認する](https://dev.classmethod.jp/articles/swiftui-localization/)
 #Preview(traits: .sizeThatFitsLayout) {
     let localizationIds = ["en", "ja"]

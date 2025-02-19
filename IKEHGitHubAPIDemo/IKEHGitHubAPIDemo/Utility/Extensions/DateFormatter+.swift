@@ -53,26 +53,3 @@ extension RelativeDateTimeFormatter {
     }()
 }
 
-
-// MARK: - Debugging
-
-/*
-import SwiftUI
-
-fileprivate struct SampleView: View {
-    
-    var title: String {
-        DateFormatter.forTokenExpiresIn.string(from: Date())
-    }
-    
-    var body: some View {
-        VStack {
-            Text(title)
-        }
-    }
-}
-
-#Preview("Sample") {
-    SampleView()
-}
-*/
