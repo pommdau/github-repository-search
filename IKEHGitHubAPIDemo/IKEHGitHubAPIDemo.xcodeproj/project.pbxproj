@@ -40,7 +40,7 @@
 		DAB7BC1E2D3BF67F001E9D38 /* Exceptions for "IKEHGitHubAPIDemo" folder in "IKEHGitHubAPIDemo" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				Resources/Info.plist,
 			);
 			target = DA12C5CD2D252C6600296345 /* IKEHGitHubAPIDemo */;
 		};
@@ -437,15 +437,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = IKEHGitHubAPIDemo/IKEHGitHubAPIDemo.entitlements;
+				CODE_SIGN_ENTITLEMENTS = IKEHGitHubAPIDemo/Resources/IKEHGitHubAPIDemo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"IKEHGitHubAPIDemo/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"IKEHGitHubAPIDemo/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = BWMJMJK727;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = IKEHGitHubAPIDemo/Info.plist;
+				INFOPLIST_FILE = IKEHGitHubAPIDemo/Resources/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -478,15 +478,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = IKEHGitHubAPIDemo/IKEHGitHubAPIDemo.entitlements;
+				CODE_SIGN_ENTITLEMENTS = IKEHGitHubAPIDemo/Resources/IKEHGitHubAPIDemo.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"IKEHGitHubAPIDemo/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"IKEHGitHubAPIDemo/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = BWMJMJK727;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = IKEHGitHubAPIDemo/Info.plist;
+				INFOPLIST_FILE = IKEHGitHubAPIDemo/Resources/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

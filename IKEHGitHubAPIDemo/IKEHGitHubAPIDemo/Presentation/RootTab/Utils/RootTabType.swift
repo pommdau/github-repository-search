@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum TabType: String {
+enum RootTabType: String {
     case profile
     case search
     case starredRepos

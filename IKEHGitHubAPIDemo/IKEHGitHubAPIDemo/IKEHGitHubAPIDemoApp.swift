@@ -12,11 +12,8 @@ import UserDefaultsBrowser
 struct IKEHGitHubAPIDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            UserDefaultsBrowserContainer {                
-                //            SearchScreen()
-                //            LoginDebugView()
+            UserDefaultsBrowserContainer {
                 RootTabView()
-                //            LoginUserView()
             }
         }
     }

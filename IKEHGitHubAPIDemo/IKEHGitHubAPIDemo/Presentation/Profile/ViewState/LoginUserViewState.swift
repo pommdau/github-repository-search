@@ -7,7 +7,8 @@
 
 import SwiftUI
 
-@MainActor @Observable
+@MainActor
+@Observable
 final class LoginUserViewState {
     
     // MARK: - Property
