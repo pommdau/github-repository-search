@@ -24,7 +24,7 @@ final class StarredRepoResultViewState {
     // MARK: - Property(Public)
     
     var error: Error?
-    var sortedBy: GitHubAPIRequest.FetchStarredRepos.SortBy = .recentlyStarred
+    var sortedBy: FetchStarredReposSortedBy = .recentlyStarred
         
     var loginUser: LoginUser? {
         loginUserStore.value
@@ -114,7 +114,12 @@ extension StarredRepoResultViewState {
             try? await Task.sleep(for: .seconds(1))
             do {
                 // 検索の実行
-                let response = try await githubAPIClient.fetchStarredRepos(userName: loginUserName, sortedBy: sortedBy, page: page)
+                let response = try await githubAPIClient.fetchStarredRepos(
+                    userName: loginUserName,
+                    sort: sortedBy.sort,
+                    direction: sortedBy.direction,
+                    page: page
+                )
 
                 // 検索に成功
                 try await repoStore.addValues(response.repos) // Storeに検索結果を保存
@@ -126,8 +131,7 @@ extension StarredRepoResultViewState {
                     } else {
                         asyncRepoIDs = .loaded(response.repos.map { $0.id })
                     }
-                }
-                
+                }                
             } catch {
                 // 検索に失敗
                 if Task.isCancelled {

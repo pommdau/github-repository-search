@@ -12,14 +12,16 @@ extension GitHubAPIClient {
     
     func fetchStarredRepos(
         userName: String,
-        sortedBy: GitHubAPIRequest.FetchStarredRepos.SortBy,
+        sort: String? = nil,
+        direction: String? = nil,
         page: Int? = nil
     ) async throws -> StarredReposResponse {
         // TODO: fix
         let request = await GitHubAPIRequest.FetchStarredRepos(
             accessToken: tokenStore.accessToken,
             userName: userName,
-            sortedBy: sortedBy
+            sort: sort,
+            direction: direction
         )
         let response = try await sendRequest(with: request)
         return response

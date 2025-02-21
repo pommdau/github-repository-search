@@ -39,7 +39,7 @@ struct StarredReposResultView: View {
     private func toolbarItemContentSortedBy() -> some View {
         Menu {
             Picker("Sorted By", selection: $state.sortedBy) {
-                ForEach(GitHubAPIRequest.FetchStarredRepos.SortBy.allCases) { type in
+                ForEach(FetchStarredReposSortedBy.allCases) { type in
                     Text(type.title)
                         .tag(type)
                         .frame(maxWidth: .infinity, alignment: .leading)

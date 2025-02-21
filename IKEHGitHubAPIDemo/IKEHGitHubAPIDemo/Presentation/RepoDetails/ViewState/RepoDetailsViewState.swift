@@ -95,7 +95,7 @@ final class RepoDetailsViewState {
     }
     
     func checkIsStarred() {
-        guard var repo, let loginUser else {
+        guard var repo else {
             return
         }
         checkIsStarredTask = Task {

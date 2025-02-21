@@ -14,54 +14,8 @@ extension GitHubAPIRequest {
         var userName: String
         var page: Int?
         var perPage: Int? = 10
-        var sortedBy: SortBy
-    }
-}
-
-// MARK: - 検索タイプ
-
-extension GitHubAPIRequest.FetchStarredRepos {
-    enum SortBy: String, CaseIterable, Identifiable, Equatable, Codable {
-        case recentlyStarred = "recently_starred" // クエリで指定しない場合のデフォルト
-        case recentlyActive = "recently_active"
-        case leastRecentlyStarred = "least_recently_starred"
-        case leastRecentlyActive = "least_recently_active"
-        
-        var id: String { rawValue }
-        
-        var title: String {
-            switch self {
-            case .recentlyStarred:
-                return "Recently starred"
-            case .recentlyActive:
-                return "Recentrly active"
-            case .leastRecentlyStarred:
-                return "Least recently starred"
-            case .leastRecentlyActive:
-                return "Least recentrly active"
-            }
-        }
-        
-        // MARK: - Query Parameter
-        
-        var sort: String? {
-            switch self {
-            case .recentlyStarred, .leastRecentlyStarred: // リポジトリへのスター日時
-                return "created"
-            case .recentlyActive, .leastRecentlyActive: // リポジトリへの最終Push日時
-                return "updated"
-                
-            }
-        }
-        
-        var direction: String? {
-            switch self {
-            case .recentlyStarred, .recentlyActive:
-                return "desc"
-            case .leastRecentlyStarred, .leastRecentlyActive:
-                return "asc"
-            }
-        }
+        var sort: String? // "created" or "updated"
+        var direction: String? // "desc" or "asc"
     }
 }
 
@@ -84,11 +38,11 @@ extension GitHubAPIRequest.FetchStarredRepos: GitHubAPIRequestProtocol {
     var queryItems: [URLQueryItem] {
         var queryItems: [URLQueryItem] = []
         
-        if let sort = sortedBy.sort {
+        if let sort {
             queryItems.append(URLQueryItem(name: "sort", value: sort))
         }
         
-        if let direction = sortedBy.direction {
+        if let direction {
             queryItems.append(URLQueryItem(name: "direction", value: direction))
         }
         if let page {

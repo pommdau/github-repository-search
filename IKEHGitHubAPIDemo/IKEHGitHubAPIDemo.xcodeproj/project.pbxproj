@@ -92,13 +92,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		DA09FB252D5EDB470078A0AF /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		DA12C5C52D252C6600296345 = {
 			isa = PBXGroup;
 			children = (
@@ -106,7 +99,6 @@
 				DAFB9FC22D5DD98600474FF5 /* .swiftlint.yml */,
 				DA12C5D02D252C6600296345 /* IKEHGitHubAPIDemo */,
 				DA09FD2E2D5F11DF0078A0AF /* IKEHGitHubAPIDemoUITests */,
-				DA09FB252D5EDB470078A0AF /* Frameworks */,
 				DA12C5CF2D252C6600296345 /* Products */,
 			);
 			sourceTree = "<group>";
