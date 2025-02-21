@@ -44,7 +44,7 @@ struct SearchScreen: View {
     private func sortedByToolbarItemContent() -> some View {
         Menu {
             Picker("Sorted By", selection: $state.sortedBy) {
-                ForEach(GitHubAPIRequest.SearchReposRequest.SortBy.allCases) { type in
+                ForEach(SearchReposSortedBy.allCases) { type in
                     /// 選択項目の一覧
                     Text(type.title).tag(type)
                         .frame(maxWidth: .infinity, alignment: .leading)

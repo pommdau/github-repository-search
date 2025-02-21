@@ -81,12 +81,12 @@ final class RepoDetailsViewState {
             
             // ローカルの情報の更新
             let isStarred = !repo.isStarred
-            repo.update(
+            let newRepo = repo.updated(
                 isStarred: isStarred,
                 starredAt: isStarred ? ISO8601DateFormatter.shared.string(from: .now) : nil
-            )            
+            )
             do {
-                try await repoStore.addValue(repo)
+                try await repoStore.addValue(newRepo, updateStarred: true)
             } catch {
                 self.error = error
                 return
@@ -117,7 +117,7 @@ final class RepoDetailsViewState {
             // ローカルの情報の更新
             repo.isStarred = isStarred
             do {
-                try await repoStore.addValue(repo)
+                try await repoStore.addValue(repo, updateStarred: true)
             } catch {
                 self.error = error
                 return

@@ -37,15 +37,30 @@ final class RepoStore {
 
     // MARK: Create/Update
 
-    func addValue(_ value: Repo) async throws {
+    func addValue(_ value: Repo, updateStarred: Bool) async throws {
+        let values = Repo.mergeRepos(
+            existingRepos: Array(valuesDic.values),
+            newRepos: [value],
+            updateStarred: updateStarred
+        )
+        guard let value = values.first else {
+            assertionFailure()
+            return
+        }
+        
         try await repository.addValue(value)
         valuesDic[value.id] = value
     }
     
-    func addValues(_ values: [Repo]) async throws {
+    func addValues(_ values: [Repo], updateStarred: Bool) async throws {
+        let values = Repo.mergeRepos(
+            existingRepos: Array(valuesDic.values),
+            newRepos: values,
+            updateStarred: updateStarred
+        )
         try await repository.addValues(values)
         let newValuesDic = Dictionary(uniqueKeysWithValues: values.map { ($0.id, $0) })
-        valuesDic.merge(newValuesDic) { (_, new) in new }
+        valuesDic.merge(newValuesDic) { _, new in new }
     }
     
     // MARK: Read

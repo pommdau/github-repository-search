@@ -16,7 +16,7 @@ final class SearchScreenViewState {
     // MARK: 検索条件
     
     var searchText: String = "Swift"
-    var sortedBy: GitHubAPIRequest.SearchReposRequest.SortBy = .bestMatch
+    var sortedBy: SearchReposSortedBy = .bestMatch
                 
     // MARK: 検索結果
     
@@ -87,8 +87,8 @@ extension SearchScreenViewState {
         searchTask = Task {
             do {
                 // 検索: 成功
-                let response = try await gitHubAPIClient.searchRepos(searchText: searchText, sortedBy: sortedBy)
-                try await repoStore.addValues(response.items)
+                let response = try await gitHubAPIClient.searchRepos(searchText: searchText, sort: sortedBy.sort, order: sortedBy.order)
+                try await repoStore.addValues(response.items, updateStarred: false)
                 withAnimation {
                     asyncRepoIDs = .loaded(response.items.map { $0.id })
                 }
@@ -134,8 +134,8 @@ extension SearchScreenViewState {
         searchTask = Task {
             do {
                 // 検索に成功
-                let response = try await gitHubAPIClient.searchRepos(searchText: query, page: page, sortedBy: sortedBy)
-                try await repoStore.addValues(response.items)
+                let response = try await gitHubAPIClient.searchRepos(searchText: query, page: page, sort: sortedBy.sort, order: sortedBy.order)
+                try await repoStore.addValues(response.items, updateStarred: false)
                 withAnimation {
                     asyncRepoIDs = .loaded(asyncRepoIDs.values + response.items.map { $0.id })
                 }
@@ -151,7 +151,7 @@ extension SearchScreenViewState {
             }
         }
     }
-        
+            
     /// ソート順が変更された際の再検索
     func handleSortedByChanged() {
         
@@ -169,8 +169,8 @@ extension SearchScreenViewState {
         asyncRepoIDs = .loading(asyncRepoIDs.values)
         searchTask = Task {
             do {
-                let response = try await gitHubAPIClient.searchRepos(searchText: query, sortedBy: sortedBy)
-                try await repoStore.addValues(response.items)
+                let response = try await gitHubAPIClient.searchRepos(searchText: query, sort: sortedBy.sort, order: sortedBy.order)
+                try await repoStore.addValues(response.items, updateStarred: false)
                 withAnimation {
                     asyncRepoIDs = .loaded(response.items.map { $0.id })
                 }

@@ -122,7 +122,7 @@ extension StarredRepoResultViewState {
                 )
 
                 // 検索に成功
-                try await repoStore.addValues(response.repos) // Storeに検索結果を保存
+                try await repoStore.addValues(response.repos, updateStarred: true) // Storeに検索結果を保存
                 // ViewStateに検索結果を保存
                 relationLink = response.relationLink
                 withAnimation {

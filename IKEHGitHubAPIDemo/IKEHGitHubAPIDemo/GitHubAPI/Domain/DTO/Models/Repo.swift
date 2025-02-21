@@ -79,12 +79,36 @@ extension Repo {
     
     // MARK: - Update
 
-    mutating func update(_ detail: RepoDetails) {
-        self.subscribersCount = detail.subscribersCount
+//    mutating func update(_ detail: RepoDetails) {
+//        self.subscribersCount = detail.subscribersCount
+//    }
+//    
+    
+    static func mergeRepos(existingRepos: [Repo], newRepos: [Repo], updateStarred: Bool) -> [Repo] {
+        let mergedRepos = newRepos.map { newRepo in
+            guard let existingRepo = existingRepos.first(where: { $0.id == newRepo.id }) else {
+                return newRepo // 新規登録の場合は新しい情報をそのまま返す
+            }
+            
+            if updateStarred {
+                // スター情報を含めて更新
+                return newRepo
+            } else {
+                // スター情報は更新しない
+                return newRepo.updated(
+                    isStarred: existingRepo.isStarred,
+                    starredAt: existingRepo.starredAt
+                )
+            }
+        }
+        return mergedRepos
     }
     
-    mutating func update(isStarred: Bool, starredAt: String? = nil) {
-        self.isStarred = isStarred
-        self.starredAt = starredAt
+    func updated(isStarred: Bool, starredAt: String? = nil) -> Repo {
+        var updatedRepo = self
+        updatedRepo.isStarred = isStarred
+        updatedRepo.starredAt = starredAt
+        
+        return updatedRepo
     }
 }
