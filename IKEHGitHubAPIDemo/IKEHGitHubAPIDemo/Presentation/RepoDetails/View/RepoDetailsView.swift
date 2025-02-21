@@ -30,7 +30,7 @@ struct RepoDetailsView: View {
                     state.handleStarButtonTapped()
                 }
                 .onAppear {
-                    state.checkIsStarred()
+                    state.onAppear()
                 }
             } else {
                 ProgressView()

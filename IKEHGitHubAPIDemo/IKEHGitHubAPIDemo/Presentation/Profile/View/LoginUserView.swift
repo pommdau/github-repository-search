@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct LoginUserView: View {
     
@@ -35,13 +36,14 @@ struct LoginUserView: View {
     
     @ViewBuilder
     private func userImage() -> some View {
-        AsyncImage(url: URL(string: state.loginUser.avatarURL),
-                   content: { image in
+        // StarredViewなど別Viewでログインした場合に画像がうまく表示されないため、ここではSDWebImageを利用している
+        WebImage(url: URL(string: state.loginUser.avatarURL),
+                 content: { image in
             image.resizable()
         }, placeholder: {
             Image(systemName: "person.fill")
                 .resizable()
-        })
+        })        
         .frame(width: 80, height: 80)
         .cornerRadius(40)
         .matchedGeometryEffect(id: NamespaceID.LoginView.image1, in: state.namespace)
