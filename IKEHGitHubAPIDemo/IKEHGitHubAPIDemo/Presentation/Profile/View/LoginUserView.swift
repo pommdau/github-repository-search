@@ -22,13 +22,57 @@ struct LoginUserView: View {
     // MARK: - View
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            userLabel()
-            locationAndTwitterLabel()
-            followLabel()
+        NavigationStack {
+//            VStack(alignment: .leading, spacing: 10) {
+            List {
+                Section {
+                    VStack(alignment: .leading, spacing: 10) {
+                        userLabel()
+                        locationAndTwitterLabel()
+                        followLabel()
+                    }
+                    .padding(.bottom, 20)
+                }
+                .listRowBackground(Color.clear)
+                
+                Section {
+                    NavigationLink {
+                        Text("repos")
+                    } label: {
+                        HStack {
+                            Image(.bookClosedSquareFill)
+                                .font(.title)
+                            Text("Repositories")
+                            Spacer()
+                            Text("999")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    
+                    NavigationLink {
+                        Text("repos")
+                    } label: {
+                        HStack {
+                            Image(systemName: "star.square.fill")
+                                .font(.title)
+                                .foregroundStyle(.yellow)
+                                .accessibilityLabel(Text("Star icon"))
+                            Text("Starred")
+                            Spacer()
+                            Text("999")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+            .listStyle(.inset)
+            .scrollContentBackground(.hidden)
+            .background(.black.opacity(0.1))
             logoutButton()
         }
-        .padding(.vertical, 20)
+        .navigationBarTitleDisplayMode(.inline)
+        .ignoresSafeArea()
+//        .padding(.vertical, 20)
         .errorAlert(error: $state.error)
     }
     
@@ -122,7 +166,6 @@ struct LoginUserView: View {
             Text("following")
                 .foregroundStyle(.secondary)
         }
-        .padding(.bottom, 60)
     }
     
     @ViewBuilder
