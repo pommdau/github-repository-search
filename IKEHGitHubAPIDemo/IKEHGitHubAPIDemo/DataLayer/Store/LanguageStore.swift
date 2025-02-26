@@ -5,7 +5,7 @@
 //  Created by HIROKI IKEUCHI on 2022/11/14.
 //  Copyright © 2022 YUMEMI Inc. All rights reserved.
 //
-// refs: https://raw.githubusercontent.com/ozh/github-colors/master/colors.json
+// refs: https://github.com/ozh/github-colors/blob/master/colors.json
 
 import SwiftUI
 

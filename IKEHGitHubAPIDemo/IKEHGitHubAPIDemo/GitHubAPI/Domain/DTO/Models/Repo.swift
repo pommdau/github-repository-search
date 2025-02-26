@@ -78,11 +78,6 @@ extension Repo {
     }
     
     // MARK: - Update
-
-//    mutating func update(_ detail: RepoDetails) {
-//        self.subscribersCount = detail.subscribersCount
-//    }
-//    
     
     static func mergeRepos(existingRepos: [Repo], newRepos: [Repo], updateStarred: Bool) -> [Repo] {
         let mergedRepos = newRepos.map { newRepo in
@@ -108,7 +103,6 @@ extension Repo {
         var updatedRepo = self
         updatedRepo.isStarred = isStarred
         updatedRepo.starredAt = starredAt
-        
         return updatedRepo
     }
 }
