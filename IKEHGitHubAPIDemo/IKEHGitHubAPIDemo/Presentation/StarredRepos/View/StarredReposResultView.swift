@@ -51,6 +51,7 @@ struct StarredReposResultView: View {
             }
         } label: {
             Image(systemName: "arrow.up.arrow.down")
+                .accessibilityLabel(Text("SortedBy icon"))
         }
     }
 }

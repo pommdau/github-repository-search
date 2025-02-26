@@ -48,7 +48,7 @@ extension GitHubAPIRequestProtocol {
         guard
             let baseURL,
             var components = URLComponents(
-                url: baseURL.appendingPathComponent(path),
+                url: path.isEmpty ? baseURL : baseURL.appendingPathComponent(path),
                 resolvingAgainstBaseURL: true
             )
         else {
@@ -58,7 +58,6 @@ extension GitHubAPIRequestProtocol {
         if !queryItems.isEmpty {
             components.queryItems = queryItems
         }
-        
         return components.url
     }
         

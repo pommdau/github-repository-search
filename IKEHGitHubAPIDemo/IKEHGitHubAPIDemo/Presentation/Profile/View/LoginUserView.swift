@@ -78,6 +78,7 @@ struct LoginUserView: View {
                     Image(systemName: "mappin")
                         .scaledToFit()
                         .frame(width: 20)
+                        .accessibilityLabel(Text("Location icon"))
                     Text(location)
                 }
                 .foregroundStyle(.secondary)
@@ -109,6 +110,7 @@ struct LoginUserView: View {
                 .scaledToFit()
                 .frame(width: 20)
                 .foregroundStyle(.secondary)
+                .accessibilityLabel(Text("Followers icon"))
             Text("\(state.loginUser.followers)")
                 .bold()
             Text("followers")

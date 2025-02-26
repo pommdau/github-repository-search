@@ -18,6 +18,7 @@ struct StarButton: View {
         } label: {
             HStack {
                 Image(systemName: isStarred ? "star.fill" : "star")
+                    .accessibilityLabel(Text("Star icon"))
                 Text(isStarred ? "Starred" : "Star")
                     .foregroundColor(.secondary)
             }

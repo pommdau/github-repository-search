@@ -23,6 +23,7 @@ struct LoginView: View {
                 .scaledToFit()
                 .frame(width: 100, height: 100)
                 .matchedGeometryEffect(id: NamespaceID.LoginView.image1, in: namespace)
+                .accessibilityLabel(Text("GitHub icon"))
             
             Text("Log in to GitHub")
                 .font(.title)

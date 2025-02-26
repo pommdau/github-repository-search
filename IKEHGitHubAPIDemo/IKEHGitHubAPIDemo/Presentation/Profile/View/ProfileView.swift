@@ -44,29 +44,30 @@ private extension ProfileView {
 
 // MARK: - Preview
 
-// swiftlint:disable:next file_types_order
-private struct PreviewView: View {
-    
-    @State private var loginUser: LoginUser?
-
-    private var loggedIn: Bool {
-        loginUser != nil
-    }
-    
-    var body: some View {
-        ZStack {
-            Toggle("Login: ", isOn: .bind(loggedIn, with: { loggedIn in
-                withAnimation {
-                    loginUser = loggedIn ? LoginUser.Mock.ikeh : nil
-                }
-            }))
-            .frame(width: 120)
-            .offset(y: -300)
-            ProfileView.Content(loginUser: loginUser)
+private extension ProfileView {
+    struct PreviewView: View {
+        
+        @State private var loginUser: LoginUser?
+        
+        private var loggedIn: Bool {
+            loginUser != nil
+        }
+        
+        var body: some View {
+            ZStack {
+                Toggle("Login: ", isOn: .bind(loggedIn, with: { loggedIn in
+                    withAnimation {
+                        loginUser = loggedIn ? LoginUser.Mock.ikeh : nil
+                    }
+                }))
+                .frame(width: 120)
+                .offset(y: -300)
+                ProfileView.Content(loginUser: loginUser)
+            }
         }
     }
 }
 
 #Preview {
-    PreviewView()
+    ProfileView.PreviewView()
 }

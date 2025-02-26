@@ -8,7 +8,8 @@
 import Foundation
 import SwiftUI
 
-@MainActor @Observable
+@MainActor
+@Observable
 final class SearchScreenViewState {
     
     // MARK: - Property
