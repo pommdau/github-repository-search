@@ -94,7 +94,7 @@ final class StarredRepoResultViewState {
 
 extension StarredRepoResultViewState {
     
-    func fetchStarredRepos(page: Int? = nil, isLoadingMore: Bool = false) {
+    func fetchStarredRepos(link: RelationLink.Link? = nil, isLoadingMore: Bool = false) {
         guard let loginUserName else {
             return
         }
@@ -114,12 +114,19 @@ extension StarredRepoResultViewState {
             try? await Task.sleep(for: .seconds(1))
             do {
                 // 検索の実行
-                let response = try await githubAPIClient.fetchStarredRepos(
-                    userName: loginUserName,
-                    sort: sortedBy.sort,
-                    direction: sortedBy.direction,
-                    page: page
-                )
+                let response: StarredReposResponse
+                if let link {
+                    response = try await githubAPIClient.fetchStarredRepos(
+                        userName: loginUserName,
+                        link: link
+                    )
+                } else {
+                    response = try await githubAPIClient.fetchStarredRepos(
+                        userName: loginUserName,
+                        sort: sortedBy.sort,
+                        direction: sortedBy.direction
+                    )
+                }
 
                 // 検索に成功
                 try await repoStore.addValues(response.repos, updateStarred: true) // Storeに検索結果を保存
@@ -157,7 +164,8 @@ extension StarredRepoResultViewState {
         
     func handleFetchingStarredRepos() {
         // すでに検索中であれば何もしない
-        if case .loading = asyncRepoIDs {
+        if case .loading = asyncRepoIDs,
+           asyncRepoIDs.values.isEmpty {
             return
         }
         fetchStarredRepos()
@@ -166,13 +174,9 @@ extension StarredRepoResultViewState {
     /// 検索結果の続きの読み込み
     func handleFetchStarredReposMore() {
         // すでに検索中であれば何もしない
-        switch asyncRepos {
-        case .loading, .loadingMore:
+        guard case .loaded = asyncRepos else {
             return
-        default:
-            break
         }
-        
         // リンク情報がなければ何もしない
         guard let nextLink = relationLink?.next else {
             return
@@ -180,7 +184,7 @@ extension StarredRepoResultViewState {
         
         // 検索開始
         asyncRepoIDs = .loadingMore(asyncRepoIDs.values)
-        fetchStarredRepos(page: nextLink.page, isLoadingMore: true)
+        fetchStarredRepos(link: nextLink, isLoadingMore: true)
     }
     
     /// Pull to refresh時の処理

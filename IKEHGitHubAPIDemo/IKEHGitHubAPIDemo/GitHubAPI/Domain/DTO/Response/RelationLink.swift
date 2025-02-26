@@ -8,6 +8,7 @@
 import Foundation
 import SwiftID
 
+
 struct RelationLink: Sendable {
     
     struct Link: Identifiable, Equatable, Sendable {

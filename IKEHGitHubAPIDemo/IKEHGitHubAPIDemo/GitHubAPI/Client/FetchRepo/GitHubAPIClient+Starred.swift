@@ -13,15 +13,27 @@ extension GitHubAPIClient {
     func fetchStarredRepos(
         userName: String,
         sort: String? = nil,
-        direction: String? = nil,
-        page: Int? = nil
+        direction: String? = nil
     ) async throws -> StarredReposResponse {
         // TODO: fix
         let request = await GitHubAPIRequest.FetchStarredRepos(
-            accessToken: tokenStore.accessToken,
             userName: userName,
+            accessToken: tokenStore.accessToken,
             sort: sort,
             direction: direction
+        )
+        let response = try await sendRequest(with: request)
+        return response
+    }
+    
+    func fetchStarredRepos(
+        userName: String,
+        link: RelationLink.Link
+    ) async throws -> StarredReposResponse {
+        let request = await GitHubAPIRequest.FetchStarredRepos(
+            userName: userName,
+            link: link,
+            accessToken: tokenStore.accessToken
         )
         let response = try await sendRequest(with: request)
         return response

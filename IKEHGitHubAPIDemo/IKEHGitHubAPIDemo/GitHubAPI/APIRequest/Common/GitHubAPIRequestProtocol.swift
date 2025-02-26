@@ -67,6 +67,7 @@ extension GitHubAPIRequestProtocol {
         guard let url else {
             return nil
         }
+        print(url.absoluteString)
         return HTTPRequest(
             method: method,
             url: url,
