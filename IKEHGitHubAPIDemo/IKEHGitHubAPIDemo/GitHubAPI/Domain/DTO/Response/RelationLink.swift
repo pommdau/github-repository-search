@@ -8,26 +8,12 @@
 import Foundation
 import SwiftID
 
-
 struct RelationLink: Sendable {
     
     struct Link: Identifiable, Equatable, Sendable {
-
         var id: SwiftID<Self>
         var url: URL
         var queryItems: [URLQueryItem]
-        
-        // MARK: - QueryItems
-        
-        var query: String? {
-            queryItems.first(where: { $0.name == "q" })?.value
-        }
-        var page: Int? {
-            guard let page = queryItems.first(where: { $0.name == "page" })?.value else {
-                return 0
-            }
-            return Int(page)
-        }
     }
     
     var prev: Link?

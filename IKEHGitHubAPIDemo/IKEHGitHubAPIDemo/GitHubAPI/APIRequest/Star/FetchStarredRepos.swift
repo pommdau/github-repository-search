@@ -9,12 +9,14 @@ import Foundation
 import HTTPTypes
 
 extension GitHubAPIRequest {
+    
     struct FetchStarredRepos {
         
         // MARK: - Property
         
-        var userName: String
         var accessToken: String?
+        
+        var userName: String
         var page: Int?
         var perPage: Int?
         var sort: String? // "created" or "updated"
@@ -45,6 +47,7 @@ extension GitHubAPIRequest {
             link: RelationLink.Link,
             accessToken: String? = nil
         ) {
+            self.accessToken = accessToken
             self.userName = userName
             if let page = link.queryItems["page"] {
                 self.page = Int(page)
@@ -58,7 +61,6 @@ extension GitHubAPIRequest {
             if let direction = link.queryItems["direction"] {
                 self.direction = direction
             }
-            self.accessToken = accessToken
             self.path = link.url.path
         }
     }

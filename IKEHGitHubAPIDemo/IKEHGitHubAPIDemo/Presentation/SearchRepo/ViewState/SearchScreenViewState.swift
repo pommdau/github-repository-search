@@ -123,8 +123,8 @@ extension SearchScreenViewState {
         // リンク情報がなければ何もしない
         guard
             let nextLink = relationLink?.next,
-            let query = nextLink.query,
-            let page = nextLink.page
+            let query = nextLink.queryItems["q"],
+            let page = nextLink.queryItems["page"]
         else {
             return
         }
@@ -134,7 +134,7 @@ extension SearchScreenViewState {
         searchTask = Task {
             do {
                 // 検索に成功
-                let response = try await gitHubAPIClient.searchRepos(searchText: query, page: page, sort: sortedBy.sort, order: sortedBy.order)
+                let response = try await gitHubAPIClient.searchRepos(searchText: query, page: Int(page), sort: sortedBy.sort, order: sortedBy.order)
                 try await repoStore.addValues(response.items, updateStarred: false)
                 withAnimation {
                     asyncRepoIDs = .loaded(asyncRepoIDs.values + response.items.map { $0.id })
@@ -161,7 +161,7 @@ extension SearchScreenViewState {
         guard case .loaded = asyncRepos,
               !asyncRepos.values.isEmpty,
               let nextLink = relationLink?.next,
-              let query = nextLink.query
+              let query = nextLink.queryItems["q"]
         else {
             return
         }

@@ -16,7 +16,7 @@ extension GitHubAPIRequest {
     }
 }
 
-extension GitHubAPIRequest.CheckIsRepoStarredRequest : GitHubAPIRequestProtocol {
+extension GitHubAPIRequest.CheckIsRepoStarredRequest: GitHubAPIRequestProtocol {
 
     typealias Response = String
     

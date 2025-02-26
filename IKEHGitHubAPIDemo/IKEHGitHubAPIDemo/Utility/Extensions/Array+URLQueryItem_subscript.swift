@@ -1,5 +1,5 @@
 //
-//  Array_URLQueryItem+subscript.swift
+//  Array+URLQueryItem_subscript.swift
 //  IKEHGitHubAPIDemo
 //
 //  Created by HIROKI IKEUCHI on 2025/02/26.
