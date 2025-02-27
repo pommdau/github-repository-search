@@ -133,6 +133,7 @@ extension StarredReposResultView.Content {
     @ViewBuilder
     private func starredReposList() -> some View {
         ForEach(asyncRepos.values) { repo in
+//            let id = UUID().uuidString
             NavigationLink {
                 RepoDetailsView(repoID: repo.id)
                     .navigationTransition(.zoom(sourceID: "\(repo.id)", in: namespace))

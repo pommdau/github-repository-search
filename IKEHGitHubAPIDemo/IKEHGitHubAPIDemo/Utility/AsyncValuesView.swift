@@ -35,8 +35,9 @@ struct AsyncValuesView<
     var loadingMoreProgressView: LoadingMoreProgress
     
     var handlePullToRefresh: (() -> Void)?
-        
-    var allowPullToRefresh: Bool {
+    
+    /// Pull to Refreshを動作させるかどうか
+    private var allowPullToRefresh: Bool {
         if handlePullToRefresh == nil {
             return false
         }
@@ -105,6 +106,53 @@ struct AsyncValuesView<
         }
     }
 }
+
+extension AsyncValuesView {
+    
+    init(
+        asyncValues: AsyncValues<T, E>,
+        @ViewBuilder loadingView: @escaping () -> LoadingView,
+        @ViewBuilder dataView: @escaping ([T]) -> DataView,
+        @ViewBuilder noResultView: @escaping () -> NoResultView
+    )
+    where InitialView == ProgressView<EmptyView, EmptyView>,
+    LoadingMoreProgress == ProgressView<EmptyView, EmptyView> {
+        self.init(
+            asyncValues: asyncValues,
+            initialView: progressView(),
+            loadingView: loadingView,
+            dataView: dataView,
+            noResultView: noResultView,
+            loadingMoreProgressView: progressView()
+        )
+    }
+    
+    init(
+        asyncValues: AsyncValues<T, E>,
+        @ViewBuilder initialView: @escaping () -> InitialView,
+        @ViewBuilder loadingView: @escaping () -> LoadingView,
+        @ViewBuilder dataView: @escaping ([T]) -> DataView,
+        @ViewBuilder noResultView: @escaping () -> NoResultView,
+        @ViewBuilder loadingMoreProgressView: @escaping () -> LoadingMoreProgress
+    ) {
+        self.asyncValues = asyncValues
+        self.initialView = initialView()
+        self.loadingView = loadingView()
+        self.dataView = dataView
+        self.noResultView = noResultView()
+        self.loadingMoreProgressView = loadingMoreProgressView()
+    }
+        
+    @ViewBuilder
+    private func progressView() -> some View {
+        // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
+        ProgressView<EmptyView, EmptyView>()
+            .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+            .frame(maxWidth: .infinity, alignment: .center)
+            .id(UUID())
+    }
+}
+
 
 // MARK: - Preview
 
