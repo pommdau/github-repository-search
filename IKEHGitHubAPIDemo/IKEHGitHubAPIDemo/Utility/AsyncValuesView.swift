@@ -20,8 +20,8 @@ struct AsyncValuesView<
     DataView: View,
     InitialView: View,
     LoadingView: View,
-    NoResultView: View,
-    LoadingMoreProgress: View
+    NoResultView: View
+//    LoadingMoreProgress: View
 >: View {
     
     // MARK: - Property
@@ -32,7 +32,6 @@ struct AsyncValuesView<
     var loadingView: LoadingView
     var dataView: ([T]) -> DataView
     var noResultView: NoResultView
-    var loadingMoreProgressView: LoadingMoreProgress
     
     var handlePullToRefresh: (() -> Void)?
     
@@ -49,6 +48,23 @@ struct AsyncValuesView<
         }
     }
     
+    // MARK: - LifeCycle
+    
+    // swiftlint:disable:next type_contents_order
+    init(
+        asyncValuesa: AsyncValues<T, E>,
+        @ViewBuilder initialView: @escaping () -> InitialView,
+        @ViewBuilder loadingView: @escaping () -> LoadingView,
+        @ViewBuilder dataView: @escaping ([T]) -> DataView,
+        @ViewBuilder noResultView: @escaping () -> NoResultView
+    ) {
+        self.asyncValues = asyncValuesa
+        self.initialView = initialView()
+        self.loadingView = loadingView()
+        self.dataView = dataView
+        self.noResultView = noResultView()
+    }
+    
     // MARK: - View
     
     var body: some View {
@@ -58,7 +74,7 @@ struct AsyncValuesView<
                 Group {
                     dataView(values)
                     if case .loadingMore = asyncValues {
-                        loadingMoreProgressView
+                        progressView()
                     }
                 }
             default:
@@ -84,6 +100,8 @@ struct AsyncValuesView<
         }
     }
     
+    // MARK: - Helpers
+    
     private func handleRefreshable() async {
         guard let handlePullToRefresh else {
             return
@@ -105,44 +123,7 @@ struct AsyncValuesView<
             }
         }
     }
-}
-
-extension AsyncValuesView {
     
-    init(
-        asyncValues: AsyncValues<T, E>,
-        @ViewBuilder loadingView: @escaping () -> LoadingView,
-        @ViewBuilder dataView: @escaping ([T]) -> DataView,
-        @ViewBuilder noResultView: @escaping () -> NoResultView
-    )
-    where InitialView == ProgressView<EmptyView, EmptyView>,
-    LoadingMoreProgress == ProgressView<EmptyView, EmptyView> {
-        self.init(
-            asyncValues: asyncValues,
-            initialView: progressView(),
-            loadingView: loadingView,
-            dataView: dataView,
-            noResultView: noResultView,
-            loadingMoreProgressView: progressView()
-        )
-    }
-    
-    init(
-        asyncValues: AsyncValues<T, E>,
-        @ViewBuilder initialView: @escaping () -> InitialView,
-        @ViewBuilder loadingView: @escaping () -> LoadingView,
-        @ViewBuilder dataView: @escaping ([T]) -> DataView,
-        @ViewBuilder noResultView: @escaping () -> NoResultView,
-        @ViewBuilder loadingMoreProgressView: @escaping () -> LoadingMoreProgress
-    ) {
-        self.asyncValues = asyncValues
-        self.initialView = initialView()
-        self.loadingView = loadingView()
-        self.dataView = dataView
-        self.noResultView = noResultView()
-        self.loadingMoreProgressView = loadingMoreProgressView()
-    }
-        
     @ViewBuilder
     private func progressView() -> some View {
         // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
@@ -153,7 +134,6 @@ extension AsyncValuesView {
     }
 }
 
-
 // MARK: - Preview
 
 private struct PreviewView: View {
@@ -161,28 +141,17 @@ private struct PreviewView: View {
     let asyncValues: AsyncValues<String, Error>
     
     var body: some View {
-        AsyncValuesView(
-            asyncValues: asyncValues,
-            initialView: ContentUnavailableView.search,
-            loadingView: ProgressView("loading..."),
-            dataView: { values in
-                ForEach(values, id: \.self) { value in
-                    Text(value)
-                }
-            },
-            noResultView: ContentUnavailableView.search,
-            loadingMoreProgressView: progressView(),
-            handlePullToRefresh: { _ = print("handlePullToRefresh") }
-        )
-    }
-    
-    @ViewBuilder
-    private func progressView() -> some View {
-        // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
-        ProgressView()
-            .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
-            .frame(maxWidth: .infinity, alignment: .center)
-            .id(UUID())
+        AsyncValuesView(asyncValuesa: asyncValues) {
+            ContentUnavailableView.search
+        } loadingView: {
+            ProgressView()
+        } dataView: { values in
+            ForEach(values, id: \.self) { value in
+                Text(value)
+            }
+        } noResultView: {
+            ContentUnavailableView.search
+        }
     }
 }
 

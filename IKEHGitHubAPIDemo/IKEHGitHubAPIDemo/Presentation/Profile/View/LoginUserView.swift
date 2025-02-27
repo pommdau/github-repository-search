@@ -34,10 +34,12 @@ struct LoginUserView: View {
                     .padding(.bottom, 20)
                 }
                 .listRowBackground(Color.clear)
+                .listRowSeparator(.hidden)
                 
                 Section {
                     NavigationLink {
-                        Text("repos")
+                        // swiftlint:disable:next force_unwrapping
+                        LoginUserReposView(url: URL(string: "https://api.github.com/users/octocat/repo")!)
                     } label: {
                         HStack {
                             Image(.bookClosedSquareFill)
@@ -64,11 +66,12 @@ struct LoginUserView: View {
                         }
                     }
                 }
+                Spacer()
+                logoutButton()
             }
             .listStyle(.inset)
             .scrollContentBackground(.hidden)
-            .background(.black.opacity(0.1))
-            logoutButton()
+//            .background(.black.opacity(0.1))
         }
         .navigationBarTitleDisplayMode(.inline)
         .ignoresSafeArea()
@@ -174,7 +177,10 @@ struct LoginUserView: View {
             state.handleLogOutButtonTapped()
         }
         .gitHubButtonStyle(.logOut)
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
         .matchedGeometryEffect(id: NamespaceID.LoginView.button1, in: state.namespace)
+        .frame(maxWidth: .infinity, alignment: .center)
     }
 }
 

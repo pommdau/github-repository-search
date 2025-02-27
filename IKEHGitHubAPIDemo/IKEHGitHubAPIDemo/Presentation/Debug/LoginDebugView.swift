@@ -25,7 +25,8 @@ struct LoginDebugView: View {
                 Button("Debug") {
                     Task {
                         do {
-                            let response = try await gitHubAPIClient.fetchLoginUserPinnedRepos(userName: "pommdau")
+                            let url = URL(string: "https://api.github.com/users/octocat/repos")!
+                            let response: ListResponse<Repo> = try await gitHubAPIClient.fetchWithURL(url: url)
                             print("stop")
                         } catch {
                             print(error.localizedDescription)
