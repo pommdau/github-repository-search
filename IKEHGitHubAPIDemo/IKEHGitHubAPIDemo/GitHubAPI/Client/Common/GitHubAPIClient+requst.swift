@@ -52,7 +52,7 @@ extension GitHubAPIClient {
         do {
             response = try JSONDecoder().decode(Response.self, from: data)
         } catch {
-//            print(String(data: data, encoding: .utf8)!)
+            print(String(data: data, encoding: .utf8)!)
             throw GitHubAPIClientError.responseParseError(error)
         }
         response = try Self.attachRelationLink(to: response, from: httpResponse)
