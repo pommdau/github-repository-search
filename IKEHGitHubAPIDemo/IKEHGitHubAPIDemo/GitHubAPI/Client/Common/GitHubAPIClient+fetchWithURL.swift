@@ -15,7 +15,7 @@ extension GitHubAPIClient {
         return response
     }
     
-    /// クエリを含む完全なURLが分かっている場合に利用できるGET用API通信
+    // TODO: remove
     func fetchLoginUserPinnedRepos(userName: String) async throws -> ListResponse<Repo> {
         let request = await GitHubAPIRequest.FetchLoginUserPinnedRepos(userName: userName, accessToken: tokenStore.accessToken)
         let response = try await sendRequest(with: request)

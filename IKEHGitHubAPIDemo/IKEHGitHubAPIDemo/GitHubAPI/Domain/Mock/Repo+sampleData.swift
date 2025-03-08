@@ -20,7 +20,7 @@ extension Repo {
         static func random() -> Repo {
             let randomID = Int.random(in: 1000...9999)
             let randomName = ["Tetris", "Chess", "Snake", "Pong", "Breakout"].randomElement() ?? ""
-            let randomOwner = User.createRandom()
+            let randomOwner = User.Mock.random()
             let randomLanguage = ["Swift", "Python", "JavaScript", "C++", "Rust"].randomElement()
             
             return Repo(
@@ -46,11 +46,7 @@ extension Repo {
             .init(rawID: 44838949,
                   name: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
                   fullName: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-                  owner:
-                  User(rawID: 10639145,
-                       name: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
-                       avatarImagePath: "https://avatars.githubusercontent.com/u/10639145?v=4",
-                       htmlPath: "https://github.com/apple/ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"),
+                  owner: User.Mock.random(),
                   starsCount: 61080,
                   watchersCount: 2100,
                   forksCount: 9815,
@@ -67,11 +63,7 @@ extension Repo {
             .init(rawID: 44838949,
                   name: "swift",
                   fullName: "apple/swift",
-                  owner:
-                  User(rawID: 10639145,
-                       name: "apple",
-                       avatarImagePath: "https://avatars.githubusercontent.com/u/10639145?v=4",
-                       htmlPath: "https://github.com/apple"),
+                  owner: User.Mock.random(),
                   starsCount: 61308,
                   watchersCount: 61308,
                   forksCount: 9858,
@@ -89,11 +81,7 @@ extension Repo {
             rawID: 44838949,
             name: "Lorem ipsum dol",
             fullName: "apple/swift",
-            owner:
-                User(rawID: 10639145,
-                     name: "Lorem ipsum",
-                     avatarImagePath: "",
-                     htmlPath: "https://github.com/apple"),
+            owner: User.Mock.random(),
             starsCount: 61308,
             watchersCount: 61308,
             forksCount: 9858,

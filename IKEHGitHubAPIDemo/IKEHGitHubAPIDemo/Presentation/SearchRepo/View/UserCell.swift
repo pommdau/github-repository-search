@@ -22,7 +22,7 @@ struct UserCell: View {
                         UIApplication.shared.open(url)
                     }
                 } label: {
-                    Text(user.htmlPath)
+                    Text(user.htmlPath ?? "(nil)")
                         .lineLimit(1)
                         .bold()
                         .truncationMode(.tail)
@@ -54,6 +54,6 @@ struct UserCell: View {
 // MARK: - Previews
 
 #Preview("通常", traits: .sizeThatFitsLayout) {
-    UserCell(user: User.sampleData[0])
+    UserCell(user: User.Mock.random())
         .padding()
 }

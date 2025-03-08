@@ -69,7 +69,7 @@ extension GitHubAPIClient {
         guard let httpRequest = request.buildHTTPRequest() else {
             throw GitHubAPIClientError.invalidRequest
         }
-        print(httpRequest.url?.absoluteString)
+//        print(httpRequest.url?.absoluteString)
 
         // リクエストの送信
         let (data, httpResponse): (Data, HTTPResponse)
@@ -83,7 +83,8 @@ extension GitHubAPIClient {
             throw GitHubAPIClientError.connectionError(error)
         }
         
-//        printFormattedJSON(data)
+        print(String(data: data, encoding: .utf8)!)
+        printFormattedJSON(data)
         
         return (data, httpResponse)
     }

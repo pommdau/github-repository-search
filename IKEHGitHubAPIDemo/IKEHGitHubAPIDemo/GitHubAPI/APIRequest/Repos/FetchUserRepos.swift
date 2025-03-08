@@ -16,7 +16,7 @@ extension GitHubAPIRequest {
         var type: String?
         var sort: String?
         var direction: String?
-        var perPage: Int?
+        var perPage: Int? = 1
         var page: Int?
     }
 }

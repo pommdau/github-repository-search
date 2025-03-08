@@ -25,7 +25,7 @@ struct LoginDebugView: View {
                 Button("Debug") {
                     Task {
                         do {
-                            let response = try await self.gitHubAPIClient.fetchUserRepos(userName: "koher")
+                            let response = try await self.gitHubAPIClient.fetchUser(login: "pommdau")
                             print("stop")
                         } catch {
                             print(error.localizedDescription)
