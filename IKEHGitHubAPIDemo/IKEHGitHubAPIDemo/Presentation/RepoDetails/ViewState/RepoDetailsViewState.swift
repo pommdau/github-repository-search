@@ -94,7 +94,7 @@ final class RepoDetailsViewState {
         }
     }
     
-    func checkIsStarred() {
+    func checkIfRepoIsStarred() {
         guard var repo, loginUser != nil else {
             return
         }
@@ -126,6 +126,6 @@ final class RepoDetailsViewState {
     }
     
     func onAppear() {
-        checkIsStarred()
+        checkIfRepoIsStarred()
     }
 }

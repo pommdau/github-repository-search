@@ -23,7 +23,6 @@ struct LoginUserView: View {
     
     var body: some View {
         NavigationStack {
-//            VStack(alignment: .leading, spacing: 10) {
             List {
                 Section {
                     VStack(alignment: .leading, spacing: 10) {
@@ -35,37 +34,6 @@ struct LoginUserView: View {
                 }
                 .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
-                
-                Section {
-                    NavigationLink {
-                        // swiftlint:disable:next force_unwrapping
-                        LoginUserReposView(url: URL(string: "https://api.github.com/users/octocat/repo")!)
-                    } label: {
-                        HStack {
-                            Image(.bookClosedSquareFill)
-                                .font(.title)
-                            Text("Repositories")
-                            Spacer()
-                            Text("999")
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    
-                    NavigationLink {
-                        Text("repos")
-                    } label: {
-                        HStack {
-                            Image(systemName: "star.square.fill")
-                                .font(.title)
-                                .foregroundStyle(.yellow)
-                                .accessibilityLabel(Text("Star icon"))
-                            Text("Starred")
-                            Spacer()
-                            Text("999")
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                }
                 Spacer()
                 logoutButton()
             }
@@ -169,6 +137,41 @@ struct LoginUserView: View {
             Text("following")
                 .foregroundStyle(.secondary)
         }
+    }
+    
+    @ViewBuilder
+    private func debugSection() -> some View {
+        Section {
+            NavigationLink {
+                // swiftlint:disable:next force_unwrapping
+                LoginUserReposView(url: URL(string: "https://api.github.com/users/octocat/repo")!)
+            } label: {
+                HStack {
+                    Image(.bookClosedSquareFill)
+                        .font(.title)
+                    Text("Repositories")
+                    Spacer()
+                    Text("999")
+                        .foregroundStyle(.secondary)
+                }
+            }
+            
+            NavigationLink {
+                Text("repos")
+            } label: {
+                HStack {
+                    Image(systemName: "star.square.fill")
+                        .font(.title)
+                        .foregroundStyle(.yellow)
+                        .accessibilityLabel(Text("Star icon"))
+                    Text("Starred")
+                    Spacer()
+                    Text("999")
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        Spacer()
     }
     
     @ViewBuilder
