@@ -29,11 +29,11 @@ extension GitHubAPIRequest.SearchReposRequest: GitHubAPIRequestProtocol {
     }
     
     var baseURL: URL? {
-        URL(string: "https://api.github.com/search")
+        URL(string: "https://api.github.com")
     }
     
     var path: String {
-        "/repositories"
+        "/search/repositories"
     }
     
     var queryItems: [URLQueryItem] {
