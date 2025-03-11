@@ -10,9 +10,9 @@ import Foundation
 import SwiftID
 
 struct User: GitHubDTO, Equatable {
-
+    
     // MARK: - Decode Result
-
+    
     private enum CodingKeys: String, CodingKey {
         case rawID = "id"
         case login
@@ -21,7 +21,7 @@ struct User: GitHubDTO, Equatable {
         case htmlPath = "html_url"
         case location
         case bio
-        case twitterUserName = "twitter_username"
+        case twitterUsername = "twitter_username"
         case publicRepos = "public_repos"
         case followers
         case following
@@ -34,7 +34,7 @@ struct User: GitHubDTO, Equatable {
     var htmlPath: String?  // e.g. https://github.com/apple
     var location: String?
     var bio: String?
-    var twitterUserName: String?
+    var twitterUsername: String?
     var publicRepos: Int
     var followers: Int
     var following: Int
@@ -44,9 +44,9 @@ struct User: GitHubDTO, Equatable {
     var id: SwiftID<Self> { "\(rawID)" }
     
     var avatarImageURL: URL? {
-//        guard let avatarImagePath else {
-//            return nil
-//        }
+        //        guard let avatarImagePath else {
+        //            return nil
+        //        }
         return URL(string: avatarImagePath)
     }
     
@@ -56,11 +56,11 @@ struct User: GitHubDTO, Equatable {
         }
         return URL(string: htmlPath)
     }
+    
+    var twitterURL: URL? {
+        guard let twitterUsername else {
+            return nil
+        }
+        return URL(string: "https://x.com/\(twitterUsername)")
+    }
 }
-
-extension User {
-    static let sampleData: [User] = [
-        
-    ]
-}
-

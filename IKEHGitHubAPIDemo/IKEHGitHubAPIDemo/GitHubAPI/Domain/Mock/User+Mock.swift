@@ -33,7 +33,7 @@ extension User {
                 htmlPath: "https://github.com/pommdau",
                 location: randomLocation,
                 bio: randomBio,
-                twitterUserName: randomTwitter,
+                twitterUsername: randomTwitter,
                 publicRepos: randomRepos,
                 followers: randomFollowers,
                 following: randomFollowing
