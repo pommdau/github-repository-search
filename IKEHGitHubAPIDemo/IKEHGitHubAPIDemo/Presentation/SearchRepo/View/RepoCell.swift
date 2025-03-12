@@ -79,7 +79,7 @@ struct RepoCell: View {
                     .stroke(lineWidth: 1)
                     .foregroundStyle(.secondary.opacity(0.5))
             }
-            Text(repo.owner.name)
+            Text(repo.owner.login)
                 .lineLimit(1)
         }
     }

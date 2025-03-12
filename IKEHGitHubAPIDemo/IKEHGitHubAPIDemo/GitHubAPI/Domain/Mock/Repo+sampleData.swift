@@ -26,7 +26,7 @@ extension Repo {
             return Repo(
                 rawID: randomID,
                 name: randomName,
-                fullName: "\(randomOwner.name)/\(randomName)",
+                fullName: "\(randomOwner.login)/\(randomName)",
                 owner: randomOwner,
                 starsCount: Int.random(in: 0...10000),
                 watchersCount: Int.random(in: 0...5000),

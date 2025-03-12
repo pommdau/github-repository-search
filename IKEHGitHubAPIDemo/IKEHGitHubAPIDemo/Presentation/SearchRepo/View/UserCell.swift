@@ -14,7 +14,7 @@ struct UserCell: View {
         HStack(alignment: .top) {
             userImage()
             VStack(spacing: 8) {
-                Text(user.name)
+                Text(user.login)
                     .lineLimit(1)
                     .padding(.top, 2)                
                 Button {

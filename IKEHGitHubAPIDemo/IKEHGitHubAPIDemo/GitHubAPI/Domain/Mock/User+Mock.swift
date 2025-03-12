@@ -17,26 +17,26 @@ extension User {
         static func random() -> User {
             let randomID = Int.random(in: 1000...9999)
             let randomLogin = ["alice", "bob", "charlie", "dave", "eve"].randomElement() ?? ""
-            let randomName = ["Alice Johnson", "Bob Smith", "Charlie Brown", "Dave Williams", "Eve Adams"].randomElement() ?? ""
-            let randomLocation = ["New York", "San Francisco", "Tokyo", "Berlin", "London"].randomElement() ?? ""
-            let randomBio = ["iOS Developer", "Swift Enthusiast", "Open Source Contributor", "Tech Blogger", "GitHub Fan"].randomElement() ?? ""
-            let randomTwitter = ["alice_dev", "bob_swift", "charlie_code", "dave_ios", "eve_git"].randomElement()
-            let randomRepos = Int.random(in: 1...100)
-            let randomFollowers = Int.random(in: 0...5000)
-            let randomFollowing = Int.random(in: 0...500)
+//            let randomName = ["Alice Johnson", "Bob Smith", "Charlie Brown", "Dave Williams", "Eve Adams"].randomElement() ?? ""
+//            let randomLocation = ["New York", "San Francisco", "Tokyo", "Berlin", "London"].randomElement() ?? ""
+//            let randomBio = ["iOS Developer", "Swift Enthusiast", "Open Source Contributor", "Tech Blogger", "GitHub Fan"].randomElement() ?? ""
+//            let randomTwitter = ["alice_dev", "bob_swift", "charlie_code", "dave_ios", "eve_git"].randomElement()
+//            let randomRepos = Int.random(in: 1...100)
+//            let randomFollowers = Int.random(in: 0...5000)
+//            let randomFollowing = Int.random(in: 0...500)
             
             return User(
                 rawID: randomID,
                 login: randomLogin,
-                name: randomName,
+//                name: randomName,
                 avatarImagePath: "https://avatars.githubusercontent.com/u/29433103?v=4",
-                htmlPath: "https://github.com/pommdau",
-                location: randomLocation,
-                bio: randomBio,
-                twitterUsername: randomTwitter,
-                publicRepos: randomRepos,
-                followers: randomFollowers,
-                following: randomFollowing
+                htmlPath: "https://github.com/pommdau"
+//                location: randomLocation,
+//                bio: randomBio,
+//                twitterUsername: randomTwitter,
+//                publicRepos: randomRepos,
+//                followers: randomFollowers,
+//                following: randomFollowing
             )
         }
     }

@@ -69,9 +69,9 @@ final class RepoDetailsViewState {
             // API通信
             do {
                 if repo.isStarred {
-                    try await gitHubAPIClient.unstarRepo(ownerName: repo.owner.name, repoName: repo.name)
+                    try await gitHubAPIClient.unstarRepo(ownerName: repo.owner.login, repoName: repo.name)
                 } else {
-                    try await gitHubAPIClient.starRepo(ownerName: repo.owner.name, repoName: repo.name)
+                    try await gitHubAPIClient.starRepo(ownerName: repo.owner.login, repoName: repo.name)
                     
                 }
             } catch {
@@ -108,7 +108,7 @@ final class RepoDetailsViewState {
             // API通信
             let isStarred: Bool
             do {
-                isStarred = try await gitHubAPIClient.checkIsRepoStarred(ownerName: repo.owner.name, repoName: repo.name)
+                isStarred = try await gitHubAPIClient.checkIsRepoStarred(ownerName: repo.owner.login, repoName: repo.name)
             } catch {
                 self.error = error
                 return

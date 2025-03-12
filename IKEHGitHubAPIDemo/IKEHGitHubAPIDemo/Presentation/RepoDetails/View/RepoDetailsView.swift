@@ -104,7 +104,7 @@ extension RepoDetailsView {
                             .foregroundStyle(.secondary)
                     }
                     // User Name
-                    Text(repo.owner.name)
+                    Text(repo.owner.login)
                         .lineLimit(1)
                 }
             }

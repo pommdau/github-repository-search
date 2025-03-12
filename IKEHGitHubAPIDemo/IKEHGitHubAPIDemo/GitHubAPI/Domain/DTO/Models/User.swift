@@ -16,28 +16,29 @@ struct User: GitHubDTO, Equatable {
     private enum CodingKeys: String, CodingKey {
         case rawID = "id"
         case login
-        case name
+//        case name
         case avatarImagePath = "avatar_url"
         case htmlPath = "html_url"
-        case location
-        case bio
-        case twitterUsername = "twitter_username"
-        case publicRepos = "public_repos"
-        case followers
-        case following
+//        case location
+//        case bio
+//        case twitterUsername = "twitter_username"
+//        case publicRepos = "public_repos"
+//        case followers
+//        case following
     }
     
     let rawID: Int
     var login: String
-    var name: String
     var avatarImagePath: String
     var htmlPath: String?  // e.g. https://github.com/apple
-    var location: String?
-    var bio: String?
-    var twitterUsername: String?
-    var publicRepos: Int
-    var followers: Int
-    var following: Int
+    
+//    var name: String
+//    var location: String?
+//    var bio: String?
+//    var twitterUsername: String?
+//    var publicRepos: Int
+//    var followers: Int
+//    var following: Int
     
     // MARK: - Computed Property
     
@@ -57,10 +58,10 @@ struct User: GitHubDTO, Equatable {
         return URL(string: htmlPath)
     }
     
-    var twitterURL: URL? {
-        guard let twitterUsername else {
-            return nil
-        }
-        return URL(string: "https://x.com/\(twitterUsername)")
-    }
+//    var twitterURL: URL? {
+//        guard let twitterUsername else {
+//            return nil
+//        }
+//        return URL(string: "https://x.com/\(twitterUsername)")
+//    }
 }
