@@ -16,7 +16,7 @@ extension GitHubAPIRequest {
     }
 }
 
-extension GitHubAPIRequest.CheckIsRepoStarredRequest : GitHubAPIRequestProtocol {
+extension GitHubAPIRequest.CheckIsRepoStarredRequest: GitHubAPIRequestProtocol {
 
     typealias Response = String
     
@@ -38,9 +38,9 @@ extension GitHubAPIRequest.CheckIsRepoStarredRequest : GitHubAPIRequestProtocol 
     
     var header: HTTPTypes.HTTPFields {
         var headerFields = HTTPTypes.HTTPFields()
-        headerFields[.accept] = HTTPField.ConstantValue.applicationVndGitHubJSON
+        headerFields[.accept] = HTTPField.ConstValue.applicationVndGitHubJSON
         headerFields[.authorization] = "Bearer \(accessToken)"
-        headerFields[.xGithubAPIVersion] = HTTPField.ConstantValue.xGitHubAPIVersion
+        headerFields[.xGithubAPIVersion] = HTTPField.ConstValue.xGitHubAPIVersion
         return headerFields
     }
     

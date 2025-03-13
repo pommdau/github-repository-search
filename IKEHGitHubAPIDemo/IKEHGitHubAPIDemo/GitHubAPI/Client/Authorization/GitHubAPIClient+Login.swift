@@ -18,7 +18,7 @@ extension GitHubAPIClient {
     func openLoginPageInBrowser() async throws {
         await tokenStore.addLastLoginStateID(UUID().uuidString) // 多重ログイン防止のためログインセッションのIDを記録
         let request = await GitHubAPIRequest.LoginPage(
-            clientID: GitHubAPIClient.PrivateConstant.clientID,
+            clientID: clientID,
             lastLoginStateID: tokenStore.lastLoginStateID
         )
         guard let loginURL = request.url else {
@@ -34,7 +34,7 @@ extension GitHubAPIClient {
         return try await fetchLoginUser()
     }
             
-    /// コールバックURLからログインセッションIDを取得
+    /// コールバックURLからログインセッションID(初回認証時にのみ利用する一時的なcode)を取得
     private func extactSessionCodeFromCallbackURL(_ url: URL) async throws -> String {
         guard
             let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
@@ -51,6 +51,6 @@ extension GitHubAPIClient {
             throw GitHubAPIClientError.loginError("無効なログインセッションです")
         }
         
-        return sessionCode // 初回認証時にのみ利用する一時的なcode
+        return sessionCode
     }
 }
