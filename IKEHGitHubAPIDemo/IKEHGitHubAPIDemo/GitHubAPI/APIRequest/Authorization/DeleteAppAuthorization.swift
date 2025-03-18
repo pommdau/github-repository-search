@@ -39,10 +39,7 @@ extension GitHubAPIRequest.DeleteAppAuthorization: GitHubAPIRequestProtocol {
     
     var header: HTTPTypes.HTTPFields {
         var headerFields = HTTPTypes.HTTPFields()
-
-        let authorizationValue = Data("\(clientID):\(clientSecret)".utf8).base64EncodedString()
-        headerFields[.authorization] = "Basic \(authorizationValue)"
-
+        headerFields[.authorization] = HTTPField.ConstValue.aurhorization(clientID: clientID, clientSecret: clientSecret)
         headerFields[.contentType] = HTTPField.ConstValue.applicationJSON
         headerFields[.accept] = HTTPField.ConstValue.applicationVndGitHubJSON
         headerFields[.xGithubAPIVersion] = HTTPField.ConstValue.xGitHubAPIVersion

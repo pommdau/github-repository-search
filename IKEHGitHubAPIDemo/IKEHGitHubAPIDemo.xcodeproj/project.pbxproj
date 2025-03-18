@@ -30,11 +30,19 @@
 			remoteGlobalIDString = DA12C5CD2D252C6600296345;
 			remoteInfo = IKEHGitHubAPIDemo;
 		};
+		DA0CCBC52D892193008E0296 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA12C5C62D252C6600296345 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DA12C5CD2D252C6600296345;
+			remoteInfo = IKEHGitHubAPIDemo;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		DA09FD2D2D5F11DF0078A0AF /* IKEHGitHubAPIDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IKEHGitHubAPIDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA09FF9B2D65CB0B0078A0AF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		DA0CCBC12D892193008E0296 /* IKEHGitHubAPIDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IKEHGitHubAPIDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA12C5CE2D252C6600296345 /* IKEHGitHubAPIDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IKEHGitHubAPIDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAFB9FC22D5DD98600474FF5 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -55,6 +63,11 @@
 			path = IKEHGitHubAPIDemoUITests;
 			sourceTree = "<group>";
 		};
+		DA0CCBC22D892193008E0296 /* IKEHGitHubAPIDemoTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = IKEHGitHubAPIDemoTests;
+			sourceTree = "<group>";
+		};
 		DA12C5D02D252C6600296345 /* IKEHGitHubAPIDemo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -67,6 +80,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		DA09FD2A2D5F11DF0078A0AF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA0CCBBE2D892193008E0296 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -101,6 +121,7 @@
 				DAFB9FC22D5DD98600474FF5 /* .swiftlint.yml */,
 				DA12C5D02D252C6600296345 /* IKEHGitHubAPIDemo */,
 				DA09FD2E2D5F11DF0078A0AF /* IKEHGitHubAPIDemoUITests */,
+				DA0CCBC22D892193008E0296 /* IKEHGitHubAPIDemoTests */,
 				DA12C5CF2D252C6600296345 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -110,6 +131,7 @@
 			children = (
 				DA12C5CE2D252C6600296345 /* IKEHGitHubAPIDemo.app */,
 				DA09FD2D2D5F11DF0078A0AF /* IKEHGitHubAPIDemoUITests.xctest */,
+				DA0CCBC12D892193008E0296 /* IKEHGitHubAPIDemoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -139,6 +161,29 @@
 			productName = IKEHGitHubAPIDemoUITests;
 			productReference = DA09FD2D2D5F11DF0078A0AF /* IKEHGitHubAPIDemoUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		DA0CCBC02D892193008E0296 /* IKEHGitHubAPIDemoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA0CCBC92D892193008E0296 /* Build configuration list for PBXNativeTarget "IKEHGitHubAPIDemoTests" */;
+			buildPhases = (
+				DA0CCBBD2D892193008E0296 /* Sources */,
+				DA0CCBBE2D892193008E0296 /* Frameworks */,
+				DA0CCBBF2D892193008E0296 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				DA0CCBC62D892193008E0296 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				DA0CCBC22D892193008E0296 /* IKEHGitHubAPIDemoTests */,
+			);
+			name = IKEHGitHubAPIDemoTests;
+			packageProductDependencies = (
+			);
+			productName = IKEHGitHubAPIDemoTests;
+			productReference = DA0CCBC12D892193008E0296 /* IKEHGitHubAPIDemoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		DA12C5CD2D252C6600296345 /* IKEHGitHubAPIDemo */ = {
 			isa = PBXNativeTarget;
@@ -189,6 +234,10 @@
 						CreatedOnToolsVersion = 16.2;
 						TestTargetID = DA12C5CD2D252C6600296345;
 					};
+					DA0CCBC02D892193008E0296 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = DA12C5CD2D252C6600296345;
+					};
 					DA12C5CD2D252C6600296345 = {
 						CreatedOnToolsVersion = 16.2;
 					};
@@ -222,12 +271,20 @@
 			targets = (
 				DA12C5CD2D252C6600296345 /* IKEHGitHubAPIDemo */,
 				DA09FD2C2D5F11DF0078A0AF /* IKEHGitHubAPIDemoUITests */,
+				DA0CCBC02D892193008E0296 /* IKEHGitHubAPIDemoTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		DA09FD2B2D5F11DF0078A0AF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA0CCBBF2D892193008E0296 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -246,6 +303,13 @@
 
 /* Begin PBXSourcesBuildPhase section */
 		DA09FD292D5F11DF0078A0AF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA0CCBBD2D892193008E0296 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -271,6 +335,11 @@
 			isa = PBXTargetDependency;
 			target = DA12C5CD2D252C6600296345 /* IKEHGitHubAPIDemo */;
 			targetProxy = DA09FD332D5F11DF0078A0AF /* PBXContainerItemProxy */;
+		};
+		DA0CCBC62D892193008E0296 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DA12C5CD2D252C6600296345 /* IKEHGitHubAPIDemo */;
+			targetProxy = DA0CCBC52D892193008E0296 /* PBXContainerItemProxy */;
 		};
 		DAFB9FC72D5DDBA500474FF5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -314,6 +383,47 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = IKEHGitHubAPIDemo;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		DA0CCBC72D892193008E0296 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BWMJMJK727;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ikeh1024.IKEHGitHubAPIDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IKEHGitHubAPIDemo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/IKEHGitHubAPIDemo";
+			};
+			name = Debug;
+		};
+		DA0CCBC82D892193008E0296 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = BWMJMJK727;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ikeh1024.IKEHGitHubAPIDemoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/IKEHGitHubAPIDemo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/IKEHGitHubAPIDemo";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -522,6 +632,15 @@
 			buildConfigurations = (
 				DA09FD362D5F11DF0078A0AF /* Debug */,
 				DA09FD372D5F11DF0078A0AF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA0CCBC92D892193008E0296 /* Build configuration list for PBXNativeTarget "IKEHGitHubAPIDemoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA0CCBC72D892193008E0296 /* Debug */,
+				DA0CCBC82D892193008E0296 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

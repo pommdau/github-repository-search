@@ -16,7 +16,7 @@ extension GitHubAPIClient {
     /// ブラウザ上でログインページを開く
     @MainActor
     func openLoginPageInBrowser() async throws {
-        await tokenStore.addLastLoginStateID(UUID().uuidString) // 多重ログイン防止のためログインセッションのIDを記録
+        await tokenStore.updateLastLoginStateID(UUID().uuidString) // 多重ログイン防止のためログインセッションのIDを記録
         let request = await GitHubAPIRequest.LoginPage(
             clientID: clientID,
             lastLoginStateID: tokenStore.lastLoginStateID

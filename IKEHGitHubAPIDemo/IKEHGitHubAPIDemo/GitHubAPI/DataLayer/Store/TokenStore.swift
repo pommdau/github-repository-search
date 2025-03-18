@@ -5,51 +5,46 @@
 //  Created by HIROKI IKEUCHI on 2025/01/20.
 //
 
-import Foundation
 import SwiftUI
 import KeychainAccess
 
-enum KeychainConstant {
-    enum Service {
-        static let oauth = "com.ikehgithubapi.oauth"
-    }
-    
-    enum Key {
-        static let accessToken = "ikehgithubapi-access-token"
-    }
+protocol TokenStoreProtocol {
+    static var shared: Self { get }
+    var accessToken: String? { get set }
+    var accessTokenExpiresAt: Date? { get set }
+    var lastLoginStateID: String { get set }
+    func updateTokens(accessToken: String?, accessTokenExpiresAt: Date?)
+    func updateLastLoginStateID(_ setLastLoginStateID: String)
+    func deleteAll()
 }
 
 final actor TokenStore {
     
+    /// シングルトン用インスタンス
     static let shared: TokenStore = .init()
         
-    // MARK: - Property
+    // MARK: - Property(Public)
     
-    let keychain = Keychain(service: KeychainConstant.Service.oauth)
-    
-    // 最新のログインセッションID
-    @AppStorage("ikehgithubapi-last-login-state-id") 
-    @MainActor var lastLoginStateID: String = ""
-
+    /// アクセストークン
     var accessToken: String? {
         didSet {
-            keychain[KeychainConstant.Key.accessToken] = accessToken
+            keychain[Keychain.Constant.Key.accessToken] = accessToken
         }
     }
     
+    /// アクセストークンの有効期限(1年間)
     @AppStorage("ikehgithubapi-access-token-expires-at")
     var accessTokenExpiresAt: Date?
     
-    // 認証ユーザの情報をAPIで利用する場合があるため、ここのプロパティで管理する
-    var loginUser: LoginUser? {
-        didSet {
-            UserDefaults.standard.setCodableItem(loginUser, forKey: "ikehgithubapi-login-user")
-        }
-    }
+    /// 最後のログインセッションID
+    @AppStorage("ikehgithubapi-last-login-state-id")
+    @MainActor var lastLoginStateID: String = ""
     
-    // MARK: - Computed Properry
+    // MARK: - Property(Private)
     
-    /// 有効なアクセストークンがあるか
+    private let keychain = Keychain(service: Keychain.Constant.Service.oauth)
+    
+    /// 有効なアクセストークンがあるかどうか
     var isAccessTokenValid: Bool {
         if accessToken != nil,
            let accessTokenExpiresAt {
@@ -63,8 +58,7 @@ final actor TokenStore {
     
     private init() {
         // 保存されている値の読込
-        self.accessToken = keychain[KeychainConstant.Key.accessToken]
-        self.loginUser = UserDefaults.standard.codableItem(forKey: "ikehgithubapi-login-user")
+        self.accessToken = keychain[Keychain.Constant.Key.accessToken]
     }
 }
 
@@ -87,7 +81,7 @@ extension TokenStore {
     }
     
     @MainActor
-    func addLastLoginStateID(_ setLastLoginStateID: String) {
+    func updateLastLoginStateID(_ setLastLoginStateID: String) {
         self.lastLoginStateID = setLastLoginStateID
     }
     

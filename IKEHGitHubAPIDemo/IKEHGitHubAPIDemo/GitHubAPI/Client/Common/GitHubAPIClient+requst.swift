@@ -84,7 +84,6 @@ extension GitHubAPIClient {
         }
         
         print(String(data: data, encoding: .utf8)!)
-        printFormattedJSON(data)
         
         return (data, httpResponse)
     }

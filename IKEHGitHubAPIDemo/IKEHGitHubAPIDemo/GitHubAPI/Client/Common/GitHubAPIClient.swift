@@ -8,13 +8,23 @@
 import Foundation
 import SwiftUI
 
+protocol GitHubAPIClientProtocol {
+    static var shared: Self { get }
+//    func searchRepos(keyword: String) async throws -> [Repo]
+}
+
+final actor GitHubAPIClientStub: GitHubAPIClientProtocol {
+    static let shared: GitHubAPIClientStub = .init()
+//    var continuation: CheckedContinuation<>
+}
+
 final actor GitHubAPIClient {
     
     let clientID: String
     let clientSecret: String
     private(set) var urlSession: URLSession
     private(set) var tokenStore: TokenStore
-            
+    
     init(
         clientID: String,
         clientSecret: String,
