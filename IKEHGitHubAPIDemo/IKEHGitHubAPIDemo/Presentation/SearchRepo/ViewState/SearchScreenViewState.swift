@@ -12,16 +12,11 @@ import SwiftUI
 @Observable
 final class SearchScreenViewState {
     
-    // MARK: - Property
-    
-    // MARK: 検索条件
-    
+    // MARK: - Property (Public)
+        
     var searchText: String = "Swift"
     var sortedBy: SearchReposSortedBy = .bestMatch
-                
-    // MARK: 検索結果
-    
-    private var asyncRepoIDs: AsyncValues<Repo.ID, Error> = .initial
+    var error: Error?
     
     var asyncRepos: AsyncValues<Repo, Error> {
         let repos = asyncRepoIDs.values.compactMap { repoStore.valuesDic[$0] }
@@ -39,17 +34,20 @@ final class SearchScreenViewState {
         }
     }
     
-    private var relationLink: RelationLink?
-    var error: Error?
-    
-    // MARK: その他
-    
-    private(set) var searchTask: Task<(), Never>?
+    // MARK: - Property (Private)
         
-    let gitHubAPIClient: GitHubAPIClient
-    let repoStore: RepoStore
-    let loginUserStore: LoginUserStore
-    let searchSuggestionStore: SearchSuggestionStore
+    // MARK: DI
+        
+    private let gitHubAPIClient: GitHubAPIClient
+    private let repoStore: RepoStore
+    private let loginUserStore: LoginUserStore
+    private let searchSuggestionStore: SearchSuggestionStore
+    
+    // MARK: Others
+    
+    private var asyncRepoIDs: AsyncValues<Repo.ID, Error> = .initial
+    private var relationLink: RelationLink?
+    private var searchTask: Task<(), Never>?
     
     // MARK: - LifeCycle
     
@@ -71,17 +69,13 @@ extension SearchScreenViewState {
     
     /// 通常の語句検索
     func handleSearch() {
-        // すでに検索中であれば何もしない
-        if case .loading = asyncRepos {
+        // 「すでに検索中」「検索ワード未入力」の場合は何もしない
+        if case .loading = asyncRepos,
+           searchText.isEmpty {
             return
         }
         
-        // 検索ワード未入力の場合
-        if searchText.isEmpty {
-            return
-        }
-        searchSuggestionStore.addHistory(searchText) // 検索履歴の保存
-        
+        searchSuggestionStore.addHistory(searchText) // 検索履歴へ保存
         asyncRepoIDs = .loading(asyncRepoIDs.values)
         relationLink = nil
         
@@ -156,20 +150,22 @@ extension SearchScreenViewState {
     /// ソート順が変更された際の再検索
     func handleSortedByChanged() {
         
-        // 検索済み以外は何もしない
-        // 有効な検索結果がなければ何もしない
-        // リンク情報がなければ何もしない(TODO: 見直せるかも)
+        // 「検索済みではない」「リンク情報がない」場合は何もしない
         guard case .loaded = asyncRepos,
-              !asyncRepos.values.isEmpty,
               let nextLink = relationLink?.next,
               let query = nextLink.queryItems["q"]
         else {
+            return
+        }
+        //「有効な検索結果がない」場合は何もしない
+        if asyncRepos.values.isEmpty {
             return
         }
         
         asyncRepoIDs = .loading(asyncRepoIDs.values)
         searchTask = Task {
             do {
+                // 検索: 成功
                 let response = try await gitHubAPIClient.searchRepos(searchText: query, sort: sortedBy.sort, order: sortedBy.order)
                 try await repoStore.addValues(response.items, updateStarred: false)
                 withAnimation {
@@ -177,6 +173,7 @@ extension SearchScreenViewState {
                 }
                 relationLink = response.relationLink
             } catch {
+                // 検索: 失敗
                 if Task.isCancelled {
                     if asyncRepos.values.isEmpty {
                         asyncRepoIDs = .initial
