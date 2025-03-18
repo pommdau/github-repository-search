@@ -8,16 +8,6 @@
 import SwiftUI
 import KeychainAccess
 
-protocol TokenStoreProtocol {
-    static var shared: Self { get }
-    var accessToken: String? { get set }
-    var accessTokenExpiresAt: Date? { get set }
-    var lastLoginStateID: String { get set }
-    func updateTokens(accessToken: String?, accessTokenExpiresAt: Date?)
-    func updateLastLoginStateID(_ setLastLoginStateID: String)
-    func deleteAll()
-}
-
 final actor TokenStore {
     
     /// シングルトン用インスタンス
