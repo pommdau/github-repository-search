@@ -10,11 +10,11 @@ import KeychainAccess
 extension Keychain {
     enum Constant {
         enum Service {
-            static let oauth = "com.ikehgithubapi.oauth"
+            static let oauth = "com.ikeh1024.IKEHGitHubAPIDemo.oauth"
         }
         
         enum Key {
-            static let accessToken = "ikehgithubapi-access-token"
+            static let accessToken = "com.ikeh1024.IKEHGitHubAPIDemo.accessToken"
         }
     }
 }

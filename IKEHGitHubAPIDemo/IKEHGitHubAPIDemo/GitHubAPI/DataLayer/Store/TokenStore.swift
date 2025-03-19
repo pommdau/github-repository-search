@@ -8,8 +8,11 @@
 import SwiftUI
 import KeychainAccess
 
+// https://zenn.dev/kntk/scraps/0c3f6014bcad33
+extension UserDefaults: @unchecked Sendable {}
+
 final actor TokenStore {
-    
+                
     /// シングルトン用インスタンス
     static let shared: TokenStore = .init()
         
@@ -23,17 +26,20 @@ final actor TokenStore {
     }
     
     /// アクセストークンの有効期限(1年間)
-    @AppStorage("ikehgithubapi-access-token-expires-at")
-    var accessTokenExpiresAt: Date?
+    var accessTokenExpiresAt: Date? {
+        didSet {
+            userDefaults.set(accessTokenExpiresAt, forKey: "TokenStore.accessTokenExpiresAt")
+        }
+    }
     
     /// 最後のログインセッションID
-    @AppStorage("ikehgithubapi-last-login-state-id")
-    @MainActor var lastLoginStateID: String = ""
+    @MainActor var lastLoginStateID = ""
     
     // MARK: - Property(Private)
     
-    private let keychain = Keychain(service: Keychain.Constant.Service.oauth)
-    
+    private let keychain: Keychain
+    private let userDefaults: UserDefaults
+     
     /// 有効なアクセストークンがあるかどうか
     var isAccessTokenValid: Bool {
         if accessToken != nil,
@@ -45,10 +51,18 @@ final actor TokenStore {
     }
     
     // MARK: - LifeCycle
-    
-    private init() {
-        // 保存されている値の読込
-        self.accessToken = keychain[Keychain.Constant.Key.accessToken]
+            
+    init(
+        keyChain: Keychain = Keychain(service: Keychain.Constant.Service.oauth),
+        userDefaults: UserDefaults = .standard
+    ) {
+        // DI
+        self.keychain = keyChain
+        self.userDefaults = userDefaults
+        
+        // 保存値の復元
+        self.accessToken = self.keychain[Keychain.Constant.Key.accessToken]
+        self.accessTokenExpiresAt = self.userDefaults.value(forKey: "TokenStore.accessTokenExpiresAt") as? Date
     }
 }
 
