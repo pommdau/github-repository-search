@@ -9,6 +9,17 @@ import XCTest
 import KeychainAccess
 @testable import IKEHGitHubAPIDemo
 
+extension UserDefaults {
+    static func plistURL(suitName: String) -> URL? {
+        guard let libraryURL = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        return libraryURL
+            .appendingPathComponent("Preferences")
+            .appendingPathComponent("\(suitName).plist")
+    }
+}
+
 final class TokenStoreTests: XCTestCase {
     
     // MARK: - Property
@@ -31,8 +42,10 @@ final class TokenStoreTests: XCTestCase {
     
     // MARK: - SetUp/TearDown(Instalce)
     
+    static let userDefaultsSuiteName = "TokenStoreTests"
+    
     let keyChain = Keychain(service: "TokenStoreTests")
-    let userDefaults = UserDefaults(suiteName: "TokenStoreTests")!
+    let userDefaults = UserDefaults(suiteName: TokenStoreTests.userDefaultsSuiteName)!
     
     override func setUp() async throws {
         try await super.setUp()
@@ -44,10 +57,24 @@ final class TokenStoreTests: XCTestCase {
     
     override func tearDown() async throws {
         try await super.tearDown()
-        
         sut = nil
         try keyChain.removeAll()
-        UserDefaults().removeSuite(named: "TokenStoreTests")
+        try resetUserDefaultsForTest(suitName: Self.userDefaultsSuiteName)
+    }
+    
+    func resetUserDefaultsForTest(suitName: String) throws {
+        /*
+         https://developer.apple.com/documentation/foundation/userdefaults/1417339-removepersistentdomain
+         removeObject(forKey:)を回すのと同等の処理
+         */
+        // 保存した値の削除
+        UserDefaults().removePersistentDomain(forName: suitName)
+        
+        // plistファイルの削除
+        if let url = UserDefaults.plistURL(suitName: suitName),
+           FileManager.default.fileExists(atPath: url.path()) {
+            try FileManager.default.removeItem(at: url)
+        }
     }
                 
 }
