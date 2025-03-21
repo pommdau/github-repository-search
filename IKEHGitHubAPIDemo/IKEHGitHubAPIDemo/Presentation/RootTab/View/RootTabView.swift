@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RootTabView: View {
     
+    /// 選択中のタブ
     @AppStorage("roottabview-selected-tab")
     private var selectedTab: RootTabType = .profile
     

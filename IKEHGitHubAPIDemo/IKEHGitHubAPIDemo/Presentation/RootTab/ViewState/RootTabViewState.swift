@@ -32,7 +32,8 @@ final class RootTabViewState {
     func handleOnCallbackURL(_ url: URL) {
         Task {
             do {
-                let loginUser = try await githubAPIClient.handleLoginCallBackURL(url)
+                try await githubAPIClient.handleLoginCallBackURL(url)
+                let loginUser = try await githubAPIClient.fetchLoginUser()                
                 withAnimation {
                     loginUserStore.addValue(loginUser)
                 }

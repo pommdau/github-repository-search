@@ -10,12 +10,34 @@ import SwiftUI
 
 protocol GitHubAPIClientProtocol {
     static var shared: Self { get }
-//    func searchRepos(keyword: String) async throws -> [Repo]
+    func searchRepos(searchText: String, page: Int?, sort: String?, order: String?) async throws -> SearchResponse<Repo>
+
+    func fetchStarredRepos(
+        userName: String,
+        sort: String?,
+        direction: String?
+    ) async throws -> StarredReposResponse
 }
 
 final actor GitHubAPIClientStub: GitHubAPIClientProtocol {
     static let shared: GitHubAPIClientStub = .init()
-//    var continuation: CheckedContinuation<>
+    
+    var searchReposContinuation: CheckedContinuation<SearchResponse<Repo>, Error>?
+    
+    func searchRepos(searchText: String, page: Int? = nil, sort: String? = nil, order: String? = nil) async throws -> SearchResponse<Repo> {
+        try await withCheckedThrowingContinuation { continuation in
+            searchReposContinuation = continuation
+        }
+    }
+    
+    func fetchStarredRepos(
+        userName: String,
+        sort: String? = nil,
+        direction: String? = nil
+    ) async throws -> StarredReposResponse {
+        return .init(repos: Repo.Mock.random(count: 10))
+    }
+    
 }
 
 final actor GitHubAPIClient {

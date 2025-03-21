@@ -1,8 +1,8 @@
 //
-//  GitHubAPIClient+Search.swift
+//  GitHubAPIClient+FetchRepos.swift
 //  IKEHGitHubAPIDemo
 //
-//  Created by HIROKI IKEUCHI on 2025/01/27.
+//  Created by HIROKI IKEUCHI on 2025/03/21.
 //
 
 import Foundation
@@ -18,7 +18,13 @@ extension GitHubAPIClient {
             page: page,
             perPage: 10
         )
-        let response = try await sendRequest(with: request)
+        let response = try await performRequest(with: request)
+        return response
+    }
+    
+    func fetchUserRepos(userName: String, page: Int? = nil) async throws -> ListResponse<Repo> {
+        let request = await GitHubAPIRequest.FetchUserRepos(accessToken: tokenStore.accessToken, userName: userName, page: page)
+        let response = try await performRequest(with: request)
         return response
     }
 }

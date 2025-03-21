@@ -6,16 +6,42 @@
 //
 
 import Foundation
-import Foundation
+@testable import IKEHGitHubAPIDemo
 
-@MainActor
-protocol TokenStoreProtocol: AnyObject {
-    var accessToken: String? { get set }
-    var accessTokenExpiresAt: Date? { get set }
-    var isAccessTokenValid: Bool { get }
-    var lastLoginStateID: String { get set }
+//protocol TokenStoreProtocol: Actor {
+//    var accessToken: String? { get set }
+//    var accessTokenExpiresAt: Date? { get set }
+//    var isAccessTokenValid: Bool { get }
+//    var lastLoginStateID: String { get set }
+//
+//    func updateTokens(accessToken: String?, accessTokenExpiresAt: Date?)
+//    func updateLastLoginStateID(_ setLastLoginStateID: String)
+//    func deleteAll()
+//}
 
-    func updateTokens(accessToken: String?, accessTokenExpiresAt: Date?)
-    func updateLastLoginStateID(_ setLastLoginStateID: String)
-    func deleteAll()
+final actor TokenStoreStub: TokenStoreProtocol {
+    var accessToken: String?
+    
+    var accessTokenExpiresAt: Date?
+    
+    var isAccessTokenValid: Bool = false
+    
+    @MainActor var lastLoginStateID: String = ""
+    
+    func updateTokens(accessToken: String?, accessTokenExpiresAt: Date?) {
+            
+    }
+    
+    @MainActor
+    func updateLastLoginStateID(_ setLastLoginStateID: String) {
+        
+    }
+    
+    func deleteAll() {
+        
+    }
+    
+
+    
+    
 }

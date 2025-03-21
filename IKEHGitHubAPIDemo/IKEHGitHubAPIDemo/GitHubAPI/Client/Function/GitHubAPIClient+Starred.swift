@@ -15,6 +15,7 @@ extension GitHubAPIClient {
         sort: String? = nil,
         direction: String? = nil
     ) async throws -> StarredReposResponse {
+                
         // TODO: fix
         let request = await GitHubAPIRequest.FetchStarredRepos(
             userName: userName,
@@ -22,7 +23,7 @@ extension GitHubAPIClient {
             sort: sort,
             direction: direction
         )
-        let response = try await sendRequest(with: request)
+        let response = try await performRequest(with: request)
         return response
     }
     
@@ -35,7 +36,7 @@ extension GitHubAPIClient {
             link: link,
             accessToken: tokenStore.accessToken
         )
-        let response = try await sendRequest(with: request)
+        let response = try await performRequest(with: request)
         return response
     }
     
@@ -48,7 +49,7 @@ extension GitHubAPIClient {
         )
         
         do {
-            try await sendRequestWithoutResponseData(with: request)
+            try await performRequestWithoutResponse(with: request)
         } catch {
             switch error {
             case let GitHubAPIClientError.apiError(error):
@@ -71,7 +72,7 @@ extension GitHubAPIClient {
         )
         print(request)
         do {
-            try await sendRequestWithoutResponseData(with: request)
+            try await performRequestWithoutResponse(with: request)
         } catch {
             switch error {
             case let GitHubAPIClientError.apiError(error):
@@ -92,7 +93,7 @@ extension GitHubAPIClient {
             repoName: repoName
         )        
         do {
-            try await sendRequestWithoutResponseData(with: request)
+            try await performRequestWithoutResponse(with: request)
         } catch {
             switch error {
             case let GitHubAPIClientError.apiError(error):

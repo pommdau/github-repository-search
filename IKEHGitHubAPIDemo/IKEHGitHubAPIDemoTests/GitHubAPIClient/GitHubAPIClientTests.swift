@@ -1,21 +1,32 @@
 //
-//  SearchScreenViewStateTests.swift
+//  GitHubAPIClientTests.swift
 //  IKEHGitHubAPIDemoTests
 //
-//  Created by HIROKI IKEUCHI on 2025/03/18.
+//  Created by HIROKI IKEUCHI on 2025/03/21.
 //
 
 import XCTest
 @testable import IKEHGitHubAPIDemo
 
-final class SearchScreenViewStateTests: XCTestCase {
+final class GitHubAPIClientTests: XCTestCase {
     
-//    private var sut: SearchScreenViewState = .init(
-//        gitHubAPIClient: <#T##GitHubAPIClient#>,
-//        repoStore: <#T##RepoStore#>,
-//        loginUserStore: <#T##LoginUserStore#>,
-//        searchSuggestionStore: <#T##SearchSuggestionStore#>
-//    )
+    // MARK: - Property
+    
+    private var sut: GitHubAPIClient!
+    
+    // MARK: - SetUp
+    
+    override func setUp() async throws {
+        try await super.setUp()
+//        sut = .init(clientID: "", clientSecret: "", urlSession: <#T##URLSession#>, tokenManager: <#T##TokenStore#>)
+    }
+    
+    // MARK: - Teardown
+    
+    override func tearDown() async throws {
+        try await super.tearDown()
+        sut = nil
+    }
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
