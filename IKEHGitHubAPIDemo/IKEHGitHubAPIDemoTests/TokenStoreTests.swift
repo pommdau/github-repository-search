@@ -24,28 +24,13 @@ final class TokenStoreTests: XCTestCase {
     
     // MARK: - Property
     
-    private var sut: TokenStore! // sut: System Under Test
-    
-    // MARK: - SetUp/TearDown(Class)
-        
-//    class func setUp() async throws {
-//        if let backupUserDefaults = UserDefaults.standard.copy() as? UserDefaults {
-//            self.backupUserDefaults = backupUserDefaults
-//        }
-//    }
-//    
-//    class func tearDown() async throws {
-//        if let backupUserDefaults {
-//
-//        }
-//    }
-    
-    // MARK: - SetUp/TearDown(Instalce)
     
     static let userDefaultsSuiteName = "TokenStoreTests"
-    
-    let keyChain = Keychain(service: "TokenStoreTests")
-    let userDefaults = UserDefaults(suiteName: TokenStoreTests.userDefaultsSuiteName)!
+    private var sut: TokenStore! // sut: System Under Test
+    private let keyChain = Keychain(service: "TokenStoreTests")
+    private let userDefaults = UserDefaults(suiteName: TokenStoreTests.userDefaultsSuiteName)!
+            
+    // MARK: - SetUp
     
     override func setUp() async throws {
         try await super.setUp()
@@ -54,6 +39,8 @@ final class TokenStoreTests: XCTestCase {
             userDefaults: userDefaults
         )
     }
+    
+    // MARK: - Teardown
     
     override func tearDown() async throws {
         try await super.tearDown()
@@ -70,7 +57,7 @@ final class TokenStoreTests: XCTestCase {
         // 保存した値の削除
         UserDefaults().removePersistentDomain(forName: suitName)
         
-        // plistファイルの削除
+        // plistファイルの削除(removePersistentDomainではキー/値の削除しかされないため)
         if let url = UserDefaults.plistURL(suitName: suitName),
            FileManager.default.fileExists(atPath: url.path()) {
             try FileManager.default.removeItem(at: url)

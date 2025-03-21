@@ -8,10 +8,43 @@
 import SwiftUI
 import KeychainAccess
 
-// https://zenn.dev/kntk/scraps/0c3f6014bcad33
-extension UserDefaults: @unchecked Sendable {}
+protocol TokenStoreProtocol: Actor {
+    var accessToken: String? { get set }
+    var accessTokenExpiresAt: Date? { get set }
+    var isAccessTokenValid: Bool { get }
+    @MainActor var lastLoginStateID: String { get set }
+    
+    func updateTokens(accessToken: String?, accessTokenExpiresAt: Date?)
+    @MainActor
+    func updateLastLoginStateID(_ setLastLoginStateID: String)
+    func deleteAll()
+}
 
-final actor TokenStore {
+/*
+final actor TokenStoreStub: TokenStoreProtocol {
+    var accessToken: String?
+    var accessTokenExpiresAt: Date?
+    var isAccessTokenValid: Bool = true
+    var lastLoginStateID: String = ""
+    
+    func updateTokens(accessToken: String?, accessTokenExpiresAt: Date?) {
+        
+    }
+    
+    func updateLastLoginStateID(_ setLastLoginStateID: String) {
+        
+    }
+    
+    func deleteAll() {
+        
+    }
+}
+*/
+ 
+// https://zenn.dev/kntk/scraps/0c3f6014bcad33
+//extension UserDefaults: @unchecked Sendable {}
+
+final actor TokenStore: TokenStoreProtocol {
                 
     /// シングルトン用インスタンス
     static let shared: TokenStore = .init()
