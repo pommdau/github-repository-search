@@ -7,6 +7,30 @@
 
 import Foundation
 
+// TODO: check
+protocol LoginUserStoreProtocol: Actor {
+    var value: LoginUser? { get }
+    func addValue(_ loginUser: LoginUser)
+    func deleteValue()
+}
+
+@MainActor
+@Observable
+final class LoginUserStoreStub {
+    
+    static let shared: LoginUserStoreStub = .init()
+
+    var value: LoginUser?
+
+    func addValue(_ loginUser: LoginUser) {
+        value = loginUser
+    }
+    
+    func deleteValue() {
+        value = nil
+    }
+}
+
 @MainActor
 @Observable
 final class LoginUserStore {

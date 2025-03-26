@@ -58,11 +58,6 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		DA09FD2E2D5F11DF0078A0AF /* IKEHGitHubAPIDemoUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = IKEHGitHubAPIDemoUITests;
-			sourceTree = "<group>";
-		};
 		DA0CCBC22D892193008E0296 /* IKEHGitHubAPIDemoTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = IKEHGitHubAPIDemoTests;
@@ -120,7 +115,6 @@
 				DA09FF9B2D65CB0B0078A0AF /* README.md */,
 				DAFB9FC22D5DD98600474FF5 /* .swiftlint.yml */,
 				DA12C5D02D252C6600296345 /* IKEHGitHubAPIDemo */,
-				DA09FD2E2D5F11DF0078A0AF /* IKEHGitHubAPIDemoUITests */,
 				DA0CCBC22D892193008E0296 /* IKEHGitHubAPIDemoTests */,
 				DA12C5CF2D252C6600296345 /* Products */,
 			);
@@ -151,9 +145,6 @@
 			);
 			dependencies = (
 				DA09FD342D5F11DF0078A0AF /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				DA09FD2E2D5F11DF0078A0AF /* IKEHGitHubAPIDemoUITests */,
 			);
 			name = IKEHGitHubAPIDemoUITests;
 			packageProductDependencies = (

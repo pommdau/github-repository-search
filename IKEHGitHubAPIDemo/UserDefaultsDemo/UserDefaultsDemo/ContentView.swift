@@ -4,21 +4,8 @@
 //
 //  Created by HIROKI IKEUCHI on 2025/03/19.
 //
-//  [【Swift】UserDefaultsをもう少しちゃんと理解する #iOS - Qiita](https://qiita.com/tanaka-tt/items/ab6c5bc2983a32b11fe3)
-//  [removePersistentDomain(forName:) | Apple Developer Documentation](https://developer.apple.com/documentation/foundation/userdefaults/1417339-removepersistentdomain)
-//  [UserDefaultsを含むclassをテストするtips #Swift - Qiita](https://qiita.com/ARATAYOKOYAMA/items/e92c39bf20bd5aea5be6)
-import SwiftUI
 
-extension UserDefaults {
-    static func plistURL(suitName: String) -> URL? {
-        guard let libraryURL = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first else {
-            return nil
-        }
-        return libraryURL
-            .appendingPathComponent("Preferences")
-            .appendingPathComponent("\(suitName).plist")
-    }
-}
+import SwiftUI
 
 struct ContentView: View {
     
@@ -35,9 +22,6 @@ struct ContentView: View {
     
     var body: some View {
         Form {
-            Section("Result") {
-                LabeledContent("Name", value: name)
-            }
             
             Section("Standard") {
                 Button("Load") {
@@ -60,13 +44,11 @@ struct ContentView: View {
                     guard let identifier = Bundle.main.bundleIdentifier else {
                         fatalError()
                     }
-                    print("identifier: \(identifier)")
                     UserDefaults().removePersistentDomain(forName: identifier)
-//                    UserDefaults.standard.removePersistentDomain(forName: Bundle.main.bundleIdentifier!)
                 }
             }
             
-            Section("Debug") {
+            Section("Secondary") {
                 
                 Button("Load") {
                     name = userDefaultsSecondary.string(forKey: "name") ?? "(nil)"
@@ -82,7 +64,7 @@ struct ContentView: View {
                     }
                     print(url.path)
                 }
-
+                
                 Button("Delete", role: .destructive) {
                     /*
                      https://developer.apple.com/documentation/foundation/userdefaults/1417339-removepersistentdomain
@@ -102,9 +84,22 @@ struct ContentView: View {
             }
         }
         .padding()
-    }
+    }        
 }
 
 #Preview {
     ContentView()
+}
+
+// MARK: - UserDefaults+
+
+extension UserDefaults {
+    static func plistURL(suitName: String) -> URL? {
+        guard let libraryURL = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        return libraryURL
+            .appendingPathComponent("Preferences")
+            .appendingPathComponent("\(suitName).plist")
+    }
 }

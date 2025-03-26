@@ -1,5 +1,5 @@
 //
-//  GitHubAPIClient+Authrization.swift
+//  GitHubAPIClient+Authorization.swift
 //  IKEHGitHubAPIDemo
 //
 //  Created by HIROKI IKEUCHI on 2025/03/21.

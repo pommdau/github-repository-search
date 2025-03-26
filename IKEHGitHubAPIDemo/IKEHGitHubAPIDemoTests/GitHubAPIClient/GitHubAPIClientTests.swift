@@ -19,6 +19,8 @@ final class GitHubAPIClientTests: XCTestCase {
     override func setUp() async throws {
         try await super.setUp()
 //        sut = .init(clientID: "", clientSecret: "", urlSession: <#T##URLSession#>, tokenManager: <#T##TokenStore#>)
+                
+        sut = .init(clientID: "", clientSecret: "", urlSession: <#T##URLSession#>, tokenManager: TokenStoreStub())
     }
     
     // MARK: - Teardown

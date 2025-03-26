@@ -16,7 +16,10 @@ import Foundation
 import HTTPTypes
 
 /// GitHubAPIClientのテストで使用するURLSessionのStub
-class URLSessionStub: URLSessionProtocol {
+final class URLSessionStub: URLSessionProtocol {
+    
+    // MARK: - Property
+        
     private let stubbedData: Data?
     private let stubbedResponse: HTTPResponse?
     private let stubbedError: Error?
@@ -33,7 +36,7 @@ class URLSessionStub: URLSessionProtocol {
         self.stubbedError = error
     }
     
-    // MARK: - URLSessionProtocol
+    // MARK: - Methods
                   
     func data(for request: HTTPRequest) async throws -> (Data, HTTPResponse) {
         // エラーを投げる場合

@@ -1,21 +1,20 @@
 //
-//  RepoStore.swift
-//  IKEHGitHubAPIDemo
+//  RepoStoreStub.swift
+//  IKEHGitHubAPIDemoTests
 //
-//  Created by HIROKI IKEUCHI on 2025/01/29.
+//  Created by HIROKI IKEUCHI on 2025/03/21.
 //
 
-import SwiftUI
+import Foundation
 
 @MainActor
 @Observable
-final class RepoStore {
+final class RepoStoreStub {
     
     // MARK: - Property
     
-    static let shared: RepoStore = .init()
+    static let shared: RepoStoreStub = .init()
 
-    let repository: RepoRepository
     var valuesDic: [Repo.ID: Repo] = [:]
     
     var repos: [Repo] {
@@ -26,9 +25,6 @@ final class RepoStore {
 
     init(repository: RepoRepository) {
         self.repository = repository
-        Task {
-            try? await self.fetchValues()
-        }
     }
     
     convenience init() {

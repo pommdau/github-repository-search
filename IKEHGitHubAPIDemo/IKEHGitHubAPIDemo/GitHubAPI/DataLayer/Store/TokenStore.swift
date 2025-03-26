@@ -19,27 +19,6 @@ protocol TokenStoreProtocol: Actor {
     func updateLastLoginStateID(_ setLastLoginStateID: String)
     func deleteAll()
 }
-
-/*
-final actor TokenStoreStub: TokenStoreProtocol {
-    var accessToken: String?
-    var accessTokenExpiresAt: Date?
-    var isAccessTokenValid: Bool = true
-    var lastLoginStateID: String = ""
-    
-    func updateTokens(accessToken: String?, accessTokenExpiresAt: Date?) {
-        
-    }
-    
-    func updateLastLoginStateID(_ setLastLoginStateID: String) {
-        
-    }
-    
-    func deleteAll() {
-        
-    }
-}
-*/
  
 // https://zenn.dev/kntk/scraps/0c3f6014bcad33
 //extension UserDefaults: @unchecked Sendable {}

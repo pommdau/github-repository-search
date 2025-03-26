@@ -8,18 +8,10 @@
 import Foundation
 @testable import IKEHGitHubAPIDemo
 
-//protocol TokenStoreProtocol: Actor {
-//    var accessToken: String? { get set }
-//    var accessTokenExpiresAt: Date? { get set }
-//    var isAccessTokenValid: Bool { get }
-//    var lastLoginStateID: String { get set }
-//
-//    func updateTokens(accessToken: String?, accessTokenExpiresAt: Date?)
-//    func updateLastLoginStateID(_ setLastLoginStateID: String)
-//    func deleteAll()
-//}
-
 final actor TokenStoreStub: TokenStoreProtocol {
+    
+    // MARK: - Property
+    
     var accessToken: String?
     
     var accessTokenExpiresAt: Date?
@@ -28,8 +20,9 @@ final actor TokenStoreStub: TokenStoreProtocol {
     
     @MainActor var lastLoginStateID: String = ""
     
+    // MARK: - CRUD
+    
     func updateTokens(accessToken: String?, accessTokenExpiresAt: Date?) {
-        // TODO:
         if let accessToken = accessToken {
             self.accessToken = accessToken
         }
