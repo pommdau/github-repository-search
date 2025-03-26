@@ -51,7 +51,7 @@ extension GitHubAPIClient {
             throw GitHubAPIClientError.connectionError(error)
         }
         
-//        print(String(data: data, encoding: .utf8)!)
+        print(String(data: data, encoding: .utf8)!)
         
         return (data, httpResponse)
     }
@@ -89,7 +89,7 @@ extension GitHubAPIClient {
 //            print(String(data: data, encoding: .utf8)!)
             throw GitHubAPIClientError.responseParseError(error)
         }
-        errorResponse.statusCode = httpResponse.status.code
+//        errorResponse.statusCode = httpResponse.status.code
         throw GitHubAPIClientError.apiError(errorResponse)
     }
     
@@ -107,10 +107,9 @@ extension GitHubAPIClient {
             return
         }
         oAuthError.statusCode = httpResponse.status.code
-        throw GitHubAPIClientError.apiError(oAuthError)
+        throw GitHubAPIClientError.oauthAPIError(oAuthError)
     }
 }
-
 
 // MARK: - レスポンスのデコード
 

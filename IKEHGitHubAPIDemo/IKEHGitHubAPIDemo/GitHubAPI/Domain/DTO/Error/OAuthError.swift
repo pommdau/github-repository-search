@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct OAuthError: GitHubAPIErrorProtocol {
+struct OAuthError: Sendable, Decodable, Error, LocalizedError {
     enum CodingKeys: String, CodingKey {
         case error
         case errorDescriptionPrivate = "error_description"
@@ -17,6 +17,7 @@ struct OAuthError: GitHubAPIErrorProtocol {
     let errorDescriptionPrivate: String
     let errorURI: String?
     
+    // レスポンスヘッダから取得される値
     var statusCode: Int?
     
     // MARK: - LocalizedError

@@ -10,15 +10,35 @@ import Foundation
 
 extension GitHubAPIError {
     enum Mock {
-        static let sampleData: [GitHubAPIError] = [
-            .init(message: "API rate limit exceeded for 121.112.2.169. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting")
-        ]
-        static var missingQueryPatemeterError: GitHubAPIError {
-            .init(message: "Validation Failed",
-                  errors: [
-                    .init(resource: "Search", field: "q", code: "missing")
-                  ]
-            )
+        static var validationFailed: GitHubAPIError {
+            guard let data = JSONString.validationFailed.data(using: .utf8) else {
+                fatalError("Failed to convert JSONString to Data.")
+            }
+            
+            do {
+                return try JSONDecoder().decode(GitHubAPIError.self, from: data)
+            } catch {
+                fatalError(error.localizedDescription)
+            }
         }
+    }
+}
+
+extension GitHubAPIError.Mock {
+    enum JSONString {
+        static let validationFailed = """
+{
+  "message": "Validation Failed",
+  "errors": [
+    {
+      "resource": "Search",
+      "field": "q",
+      "code": "missing"
+    }
+  ],
+  "documentation_url": "https://docs.github.com/v3/search",
+  "status": 422
+}
+"""
     }
 }

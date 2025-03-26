@@ -85,12 +85,79 @@ final class GitHubAPIClientTests: XCTestCase {
         XCTAssert(errorIsExpected, "expected error is .connectionError")
     }
     
-    // MARK: - Helpers
-    
-
+    /// リポジトリの検索: レスポンスのデコードエラー
+    func testSearchReposFailByResponseParseError() async throws {
         
+        // MARK: Given
+        let testData = "test message".data(using: .utf8)
+        let urlSessionStub: URLSessionStub = .init(data: testData, response: .init(status: .ok))
+        let tokenManagerStub: TokenStoreStub = .init()
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        
+        // MARK: When
 
-    
-    
+        var errorIsExpected = false
+        do {
+            _ = try await sut.searchRepos(searchText: "Swift")
+        } catch {
+
+            // MARK: Then
+            
+            guard let clientError = error as? GitHubAPIClientError else {
+                XCTFail("unexpected error: \(error.localizedDescription)")
+                return
+            }
+            switch clientError {
+            case .responseParseError:
+                errorIsExpected = true
+            default:
+                XCTFail("unexpected error: \(error.localizedDescription)")
+            }
+        }
+        XCTAssert(errorIsExpected, "expected error is .responseParseError")
+    }
+//    
+//    /// リポジトリの検索: APIからのエラーレスポンスを受け取った
+//    func testSearchReposFailByGitHubAPIError() async throws {
+//        
+//        // MARK: Given
+//        let testGitHubAPIError: GitHubAPIError = GitHubAPIError.Mock.missingQueryPatemeterError
+//        let testData = try JSONEncoder().encode(testGitHubAPIError)
+//        let urlSessionStub: URLSessionStub = .init(data: testData, response: .init(status: ))
+//        let tokenManagerStub: TokenStoreStub = .init()
+//        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+//        
+//        
+//        // MARK: When
+//
+//        var errorIsExpected = false
+//        do {
+//            _ = try await sut.searchRepos(searchText: "Swift")
+//        } catch {
+//
+//            // MARK: Then
+//            
+//            guard let clientError = error as? GitHubAPIClientError else {
+//                XCTFail("unexpected error: \(error.localizedDescription)")
+//                return
+//            }
+//            switch clientError {
+//            case .responseParseError:
+//                errorIsExpected = true
+//            default:
+//                XCTFail("unexpected error: \(error.localizedDescription)")
+//            }
+//        }
+//        XCTAssert(errorIsExpected, "expected error is .responseParseError")
+//    }
+//    
+//    
+//    // MARK: - Helpers
+//    
+//
+//        
+//
+//    
+//    
 
 }

@@ -9,24 +9,39 @@
 
 import Foundation
 
-struct GitHubAPIError: GitHubAPIErrorProtocol {
+struct GitHubAPIError: Sendable, Decodable, Error, LocalizedError {
+    
+    enum CodingKeys: String, CodingKey {
+        case message
+        case errors
+        case status
+        case documentationPath = "documentation_url"
+    }
         
     struct Error: Decodable {
         var resource: String
         var field: String
         var code: String
     }
-
+    
+    // MARK: - Property
+    
     var message: String  // レスポンスのJSONに必ず含まれる
     var errors: [Error?]?
-
-    // MARK: デコード後に別途付与するパラメータ
+    var status: String
+    var documentationPath: String
     
-    var statusCode: Int?
+    var statusCode: Int {
+        guard let statusCode = Int(status) else {
+            assertionFailure()
+            return 200
+        }
+        return statusCode
+    }
     
     // MARK: - LocalizedError
     
-    var errorDescription: String? {
+    var errorDescription: String {
         return message
     }
 }
