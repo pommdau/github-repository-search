@@ -50,10 +50,6 @@ final class TokenStoreTests: XCTestCase {
     }
     
     func resetUserDefaultsForTest(suitName: String) throws {
-        /*
-         https://developer.apple.com/documentation/foundation/userdefaults/1417339-removepersistentdomain
-         removeObject(forKey:)を回すのと同等の処理
-         */
         // 保存した値の削除
         UserDefaults().removePersistentDomain(forName: suitName)
         

@@ -29,19 +29,23 @@ final actor TokenStoreStub: TokenStoreProtocol {
     @MainActor var lastLoginStateID: String = ""
     
     func updateTokens(accessToken: String?, accessTokenExpiresAt: Date?) {
-            
+        // TODO:
+        if let accessToken = accessToken {
+            self.accessToken = accessToken
+        }
+        if let accessTokenExpiresAt = accessTokenExpiresAt {
+            self.accessTokenExpiresAt = accessTokenExpiresAt
+        }
     }
     
     @MainActor
     func updateLastLoginStateID(_ setLastLoginStateID: String) {
-        
+        self.lastLoginStateID = setLastLoginStateID
     }
     
     func deleteAll() {
-        
+        accessToken = nil
+        accessTokenExpiresAt = nil
     }
-    
-
-    
-    
+        
 }
