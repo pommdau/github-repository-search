@@ -8,5 +8,5 @@
 
 import Foundation
 
-// デフォルトのメソッドのため実装不要
+// デフォルトのメソッドのため実装は不要で準拠だけで良い
 extension URLSession: URLSessionProtocol {}

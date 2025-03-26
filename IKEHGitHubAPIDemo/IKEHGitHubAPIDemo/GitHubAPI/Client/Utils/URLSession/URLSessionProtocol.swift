@@ -13,4 +13,3 @@ protocol URLSessionProtocol: Sendable {
     func data(for request: HTTPRequest) async throws -> (Data, HTTPResponse)
     func upload(for request: HTTPRequest, from bodyData: Data) async throws -> (Data, HTTPResponse)
 }
-

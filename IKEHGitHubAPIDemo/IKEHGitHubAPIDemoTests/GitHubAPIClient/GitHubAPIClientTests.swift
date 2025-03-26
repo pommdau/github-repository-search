@@ -18,9 +18,6 @@ final class GitHubAPIClientTests: XCTestCase {
     
     override func setUp() async throws {
         try await super.setUp()
-//        sut = .init(clientID: "", clientSecret: "", urlSession: <#T##URLSession#>, tokenManager: <#T##TokenStore#>)
-                
-        sut = .init(clientID: "", clientSecret: "", urlSession: <#T##URLSession#>, tokenManager: TokenStoreStub())
     }
     
     // MARK: - Teardown
@@ -29,28 +26,71 @@ final class GitHubAPIClientTests: XCTestCase {
         try await super.tearDown()
         sut = nil
     }
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    // MARK: - OAuth処理
+    
+    // MARK: - 通常処理
+    
+    /// リポジトリの検索: 成功
+    func testSearchReposSuccess() async throws {
+        
+        // MARK: Given
+        
+        let testRepos = Repo.Mock.random(count: 10)
+        let testResponse: SearchResponse<Repo> = .init(totalCount: testRepos.count, items: testRepos)
+        let testData = try JSONEncoder().encode(testResponse)
+        let urlSessionStub: URLSessionStub = .init(data: testData, response: .init(status: .ok))
+        let tokenManagerStub: TokenStoreStub = .init()
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        
+        // MARK: When
+        let response = try await sut.searchRepos(searchText: "Swift")
+        
+        // MARK: Then
+        XCTAssertEqual(
+            testRepos,
+            response.items
+        )
     }
+    
+    /// リポジトリの検索: 通信エラー
+    func testSearchReposFailByCannotConnectTtHost() async throws {
+        
+        // MARK: Given
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+        let urlSessionStub: URLSessionStub = .init(error: URLError(.cannotConnectToHost))
+        let tokenManagerStub: TokenStoreStub = .init()
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
+        // MARK: When
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        var errorIsExpected = false
+        do {
+            _ = try await sut.searchRepos(searchText: "Swift")
+        } catch {
+
+            // MARK: Then
+            
+            guard let clientError = error as? GitHubAPIClientError else {
+                XCTFail("unexpected error: \(error.localizedDescription)")
+                return
+            }
+            switch clientError {
+            case .connectionError:
+                errorIsExpected = true
+            default:
+                XCTFail("unexpected error: \(error.localizedDescription)")
+            }
         }
+        XCTAssert(errorIsExpected, "expected error is .connectionError")
     }
+    
+    // MARK: - Helpers
+    
+
+        
+
+    
+    
 
 }

@@ -42,13 +42,13 @@ final actor GitHubAPIClient {
     let clientID: String
     let clientSecret: String
     private(set) var urlSession: URLSessionProtocol
-    private(set) var tokenStore: TokenStore
+    private(set) var tokenStore: TokenStoreProtocol
     
     init(
         clientID: String,
         clientSecret: String,
         urlSession: URLSessionProtocol = URLSession.shared,
-        tokenManager: TokenStore = TokenStore.shared
+        tokenManager: TokenStoreProtocol = TokenStore.shared
     ) {        
         printUserDefaultsPath()
         self.clientID = clientID

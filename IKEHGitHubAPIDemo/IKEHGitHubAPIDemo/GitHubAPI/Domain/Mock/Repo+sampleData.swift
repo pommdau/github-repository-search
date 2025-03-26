@@ -37,8 +37,7 @@ extension Repo {
                 websitePath: Bool.random() ? "https://\(randomName.lowercased()).com" : nil,
                 description: "This is a random repository.",
                 createdAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
-                updatedAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
-                subscribersCount: Int.random(in: 0...1000)
+                updatedAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10))
             )
         }
         
