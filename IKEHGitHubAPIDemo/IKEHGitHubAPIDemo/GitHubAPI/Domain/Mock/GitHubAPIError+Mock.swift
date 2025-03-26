@@ -11,15 +11,14 @@ import Foundation
 extension GitHubAPIError {
     enum Mock {
         static var validationFailed: GitHubAPIError {
-            guard let data = JSONString.validationFailed.data(using: .utf8) else {
-                fatalError("Failed to convert JSONString to Data.")
-            }
-            
-            do {
-                return try JSONDecoder().decode(GitHubAPIError.self, from: data)
-            } catch {
-                fatalError(error.localizedDescription)
-            }
+            .init(
+                message: "Validation Failed",
+                errors: [
+                    .init(resource: "Search", field: "q", code: "missing")
+                ],
+                status: "422",
+                documentationPath: "https://docs.github.com/v3/search"
+            )
         }
     }
 }
@@ -37,7 +36,7 @@ extension GitHubAPIError.Mock {
     }
   ],
   "documentation_url": "https://docs.github.com/v3/search",
-  "status": 422
+  "status": "422"
 }
 """
     }

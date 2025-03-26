@@ -9,7 +9,7 @@
 
 import Foundation
 
-struct GitHubAPIError: Sendable, Decodable, Error, LocalizedError {
+struct GitHubAPIError: Sendable, Codable, Error, LocalizedError {
     
     enum CodingKeys: String, CodingKey {
         case message
@@ -18,7 +18,8 @@ struct GitHubAPIError: Sendable, Decodable, Error, LocalizedError {
         case documentationPath = "documentation_url"
     }
         
-    struct Error: Decodable {
+    // TODO: 要確認
+    struct Error: Codable {
         var resource: String
         var field: String
         var code: String
