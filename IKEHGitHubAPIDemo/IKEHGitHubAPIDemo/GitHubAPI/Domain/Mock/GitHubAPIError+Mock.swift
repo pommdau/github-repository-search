@@ -8,8 +8,19 @@
 
 import Foundation
 
+// MARK: - Mock
+
 extension GitHubAPIError {
     enum Mock {
+        static var badCredentials: GitHubAPIError {
+            .init(
+                message: "Bad credentials",
+                errors: nil,
+                status: "401",
+                documentationPath: "https://docs.github.com/rest"
+            )
+        }
+        
         static var validationFailed: GitHubAPIError {
             .init(
                 message: "Validation Failed",
@@ -23,8 +34,18 @@ extension GitHubAPIError {
     }
 }
 
+// MARK: - JSONString
+
 extension GitHubAPIError.Mock {
     enum JSONString {
+        static let badCredentials = """
+{
+  "message":"Bad credentials",
+  "documentation_url":"https://docs.github.com/rest",
+  "status":"401"
+}
+"""
+        
         static let validationFailed = """
 {
   "message": "Validation Failed",

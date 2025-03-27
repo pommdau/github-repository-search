@@ -26,11 +26,168 @@ final class GitHubAPIClientTests: XCTestCase {
         try await super.tearDown()
         sut = nil
     }
+}
+
+// MARK: - コールバックURLの受け取り処理のテスト
+
+extension GitHubAPIClientTests {
     
-    // MARK: - OAuth処理
+    @MainActor
+    func testExtactSessionCodeFromCallbackURLSuccess() async throws {
+
+        // MARK: Given
+        let urlSessionStub: URLSessionStub = .init()
+        let tokenManagerStub: TokenStoreStub = .init()
+        let testLastLoginStateID = UUID().uuidString
+        tokenManagerStub.lastLoginStateID = testLastLoginStateID
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        
+        let testSessionCode = "adccb822dd897e2d470e"
+        guard let testURL = URL(string: "ikehgithubapi://callback?code=\(testSessionCode)&state=\(testLastLoginStateID)") else {
+            fatalError("Failed to create URL")
+        }
+        
+        // MARK: When
+        let sessionCode = try await sut.extactSessionCodeFromCallbackURL(testURL)
+        
+        // MARK: Then
+        XCTAssertEqual(
+            testSessionCode,
+            sessionCode
+        )
+    }
     
-    // MARK: - リポジトリの検索(成功/失敗)
+    @MainActor
+    func testExtactSessionCodeFromCallbackURLFailByInvalidURL() async throws {
+
+        // MARK: Given
+        let urlSessionStub: URLSessionStub = .init()
+        let tokenManagerStub: TokenStoreStub = .init()
+        let testLastLoginStateID = UUID().uuidString
+        tokenManagerStub.lastLoginStateID = testLastLoginStateID
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        
+        // クエリパラメータのcodeが不足しているURL
+        let testSessionCode = "adccb822dd897e2d470e"
+        guard let testURL = URL(string: "ikehgithubapi://callback?code=\(testSessionCode)") else {
+            fatalError("Failed to create URL")
+        }
+        
+        // MARK: When
+        var errorIsExpected = false
+        do {
+            _ = try await sut.extactSessionCodeFromCallbackURL(testURL)
+        } catch {
+
+            // MARK: Then
+            
+            guard let clientError = error as? GitHubAPIClientError else {
+                XCTFail("unexpected error: \(error.localizedDescription)")
+                return
+            }
+            switch clientError {
+            case .loginError:
+                errorIsExpected = true
+            default:
+                XCTFail("unexpected error: \(error.localizedDescription)")
+            }
+        }
+        XCTAssert(errorIsExpected, "error is not expected")
+    }
     
+    @MainActor
+    func testExtactSessionCodeFromCallbackURLFailByInvalidLastLoginStateID() async throws {
+
+        // MARK: Given
+        
+        let urlSessionStub: URLSessionStub = .init()
+        let tokenManagerStub: TokenStoreStub = .init()
+        let testLastLoginStateID = UUID().uuidString
+        tokenManagerStub.lastLoginStateID = testLastLoginStateID
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        
+        let testSessionCode = "adccb822dd897e2d470e"
+        guard let testURL = URL(string: "ikehgithubapi://callback?code=\(testSessionCode)&state=\(testLastLoginStateID)") else {
+            fatalError("Failed to create URL")
+        }
+        
+        // MARK: When
+        let sessionCode = try await sut.extactSessionCodeFromCallbackURL(testURL)
+        
+        // MARK: Then
+        XCTAssertEqual(
+            testSessionCode,
+            sessionCode
+        )
+    }
+}
+
+// MARK: - 初回トークン取得のテスト
+
+extension GitHubAPIClientTests {
+    
+    /// 初回トークン取得: 成功
+    @MainActor
+    func testFetchInitialTokenSuccess() async throws {
+        // MARK: Given
+        let testResponse: FetchInitialTokenResponse = .Mock.success
+        let testData = try JSONEncoder().encode(testResponse)
+        let urlSessionStub: URLSessionStub = .init(data: testData, response: .init(status: .ok))
+        let tokenManagerStub: TokenStoreStub = .init()
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        
+        // MARK: When
+        try await sut.fetchInitialToken(sessionCode: "dummy code")
+        
+        // MARK: Then
+        let accessToken = await sut.tokenStore.accessToken
+        XCTAssertEqual(
+            testResponse.accessToken,
+            accessToken
+        )
+    }
+    
+    /// 初回トークン取得: 失敗(OAuthError)
+    @MainActor
+    func testFetchInitialTokenFailedByOAuthError() async throws {
+        // MARK: Given
+        let testResponse: OAuthError = .Mock.incorrectClientCredentials
+        let testData = try JSONEncoder().encode(testResponse)
+        let urlSessionStub: URLSessionStub = .init(data: testData, response: .init(status: .init(code: testResponse.statusCode!)))
+        let tokenManagerStub: TokenStoreStub = .init()
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        
+        // MARK: When
+        var errorIsExpected = false
+        do {
+            try await sut.fetchInitialToken(sessionCode: "dummy code")
+        } catch {
+
+            // MARK: Then
+            
+            guard let clientError = error as? GitHubAPIClientError else {
+                XCTFail("unexpected error: \(error.localizedDescription)")
+                return
+            }
+            switch clientError {
+            case .oauthAPIError:
+                errorIsExpected = true
+            default:
+                XCTFail("unexpected error: \(error.localizedDescription)")
+            }
+        }
+        XCTAssert(errorIsExpected, "error is not expected")
+    }
+}
+
+// MARK: - ログアウト
+
+
+
+// MARK: - リポジトリの検索(成功/失敗)
+
+extension GitHubAPIClientTests {
+        
     /// リポジトリの検索: 成功
     func testSearchReposSuccess() async throws {
         
@@ -54,7 +211,7 @@ final class GitHubAPIClientTests: XCTestCase {
     }
     
     /// リポジトリの検索: 通信エラー
-    func testSearchReposFailByCannotConnectTtHost() async throws {
+    func testSearchReposFailByCannotConnectToHost() async throws {
         
         // MARK: Given
 
@@ -82,10 +239,10 @@ final class GitHubAPIClientTests: XCTestCase {
                 XCTFail("unexpected error: \(error.localizedDescription)")
             }
         }
-        XCTAssert(errorIsExpected, "expected error is .connectionError")
+        XCTAssert(errorIsExpected, "error is not expected")
     }
     
-    /// リポジトリの検索: レスポンスのデコードエラー
+    /// リポジトリの検索: 失敗(レスポンスのデコードエラー)
     func testSearchReposFailByResponseParseError() async throws {
         
         // MARK: Given
@@ -153,5 +310,4 @@ final class GitHubAPIClientTests: XCTestCase {
         }
         XCTAssert(errorIsExpected, "expected error is .responseParseError")
     }
-
 }

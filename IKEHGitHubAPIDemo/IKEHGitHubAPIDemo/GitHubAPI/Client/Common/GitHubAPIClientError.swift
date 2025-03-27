@@ -13,8 +13,8 @@ enum GitHubAPIClientError: Error {
     /// ログインに失敗
     case loginError(String)
     
-    /// 認証関係エラー
-    case oauthError(String)
+    /// 認証トークンのエラー
+    case tokenError(String)
     
     /// APIのリクエストの作成に失敗
     case invalidRequest
@@ -39,7 +39,7 @@ extension GitHubAPIClientError: LocalizedError {
         switch self {
         case .loginError(let message):
             return "ログインに失敗しました: \(message)"
-        case .oauthError(let message):
+        case .tokenError(let message):
             return "APIの認証でエラーが発生しました: \(message)"
         case .invalidRequest:
             return "APIリクエストの作成に失敗しました"

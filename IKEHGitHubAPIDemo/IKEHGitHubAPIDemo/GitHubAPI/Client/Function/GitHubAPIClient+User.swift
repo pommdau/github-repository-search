@@ -13,8 +13,12 @@ extension GitHubAPIClient {
     
     /// 認証中のユーザを取得
     func fetchLoginUser() async throws -> LoginUser {
-        guard let accessToken = await tokenStore.accessToken else {
-            throw GitHubAPIClientError.oauthError("有効なトークンが見つかりませんでした")
+        // TODO: 切り出しても良さそう
+        guard
+            let accessToken = await tokenStore.accessToken,
+            await tokenStore.isAccessTokenValid
+        else {
+            throw GitHubAPIClientError.tokenError("有効なトークンが見つかりませんでした")
         }
         let request = GitHubAPIRequest.FetchLoginUser(accessToken: accessToken)
         let response = try await performRequest(with: request)

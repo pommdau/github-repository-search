@@ -26,19 +26,28 @@ final class URLSessionStub: URLSessionProtocol {
     
     // MARK: - LifeCycle
     
+    /// ダミーの成功データを返すStubの作成
+    init() {
+        self.stubbedData = "dummy data".data(using: .utf8)
+        self.stubbedResponse = .init(status: .ok)
+        self.stubbedError = nil
+    }
+    
+    /// 指定したレスポンスを返すStubの作成
     init(data: Data? = nil, response: HTTPResponse? = nil) {
         self.stubbedData = data
         self.stubbedResponse = response
         self.stubbedError = nil
     }
     
+    /// 指定したエラーをthrowするStubの作成
     init(error: Error? = nil) {
         self.stubbedData = nil
         self.stubbedResponse = nil
         self.stubbedError = error
     }
     
-    // MARK: - Methods
+    // MARK: - Connection Methods
                   
     func data(for request: HTTPRequest) async throws -> (Data, HTTPResponse) {
         if let stubbedError {

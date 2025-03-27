@@ -7,10 +7,7 @@
 
 import Foundation
 
-/*
- {"access_token":"xxx","token_type":"bearer","scope":"repo"}
- */
-struct FetchInitialTokenResponse: Decodable, Sendable {    
+struct FetchInitialTokenResponse: Codable, Sendable {    
     enum CodingKeys: String, CodingKey {
         case accessToken = "access_token"
         case tokenType = "token_type"
@@ -18,6 +15,34 @@ struct FetchInitialTokenResponse: Decodable, Sendable {
     }
     
     var accessToken: String
-    var tokenType: String
-    var scope: String // e.g. "bearer"
+    var tokenType: String // e.g. "bearer"
+    var scope: String // e.g. "repo"
+}
+
+// MARK: - Mock
+
+extension FetchInitialTokenResponse {
+    enum Mock {
+        static var success: FetchInitialTokenResponse {
+            .init(
+                accessToken: "gho_dummyAccessToken1234567890",
+                tokenType: "bearer",
+                scope: "repo"
+            )
+        }
+    }
+}
+
+// MARK: - JSONString
+
+extension FetchInitialTokenResponse.Mock {
+    enum JSONString {
+        static let success = """
+{
+  "access_token": "gho_dummyAccessToken1234567890",
+  "token_type": "bearer",
+  "scope": "repo"
+}
+"""
+    }
 }

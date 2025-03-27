@@ -7,6 +7,7 @@
 //  refs: https://docs.github.com/ja/rest/activity/starring?apiVersion=2022-11-28
 
 import Foundation
+import HTTPTypes
 
 extension GitHubAPIClient {
     
@@ -53,7 +54,7 @@ extension GitHubAPIClient {
         } catch {
             switch error {
             case let GitHubAPIClientError.apiError(error):
-                if error.statusCode == 404 {
+                if error.statusCode == HTTPResponse.Status.notFound.code {
                     return false // スターされていない
                 }
                 throw error
@@ -76,8 +77,8 @@ extension GitHubAPIClient {
         } catch {
             switch error {
             case let GitHubAPIClientError.apiError(error):
-                if error.statusCode == 304 {
-                    return // not modified(=成功とみなす)
+                if error.statusCode == HTTPResponse.Status.notModified.code {
+                    return // 変更なしは成功とみなす
                 }
                 throw error
             default:
@@ -97,8 +98,8 @@ extension GitHubAPIClient {
         } catch {
             switch error {
             case let GitHubAPIClientError.apiError(error):
-                if error.statusCode == 304 {
-                    return // not modified
+                if error.statusCode == HTTPResponse.Status.notModified.code {
+                    return // 変更なしは成功とみなす
                 }
                 throw error
             default:

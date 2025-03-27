@@ -38,7 +38,7 @@ extension GitHubAPIRequest.SearchReposRequest: GitHubAPIRequestProtocol {
     
     var queryItems: [URLQueryItem] {
         var queryItems: [URLQueryItem] = []
-//        queryItems.append(URLQueryItem(name: "q", value: query))
+        queryItems.append(URLQueryItem(name: "q", value: query))
         
         if let sort {
             queryItems.append(URLQueryItem(name: "sort", value: sort))
@@ -62,7 +62,7 @@ extension GitHubAPIRequest.SearchReposRequest: GitHubAPIRequestProtocol {
         var headerFields = HTTPTypes.HTTPFields()
         headerFields[.accept] = HTTPField.ConstValue.applicationVndGitHubJSON
         if let accessToken {
-            headerFields[.authorization] = "Bearer \(accessToken)"
+            headerFields[.authorization] = "Bearer \(accessToken)aaa"
         }
         headerFields[.xGithubAPIVersion] = HTTPField.ConstValue.xGitHubAPIVersion
         return headerFields

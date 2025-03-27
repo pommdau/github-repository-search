@@ -9,7 +9,6 @@ import Foundation
 
 extension GitHubAPIClient {
     func searchRepos(searchText: String, page: Int? = nil, sort: String? = nil, order: String? = nil) async throws -> SearchResponse<Repo> {
-//        try? await Task.sleep(nanoseconds: 3_000_000_000)
         let request = await GitHubAPIRequest.SearchReposRequest(
             accessToken: tokenStore.accessToken,
             query: searchText,
