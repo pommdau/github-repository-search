@@ -62,7 +62,7 @@ extension GitHubAPIRequest.SearchReposRequest: GitHubAPIRequestProtocol {
         var headerFields = HTTPTypes.HTTPFields()
         headerFields[.accept] = HTTPField.ConstValue.applicationVndGitHubJSON
         if let accessToken {
-            headerFields[.authorization] = "Bearer \(accessToken)aaa"
+            headerFields[.authorization] = "Bearer \(accessToken)"
         }
         headerFields[.xGithubAPIVersion] = HTTPField.ConstValue.xGitHubAPIVersion
         return headerFields

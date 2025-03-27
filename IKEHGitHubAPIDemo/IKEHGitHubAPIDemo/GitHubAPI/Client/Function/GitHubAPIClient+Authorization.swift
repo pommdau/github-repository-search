@@ -63,8 +63,10 @@ extension GitHubAPIClient {
     func logout() async throws {
         do {
             // サーバ上の認証情報の削除
+            
+            // TODO: まとめる
             guard let accessToken = await tokenStore.accessToken else {
-                return
+                throw GitHubAPIClientError.tokenError("Invalid access token")
             }
             let request = GitHubAPIRequest.DeleteAppAuthorization(
                 clientID: clientID,

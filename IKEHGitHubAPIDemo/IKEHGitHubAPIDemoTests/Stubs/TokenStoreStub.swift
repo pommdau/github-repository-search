@@ -19,7 +19,7 @@ final actor TokenStoreStub: TokenStoreProtocol {
     var isAccessTokenValid: Bool = false
     
     @MainActor var lastLoginStateID: String = ""
-    
+            
     // MARK: - CRUD
     
     func updateTokens(accessToken: String?, accessTokenExpiresAt: Date?) {
@@ -40,5 +40,14 @@ final actor TokenStoreStub: TokenStoreProtocol {
         accessToken = nil
         accessTokenExpiresAt = nil
     }
-        
+}
+
+// Test Methods
+
+extension TokenStoreStub {
+    func setValidRandomToken() {
+        accessToken = UUID().uuidString
+        accessTokenExpiresAt = Calendar.current.date(byAdding: .year, value: 1, to: .now) // 有効期限は一年
+        isAccessTokenValid = true
+    }
 }

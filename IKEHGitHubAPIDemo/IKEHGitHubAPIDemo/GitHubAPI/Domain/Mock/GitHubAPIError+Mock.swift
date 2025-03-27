@@ -21,6 +21,15 @@ extension GitHubAPIError {
             )
         }
         
+        static var notFound: GitHubAPIError {
+            .init(
+                message: "Not Found",
+                errors: nil,
+                status: "404",
+                documentationPath: "https://docs.github.com/rest/apps/oauth-applications#delete-an-app-authorization"
+            )
+        }
+        
         static var validationFailed: GitHubAPIError {
             .init(
                 message: "Validation Failed",
@@ -43,6 +52,14 @@ extension GitHubAPIError.Mock {
   "message":"Bad credentials",
   "documentation_url":"https://docs.github.com/rest",
   "status":"401"
+}
+"""
+        
+        static let notFount = """
+{
+  "message": "Not Found",
+  "documentation_url": "https://docs.github.com/rest/apps/oauth-applications#delete-an-app-authorization",
+  "status": "404"
 }
 """
         

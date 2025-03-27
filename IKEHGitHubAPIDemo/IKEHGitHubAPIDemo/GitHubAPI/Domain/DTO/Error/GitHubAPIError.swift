@@ -32,10 +32,10 @@ struct GitHubAPIError: Sendable, Codable, Error, LocalizedError {
     var status: String
     var documentationPath: String
     
-    var statusCode: Int {
+    var statusCode: Int? {
         guard let statusCode = Int(status) else {
             assertionFailure()
-            return 200
+            return nil
         }
         return statusCode
     }

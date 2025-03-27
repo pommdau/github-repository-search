@@ -36,11 +36,10 @@ extension GitHubAPIClientTests {
     func testExtactSessionCodeFromCallbackURLSuccess() async throws {
 
         // MARK: Given
-        let urlSessionStub: URLSessionStub = .init()
-        let tokenManagerStub: TokenStoreStub = .init()
+        let tokenStoreStub: TokenStoreStub = .init()
         let testLastLoginStateID = UUID().uuidString
-        tokenManagerStub.lastLoginStateID = testLastLoginStateID
-        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        tokenStoreStub.lastLoginStateID = testLastLoginStateID
+        sut = .init(clientID: "", clientSecret: "", urlSession: URLSessionStub(), tokenManager: tokenStoreStub)
         
         let testSessionCode = "adccb822dd897e2d470e"
         guard let testURL = URL(string: "ikehgithubapi://callback?code=\(testSessionCode)&state=\(testLastLoginStateID)") else {
@@ -62,10 +61,10 @@ extension GitHubAPIClientTests {
 
         // MARK: Given
         let urlSessionStub: URLSessionStub = .init()
-        let tokenManagerStub: TokenStoreStub = .init()
+        let tokenStoreStub: TokenStoreStub = .init()
         let testLastLoginStateID = UUID().uuidString
-        tokenManagerStub.lastLoginStateID = testLastLoginStateID
-        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        tokenStoreStub.lastLoginStateID = testLastLoginStateID
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
         
         // クエリパラメータのcodeが不足しているURL
         let testSessionCode = "adccb822dd897e2d470e"
@@ -101,10 +100,10 @@ extension GitHubAPIClientTests {
         // MARK: Given
         
         let urlSessionStub: URLSessionStub = .init()
-        let tokenManagerStub: TokenStoreStub = .init()
+        let tokenStoreStub: TokenStoreStub = .init()
         let testLastLoginStateID = UUID().uuidString
-        tokenManagerStub.lastLoginStateID = testLastLoginStateID
-        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        tokenStoreStub.lastLoginStateID = testLastLoginStateID
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
         
         let testSessionCode = "adccb822dd897e2d470e"
         guard let testURL = URL(string: "ikehgithubapi://callback?code=\(testSessionCode)&state=\(testLastLoginStateID)") else {
@@ -133,8 +132,8 @@ extension GitHubAPIClientTests {
         let testResponse: FetchInitialTokenResponse = .Mock.success
         let testData = try JSONEncoder().encode(testResponse)
         let urlSessionStub: URLSessionStub = .init(data: testData, response: .init(status: .ok))
-        let tokenManagerStub: TokenStoreStub = .init()
-        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        let tokenStoreStub: TokenStoreStub = .init()
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
         
         // MARK: When
         try await sut.fetchInitialToken(sessionCode: "dummy code")
@@ -148,14 +147,13 @@ extension GitHubAPIClientTests {
     }
     
     /// 初回トークン取得: 失敗(OAuthError)
-    @MainActor
     func testFetchInitialTokenFailedByOAuthError() async throws {
         // MARK: Given
         let testResponse: OAuthError = .Mock.incorrectClientCredentials
         let testData = try JSONEncoder().encode(testResponse)
         let urlSessionStub: URLSessionStub = .init(data: testData, response: .init(status: .init(code: testResponse.statusCode!)))
-        let tokenManagerStub: TokenStoreStub = .init()
-        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        let tokenStoreStub: TokenStoreStub = .init()
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
         
         // MARK: When
         var errorIsExpected = false
@@ -182,7 +180,67 @@ extension GitHubAPIClientTests {
 
 // MARK: - ログアウト
 
-
+extension GitHubAPIClientTests {
+    
+    /// ログアウト: 成功
+    func testLogoutSuccess() async throws {
+        // MARK: Given
+        let testData = "".data(using: .utf8)
+        let urlSessionStub: URLSessionStub = .init(data: testData, response: .init(status: .ok))
+        let tokenStoreStub: TokenStoreStub = .init()
+        await tokenStoreStub.setValidRandomToken()        
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
+        
+        // MARK: When
+        try await sut.logout()
+        
+        // MARK: Then
+        let accessToken = await sut.tokenStore.accessToken
+        let accessTokenExpiresAt = await sut.tokenStore.accessTokenExpiresAt
+        XCTAssertEqual(nil, accessToken)
+        XCTAssertEqual(nil, accessTokenExpiresAt)
+    }
+    
+    /// ログアウト: 失敗(OAuthError)
+    func testLogoutFailByGitHubAPIError() async throws {
+        // MARK: Given
+        let testResponse: GitHubAPIError = .Mock.badCredentials
+        let testData = try JSONEncoder().encode(testResponse)
+        let urlSessionStub: URLSessionStub = .init(data: testData, response: .init(status: .init(code: testResponse.statusCode!)))
+        let tokenStoreStub: TokenStoreStub = .init()
+        await tokenStoreStub.setValidRandomToken()
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
+                                
+        // MARK: When
+        
+        // 期待するエラーが投げられるかをテスト
+        var errorIsExpected = false
+        do {
+            try await sut.logout()
+        } catch {
+            
+            // MARK: Then
+            guard let clientError = error as? GitHubAPIClientError else {
+                XCTFail("unexpected error: \(error.localizedDescription)")
+                return
+            }
+            switch clientError {
+            case .apiError:
+                errorIsExpected = true
+            default:
+                XCTFail("unexpected error: \(error.localizedDescription)")
+            }
+        }
+        XCTAssert(errorIsExpected, "error is not expected")
+        
+        // エラー発生時もStoreから情報が消えていることのテスト
+        let accessToken = await sut.tokenStore.accessToken
+        let accessTokenExpiresAt = await sut.tokenStore.accessTokenExpiresAt
+        XCTAssertEqual(nil, accessToken)
+        XCTAssertEqual(nil, accessTokenExpiresAt)
+    }
+    
+}
 
 // MARK: - リポジトリの検索(成功/失敗)
 
@@ -197,8 +255,8 @@ extension GitHubAPIClientTests {
         let testResponse: SearchResponse<Repo> = .init(totalCount: testRepos.count, items: testRepos)
         let testData = try JSONEncoder().encode(testResponse)
         let urlSessionStub: URLSessionStub = .init(data: testData, response: .init(status: .ok))
-        let tokenManagerStub: TokenStoreStub = .init()
-        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        let tokenStoreStub: TokenStoreStub = .init()
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
         
         // MARK: When
         let response = try await sut.searchRepos(searchText: "Swift")
@@ -216,8 +274,8 @@ extension GitHubAPIClientTests {
         // MARK: Given
 
         let urlSessionStub: URLSessionStub = .init(error: URLError(.cannotConnectToHost))
-        let tokenManagerStub: TokenStoreStub = .init()
-        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        let tokenStoreStub: TokenStoreStub = .init()
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
 
         // MARK: When
 
@@ -248,8 +306,8 @@ extension GitHubAPIClientTests {
         // MARK: Given
         let testData = "test message".data(using: .utf8)
         let urlSessionStub: URLSessionStub = .init(data: testData, response: .init(status: .ok))
-        let tokenManagerStub: TokenStoreStub = .init()
-        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        let tokenStoreStub: TokenStoreStub = .init()
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
         
         // MARK: When
 
@@ -283,10 +341,10 @@ extension GitHubAPIClientTests {
         let testData = try JSONEncoder().encode(testGitHubAPIError)
         let urlSessionStub: URLSessionStub = .init(
             data: testData,
-            response: .init(status: .init(code: testGitHubAPIError.statusCode))
+            response: .init(status: .init(code: testGitHubAPIError.statusCode!))
         )
-        let tokenManagerStub: TokenStoreStub = .init()
-        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenManagerStub)
+        let tokenStoreStub: TokenStoreStub = .init()
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
         
         // MARK: When
 
