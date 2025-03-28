@@ -10,7 +10,7 @@ import SwiftUI
 
 @MainActor
 @Observable
-final class SearchSuggestionStore {
+class SearchSuggestionStore {
     
     // MARK: - Property
             

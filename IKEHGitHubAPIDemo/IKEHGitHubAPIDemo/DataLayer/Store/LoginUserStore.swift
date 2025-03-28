@@ -7,7 +7,6 @@
 
 import Foundation
 
-// TODO: check
 protocol LoginUserStoreProtocol: Actor {
     var value: LoginUser? { get }
     func addValue(_ loginUser: LoginUser)

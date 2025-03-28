@@ -63,12 +63,15 @@ final actor GitHubAPIClientStub: GitHubAPIClientProtocol {
     func handleLoginCallBackURL(_ url: URL) async throws {
         
     }
+    
     func extactSessionCodeFromCallbackURL(_ url: URL) async throws -> String {
         return ""
     }
+    
     func logout() async throws {
         
     }
+    
     func fetchInitialToken(sessionCode: String) async throws {
         
     }
@@ -78,6 +81,8 @@ final actor GitHubAPIClientStub: GitHubAPIClientProtocol {
     func searchRepos(searchText: String, page: Int? = nil, sort: String? = nil, order: String? = nil) async throws -> SearchResponse<Repo> {
         return .init(totalCount: 1, items: [Repo.Mock.random()])
     }
+    
+//    var fetchUserReposResponse: ListResponse<Repo> = .init(items: Repo.Mock.random(count: 10), relationLink: <#T##RelationLink?#>)
     func fetchUserRepos(userName: String, page: Int? = nil) async throws -> ListResponse<Repo> {
         return .init(items: [Repo.Mock.random()])
     }
@@ -87,15 +92,19 @@ final actor GitHubAPIClientStub: GitHubAPIClientProtocol {
     func fetchStarredRepos( userName: String, sort: String? = nil, direction: String? = nil) async throws -> StarredReposResponse {
         return .init(repos: Repo.Mock.random(count: 10))
     }
+    
     func fetchStarredRepos(userName: String, link: RelationLink.Link) async throws -> StarredReposResponse {
         return .init(repos: Repo.Mock.random(count: 10))
     }
+    
     func checkIsRepoStarred(ownerName: String, repoName: String) async throws -> Bool {
         return true
     }
+    
     func starRepo(ownerName: String, repoName: String) async throws {
         
     }
+    
     func unstarRepo(ownerName: String, repoName: String) async throws {
         
     }
@@ -123,14 +132,7 @@ final actor GitHubAPIClientStub: GitHubAPIClientProtocol {
 //            searchReposContinuation = continuation
 //        }
 //    }
-//    
-//    func fetchStarredRepos(
-//        userName: String,
-//        sort: String? = nil,
-//        direction: String? = nil
-//    ) async throws -> StarredReposResponse {
-//        return .init(repos: Repo.Mock.random(count: 10))
-//    }
+
 }
 
 final actor GitHubAPIClient: GitHubAPIClientProtocol {
