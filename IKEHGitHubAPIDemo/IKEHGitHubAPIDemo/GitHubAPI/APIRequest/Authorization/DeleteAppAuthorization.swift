@@ -48,7 +48,7 @@ extension GitHubAPIRequest.DeleteAppAuthorization: GitHubAPIRequestProtocol {
     
     var body: Data? {
         let body: [String: String] = [
-            "access_token": "hoge"
+            "access_token": accessToken
         ]
         do {
             return try JSONSerialization.data(withJSONObject: body, options: [])

@@ -13,7 +13,6 @@ extension GitHubAPIClient {
     
     /// 認証中のユーザを取得
     func fetchLoginUser() async throws -> LoginUser {
-        // TODO: 切り出しても良さそう
         guard
             let accessToken = await tokenStore.accessToken,
             await tokenStore.isAccessTokenValid

@@ -15,9 +15,7 @@ extension GitHubAPIClient {
         userName: String,
         sort: String? = nil,
         direction: String? = nil
-    ) async throws -> StarredReposResponse {
-                
-        // TODO: fix
+    ) async throws -> StarredReposResponse {            
         let request = await GitHubAPIRequest.FetchStarredRepos(
             userName: userName,
             accessToken: tokenStore.accessToken,
