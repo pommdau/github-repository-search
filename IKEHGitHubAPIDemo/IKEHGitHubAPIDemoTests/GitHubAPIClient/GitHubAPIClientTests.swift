@@ -32,6 +32,7 @@ final class GitHubAPIClientTests: XCTestCase {
 
 extension GitHubAPIClientTests {
     
+    /// コールバックURLからセッションコードの抽出: 成功
     @MainActor
     func testExtactSessionCodeFromCallbackURLSuccess() async throws {
 
@@ -56,6 +57,7 @@ extension GitHubAPIClientTests {
         )
     }
     
+    /// コールバックURLからセッションコードの抽出: 失敗(クエリパラメータの不足)
     @MainActor
     func testExtactSessionCodeFromCallbackURLFailByInvalidURL() async throws {
 
@@ -94,6 +96,7 @@ extension GitHubAPIClientTests {
         XCTAssert(errorIsExpected, "error is not expected")
     }
     
+    /// コールバックURLからセッションコードの抽出: 失敗(ログインIDの不一致)
     @MainActor
     func testExtactSessionCodeFromCallbackURLFailByInvalidLastLoginStateID() async throws {
 
@@ -156,6 +159,7 @@ extension GitHubAPIClientTests {
         sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
         
         // MARK: When
+        // 期待するエラーが投げられるかをテスト
         var errorIsExpected = false
         do {
             try await sut.fetchInitialToken(sessionCode: "dummy code")
@@ -250,7 +254,6 @@ extension GitHubAPIClientTests {
     func testSearchReposSuccess() async throws {
         
         // MARK: Given
-        
         let testRepos = Repo.Mock.random(count: 10)
         let testResponse: SearchResponse<Repo> = .init(totalCount: testRepos.count, items: testRepos)
         let testData = try JSONEncoder().encode(testResponse)

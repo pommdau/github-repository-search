@@ -19,9 +19,6 @@ protocol TokenStoreProtocol: Actor {
     func updateLastLoginStateID(_ setLastLoginStateID: String)
     func deleteAll()
 }
- 
-// https://zenn.dev/kntk/scraps/0c3f6014bcad33
-//extension UserDefaults: @unchecked Sendable {}
 
 final actor TokenStore: TokenStoreProtocol {
                 

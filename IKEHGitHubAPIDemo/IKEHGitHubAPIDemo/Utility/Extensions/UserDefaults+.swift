@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - Apply to Codable
+
 extension UserDefaults {
     func codableItem<T>(forKey defaultName: String) -> T? where T: Codable {
         let jsonDecoder = JSONDecoder()
@@ -26,3 +28,8 @@ extension UserDefaults {
         UserDefaults.standard.set(valueData, forKey: defaultName)
     }
 }
+
+// MARK: - Sendable
+
+// refs: https://zenn.dev/kntk/scraps/0c3f6014bcad33
+extension UserDefaults: @unchecked Sendable {}
