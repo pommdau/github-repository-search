@@ -222,7 +222,6 @@ extension GitHubAPIClientTests {
         do {
             try await sut.logout()
         } catch {
-            
             // MARK: Then
             guard let clientError = error as? GitHubAPIClientError else {
                 XCTFail("unexpected error: \(error.localizedDescription)")
@@ -237,6 +236,7 @@ extension GitHubAPIClientTests {
         }
         XCTAssert(errorIsExpected, "error is not expected")
         
+        // TODO: 別のテストケースに切り出す: テスト観点は1つにすること
         // エラー発生時もStoreから情報が消えていることのテスト
         let accessToken = await sut.tokenStore.accessToken
         let accessTokenExpiresAt = await sut.tokenStore.accessTokenExpiresAt
@@ -270,76 +270,11 @@ extension GitHubAPIClientTests {
             response.items
         )
     }
-    
-    /// リポジトリの検索: 通信エラー
-    func testSearchReposFailByCannotConnectToHost() async throws {
         
-        // MARK: Given
-
-        let urlSessionStub: URLSessionStub = .init(error: URLError(.cannotConnectToHost))
-        let tokenStoreStub: TokenStoreStub = .init()
-        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
-
-        // MARK: When
-
-        var errorIsExpected = false
-        do {
-            _ = try await sut.searchRepos(searchText: "Swift")
-        } catch {
-
-            // MARK: Then
-            
-            guard let clientError = error as? GitHubAPIClientError else {
-                XCTFail("unexpected error: \(error.localizedDescription)")
-                return
-            }
-            switch clientError {
-            case .connectionError:
-                errorIsExpected = true
-            default:
-                XCTFail("unexpected error: \(error.localizedDescription)")
-            }
-        }
-        XCTAssert(errorIsExpected, "error is not expected")
-    }
-    
-    /// リポジトリの検索: 失敗(レスポンスのデコードエラー)
-    func testSearchReposFailByResponseParseError() async throws {
-        
-        // MARK: Given
-        let testData = "test message".data(using: .utf8)
-        let urlSessionStub: URLSessionStub = .init(data: testData, response: .init(status: .ok))
-        let tokenStoreStub: TokenStoreStub = .init()
-        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
-        
-        // MARK: When
-
-        var errorIsExpected = false
-        do {
-            _ = try await sut.searchRepos(searchText: "Swift")
-        } catch {
-
-            // MARK: Then
-            
-            guard let clientError = error as? GitHubAPIClientError else {
-                XCTFail("unexpected error: \(error.localizedDescription)")
-                return
-            }
-            switch clientError {
-            case .responseParseError:
-                errorIsExpected = true
-            default:
-                XCTFail("unexpected error: \(error.localizedDescription)")
-            }
-        }
-        XCTAssert(errorIsExpected, "expected error is .responseParseError")
-    }
-    
     /// リポジトリの検索: APIからのエラーレスポンスを受け取った
     func testSearchReposFailByGitHubAPIError() async throws {
         
         // MARK: Given
-        
         let testGitHubAPIError: GitHubAPIError = GitHubAPIError.Mock.validationFailed
         let testData = try JSONEncoder().encode(testGitHubAPIError)
         let urlSessionStub: URLSessionStub = .init(
@@ -350,14 +285,11 @@ extension GitHubAPIClientTests {
         sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
         
         // MARK: When
-
         var errorIsExpected = false
         do {
             _ = try await sut.searchRepos(searchText: "Swift")
         } catch {
-
             // MARK: Then
-            
             guard let clientError = error as? GitHubAPIClientError else {
                 XCTFail("unexpected error: \(error.localizedDescription)")
                 return
@@ -370,5 +302,35 @@ extension GitHubAPIClientTests {
             }
         }
         XCTAssert(errorIsExpected, "expected error is .responseParseError")
+    }
+    
+    /// リポジトリの検索: 通信エラー
+    /// (結合テストで担保できるなら必要ないかも)
+    func testSearchReposFailByCannotConnectToHost() async throws {
+        
+        // MARK: Given
+
+        let urlSessionStub: URLSessionStub = .init(error: URLError(.cannotConnectToHost))
+        let tokenStoreStub: TokenStoreStub = .init()
+        sut = .init(clientID: "", clientSecret: "", urlSession: urlSessionStub, tokenManager: tokenStoreStub)
+
+        // MARK: When
+        var errorIsExpected = false
+        do {
+            _ = try await sut.searchRepos(searchText: "Swift")
+        } catch {
+            // MARK: Then
+            guard let clientError = error as? GitHubAPIClientError else {
+                XCTFail("unexpected error: \(error.localizedDescription)")
+                return
+            }
+            switch clientError {
+            case .connectionError:
+                errorIsExpected = true
+            default:
+                XCTFail("unexpected error: \(error.localizedDescription)")
+            }
+        }
+        XCTAssert(errorIsExpected, "error is not expected")
     }
 }

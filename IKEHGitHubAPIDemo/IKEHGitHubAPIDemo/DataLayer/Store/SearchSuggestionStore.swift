@@ -8,6 +8,9 @@
 
 import SwiftUI
 
+// MARK: -
+
+
 @MainActor
 @Observable
 class SearchSuggestionStore {

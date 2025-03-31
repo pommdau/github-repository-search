@@ -47,7 +47,9 @@ extension SearchScreenViewStateTest {
             fatalError("Failed to create URL")
         }
         
+        
         let gitHubAPIClient = GitHubAPIClientStub()
+        let loginUserStoreStub = LoginUserStoreStub()
         
 //        sut = .init(
 //            gitHubAPIClient: gitHubAPIClient,
