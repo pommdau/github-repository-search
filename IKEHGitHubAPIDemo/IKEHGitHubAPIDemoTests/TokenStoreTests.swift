@@ -24,7 +24,7 @@ final class TokenStoreTests: XCTestCase {
     
     // MARK: - Property
     
-    static let userDefaultsSuiteName = "TokenStoreTests"
+    static let userDefaultsSuiteName = "TokenStoreTests.UserDefaults"
     private var sut: TokenStore! // sut: System Under Test
     private let keyChain = Keychain(service: "TokenStoreTests")
     private let userDefaults = UserDefaults(suiteName: TokenStoreTests.userDefaultsSuiteName)!

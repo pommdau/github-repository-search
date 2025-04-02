@@ -18,7 +18,7 @@ final class ProfileViewState {
     var error: Error?
     
     var loginUser: LoginUser? {
-        loginUserStore.value
+        loginUserStore.loginUser
     }
     
     // MARK: - LifeCycle
