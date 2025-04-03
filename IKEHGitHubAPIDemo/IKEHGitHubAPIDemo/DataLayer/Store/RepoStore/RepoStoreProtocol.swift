@@ -1,45 +1,27 @@
 //
-//  RepoStore.swift
+//  RepoStoreProtocol.swift
 //  IKEHGitHubAPIDemo
 //
-//  Created by HIROKI IKEUCHI on 2025/01/29.
+//  Created by HIROKI IKEUCHI on 2025/04/03.
 //
 
-import SwiftUI
+import Foundation
 
 @MainActor
 protocol RepoStoreProtocol: AnyObject {
-    
+    static var shared: Self { get } // シングルトン
+    var repository: RepoRepository? { get }
+    var valuesDic: [Repo.ID: Repo] { get set } // TODO: Rename
 }
 
-@MainActor
-@Observable
-final class RepoStore {
+extension RepoStoreProtocol {
     
     // MARK: - Property
-    
-    static let shared: RepoStore = .init()
-
-    let repository: RepoRepository
-    var valuesDic: [Repo.ID: Repo] = [:]
     
     var repos: [Repo] {
         Array(valuesDic.values)
     }
     
-    // MARK: - LifeCycle
-
-    init(repository: RepoRepository) {
-        self.repository = repository
-        Task {
-            try? await self.fetchValues()
-        }
-    }
-    
-    convenience init() {
-        self.init(repository: RepoRepository.shared)
-    }
-
     // MARK: - CRUD
 
     // MARK: Create/Update
@@ -55,7 +37,7 @@ final class RepoStore {
             return
         }
         
-        try await repository.addValue(value)
+        try await repository?.addValue(value)
         valuesDic[value.id] = value
     }
     
@@ -65,7 +47,7 @@ final class RepoStore {
             newRepos: values,
             updateStarred: updateStarred
         )
-        try await repository.addValues(values)
+        try await repository?.addValues(values)
         let newValuesDic = Dictionary(uniqueKeysWithValues: values.map { ($0.id, $0) })
         valuesDic.merge(newValuesDic) { _, new in new }
     }
@@ -73,6 +55,9 @@ final class RepoStore {
     // MARK: Read
     
     func fetchValues() async throws {
+        guard let repository else {
+            return
+        }
         let values = try await repository.fetchValuesAll()
         valuesDic = Dictionary(uniqueKeysWithValues: values.map { ($0.id, $0) }) // Array -> Dictionary
     }
@@ -80,8 +65,7 @@ final class RepoStore {
     // MARK: Delete
 
     func deleteAllValues() async throws {
-        try await repository.deleteAll()
+        try await repository?.deleteAll()
         valuesDic.removeAll()
     }
-    
 }
