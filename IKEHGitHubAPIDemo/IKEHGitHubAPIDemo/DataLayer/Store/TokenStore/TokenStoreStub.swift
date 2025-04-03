@@ -16,6 +16,17 @@ final actor TokenStoreStub: TokenStoreProtocol {
     var accessToken: String?
     var accessTokenExpiresAt: Date?
     @MainActor var lastLoginStateID: String = ""
+    
+    /// 初期化時、デフォルトでは有効な値をセットする
+    init(
+        accessToken: String? = UUID().uuidString,
+        accessTokenExpiresAt: Date? = Calendar.current.date(byAdding: .year, value: 1, to: .now), // 1年後
+        lastLoginStateID: String = UUID().uuidString
+    ) {
+        self.accessToken = accessToken
+        self.accessTokenExpiresAt = accessTokenExpiresAt
+        self.lastLoginStateID = lastLoginStateID
+    }
 }
 
 // Test Methods

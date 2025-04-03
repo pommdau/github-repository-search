@@ -38,10 +38,10 @@ final class SearchScreenViewState {
         
     // MARK: DI
         
-    private let gitHubAPIClient: GitHubAPIClient
-    private let repoStore: RepoStore
-    private let loginUserStore: LoginUserStore
-    private let searchSuggestionStore: SearchSuggestionStore
+    private let gitHubAPIClient: GitHubAPIClientProtocol
+    private let repoStore: RepoStoreProtocol
+    private let loginUserStore: LoginUserStoreProtocol
+    private let searchSuggestionStore: SearchSuggestionStoreProtocol
     
     // MARK: Others
     
@@ -51,10 +51,10 @@ final class SearchScreenViewState {
     
     // MARK: - LifeCycle
     
-    init(gitHubAPIClient: GitHubAPIClient = .shared,
-         repoStore: RepoStore = .shared,
-         loginUserStore: LoginUserStore = .shared,
-         searchSuggestionStore: SearchSuggestionStore = .shared
+    init(gitHubAPIClient: GitHubAPIClientProtocol = GitHubAPIClient.shared,
+         repoStore: RepoStoreProtocol = RepoStore.shared,
+         loginUserStore: LoginUserStoreProtocol = LoginUserStore.shared,
+         searchSuggestionStore: SearchSuggestionStoreProtocol = SearchSuggestionStore.shared
     ) {
         self.gitHubAPIClient = gitHubAPIClient
         self.repoStore = repoStore
@@ -82,7 +82,7 @@ extension SearchScreenViewState {
         searchTask = Task {
             do {
                 // 検索: 成功
-                let response = try await gitHubAPIClient.searchRepos(searchText: searchText, sort: sortedBy.sort, order: sortedBy.order)
+                let response = try await gitHubAPIClient.searchRepos(searchText: searchText, page: nil, sort: sortedBy.sort, order: sortedBy.order)
                 try await repoStore.addValues(response.items, updateStarred: false)
                 withAnimation {
                     asyncRepoIDs = .loaded(response.items.map { $0.id })
@@ -166,7 +166,7 @@ extension SearchScreenViewState {
         searchTask = Task {
             do {
                 // 検索: 成功
-                let response = try await gitHubAPIClient.searchRepos(searchText: query, sort: sortedBy.sort, order: sortedBy.order)
+                let response = try await gitHubAPIClient.searchRepos(searchText: query, page: nil, sort: sortedBy.sort, order: sortedBy.order)
                 try await repoStore.addValues(response.items, updateStarred: false)
                 withAnimation {
                     asyncRepoIDs = .loaded(response.items.map { $0.id })

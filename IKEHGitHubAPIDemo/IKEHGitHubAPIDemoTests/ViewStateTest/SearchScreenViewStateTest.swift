@@ -39,24 +39,19 @@ extension SearchScreenViewStateTest {
         // MARK: Given
         let urlSessionStub: URLSessionStub = .init()
         let tokenStoreStub: TokenStoreStub = .init()
-        let testLastLoginStateID = UUID().uuidString
-        tokenStoreStub.lastLoginStateID = testLastLoginStateID
         // クエリパラメータのcodeが不足しているURL
-        let testSessionCode = "adccb822dd897e2d470e"
-        guard let testURL = URL(string: "ikehgithubapi://callback?code=\(testSessionCode)") else {
-            fatalError("Failed to create URL")
-        }
-        
-        
+
         let gitHubAPIClient = GitHubAPIClientStub()
-        let loginUserStoreStub = LoginUserStoreStub()
+        let repoStore = RepoStoreStub()
+        let loginUserStore = LoginUserStoreStub()
+        let searchSuggestionStore = SearchSuggestionStoreStub()
         
-//        sut = .init(
-//            gitHubAPIClient: gitHubAPIClient,
-//            repoStore: <#T##RepoStore#>,
-//            loginUserStore: <#T##LoginUserStore#>,
-//            searchSuggestionStore: SearchSuggestionStore()
-//        )
+        sut = .init(
+            gitHubAPIClient: gitHubAPIClient,
+            repoStore: repoStore,
+            loginUserStore: loginUserStore,
+            searchSuggestionStore: searchSuggestionStore
+        )
         
 
         // MARK: When
