@@ -8,6 +8,7 @@
 import XCTest
 @testable import IKEHGitHubAPIDemo
 
+@MainActor
 final class SearchScreenViewStateTest: XCTestCase {
     
     // MARK: - Property
@@ -37,24 +38,34 @@ extension SearchScreenViewStateTest {
     func testHandleSearchSuccess() async {
         
         // MARK: Given
-        let urlSessionStub: URLSessionStub = .init()
-        let tokenStoreStub: TokenStoreStub = .init()
-        // クエリパラメータのcodeが不足しているURL
-
-        let gitHubAPIClient = GitHubAPIClientStub()
-        let repoStore = RepoStoreStub()
-        let loginUserStore = LoginUserStoreStub()
-        let searchSuggestionStore = SearchSuggestionStoreStub()
+        let gitHubAPIClientStub = GitHubAPIClientStub()
+        let repoStoreStub = RepoStoreStub()
+        let loginUserStoreStub = LoginUserStoreStub()
+        let searchSuggestionStoreStub = SearchSuggestionStoreStub()
         
         sut = .init(
-            gitHubAPIClient: gitHubAPIClient,
-            repoStore: repoStore,
-            loginUserStore: loginUserStore,
-            searchSuggestionStore: searchSuggestionStore
+            gitHubAPIClient: gitHubAPIClientStub,
+            repoStore: repoStoreStub,
+            loginUserStore: loginUserStoreStub,
+            searchSuggestionStore: searchSuggestionStoreStub
         )
-        
-
+                
         // MARK: When
+        
+        // MARK: 検索開始
+        sut.searchText = "testText"
+//        async let search: Void = sut.handleSearch()
+        sut.handleSearch()
+        
+        switch sut.asyncRepos {
+        case .loading:
+            break
+        default:
+            XCTFail("unexpected repos: \(sut.asyncRepos)")
+        }
+        
+        // APIの実行
+                        
         // MARK: Then
         
     }
