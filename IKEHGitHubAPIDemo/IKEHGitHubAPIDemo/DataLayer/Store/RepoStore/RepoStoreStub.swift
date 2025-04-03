@@ -11,7 +11,7 @@ import Foundation
 @Observable
 final class RepoStoreStub: RepoStoreProtocol {
     static var shared: RepoStoreStub = .init()
-    var repository: RepoRepository?
+    private(set) var repository: RepoRepository?
     var valuesDic: [Repo.ID: Repo] = [:]
     
     // MARK: - LifeCycle
