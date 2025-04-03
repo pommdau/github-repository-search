@@ -16,8 +16,8 @@ final class RepoStore: RepoStoreProtocol {
     
     // MARK: - LifeCycle
     
-    init(repository: RepoRepository = .shared) {
-        self.repository = repository
+    init() {
+        self.repository = .shared
         Task {
             try? await self.fetchValues()
         }
