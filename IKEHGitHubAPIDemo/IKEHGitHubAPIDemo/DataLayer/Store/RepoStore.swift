@@ -8,6 +8,11 @@
 import SwiftUI
 
 @MainActor
+protocol RepoStoreProtocol: AnyObject {
+    
+}
+
+@MainActor
 @Observable
 final class RepoStore {
     
