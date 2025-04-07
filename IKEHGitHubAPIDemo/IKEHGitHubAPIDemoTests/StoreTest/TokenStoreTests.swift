@@ -9,16 +9,7 @@ import XCTest
 import KeychainAccess
 @testable import IKEHGitHubAPIDemo
 
-extension UserDefaults {
-    static func plistURL(suitName: String) -> URL? {
-        guard let libraryURL = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first else {
-            return nil
-        }
-        return libraryURL
-            .appendingPathComponent("Preferences")
-            .appendingPathComponent("\(suitName).plist")
-    }
-}
+
 
 final class TokenStoreTests: XCTestCase {
     
@@ -45,20 +36,8 @@ final class TokenStoreTests: XCTestCase {
         try await super.tearDown()
         sut = nil
         try keyChain.removeAll()
-        try resetUserDefaultsForTest(suitName: Self.userDefaultsSuiteName)
+        try UserDefaults.resetAndRemovePlistUserDefaults(suitName: Self.userDefaultsSuiteName)
     }
-    
-    func resetUserDefaultsForTest(suitName: String) throws {
-        // 保存した値の削除
-        UserDefaults().removePersistentDomain(forName: suitName)
-        
-        // plistファイルの削除(removePersistentDomainではキー/値の削除しかされないため)
-        if let url = UserDefaults.plistURL(suitName: suitName),
-           FileManager.default.fileExists(atPath: url.path()) {
-            try FileManager.default.removeItem(at: url)
-        }
-    }
-                
 }
 
 // MARK: - Tests

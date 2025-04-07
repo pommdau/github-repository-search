@@ -7,6 +7,7 @@
 
 import Foundation
 
+// 一般化してもいい
 @MainActor
 protocol LoginUserStoreProtocol: AnyObject {
     // プロセスのライフサイクルを考えて、アプリの起動中ずっと存在してかつSingle Sourceなのでここではシングルトンとする
