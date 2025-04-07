@@ -48,7 +48,7 @@ extension GitHubAPIClient {
         )
         
         do {
-            try await performRequestWithoutResponse(with: request)
+            _ = try await performRequest(with: request)
         } catch {
             switch error {
             case let GitHubAPIClientError.apiError(error):
@@ -71,7 +71,7 @@ extension GitHubAPIClient {
         )
         print(request)
         do {
-            try await performRequestWithoutResponse(with: request)
+            try await performRequest(with: request)
         } catch {
             switch error {
             case let GitHubAPIClientError.apiError(error):
@@ -83,6 +83,7 @@ extension GitHubAPIClient {
                 throw error
             }
         }
+        print("stop")
     }
     
     func unstarRepo(ownerName: String, repoName: String) async throws {
@@ -92,7 +93,7 @@ extension GitHubAPIClient {
             repoName: repoName
         )        
         do {
-            try await performRequestWithoutResponse(with: request)
+            _ = try await performRequest(with: request)
         } catch {
             switch error {
             case let GitHubAPIClientError.apiError(error):

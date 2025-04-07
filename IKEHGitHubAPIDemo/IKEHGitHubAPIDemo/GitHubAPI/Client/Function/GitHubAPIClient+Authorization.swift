@@ -73,7 +73,7 @@ extension GitHubAPIClient {
                 clientSecret: clientSecret,
                 accessToken: accessToken
             )
-            try await self.performRequestWithoutResponse(with: request)
+            _ = try await self.performRequest(with: request)
         } catch {
             // ローカル上の認証情報の削除
             // サーバ上の認証情報の削除に失敗した場合もローカルのトークン情報を削除する

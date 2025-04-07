@@ -175,32 +175,3 @@ func printUserDefaultsPath() {
         print("Bundle identifier not found.")
     }
 }
-
-// Swift-Dependencies
-
-import Dependencies
-
-struct SearchReposRequest {
-    let searchText: String
-    let page: Int?
-    let sort: String?
-    let order: String?
-}
-
-struct NewGitHubAPIClient {
-//    var createCareUser: @Sendable (CareUserRequest) async throws -> ApiResponse<ResCareUser>
-
-//    func searchRepos(searchText: String, page: Int?, sort: String?, order: String?) async throws -> SearchResponse<Repo>
-
-    var searchRepos: @Sendable (SearchReposRequest) async throws -> SearchResponse<Repo>
-}
-
-extension NewGitHubAPIClient: DependencyKey {
-            
-    static let liveValue = Self(
-        searchRepos: { request in
-            // いつものAPI処理を書く
-            return SearchResponse(totalCount: 0, items: [])
-        }
-    )
-}

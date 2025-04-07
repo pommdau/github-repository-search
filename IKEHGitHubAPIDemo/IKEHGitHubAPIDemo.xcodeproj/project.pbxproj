@@ -19,9 +19,6 @@
 		DA96BAB22D2539880081B93B /* SwiftID in Frameworks */ = {isa = PBXBuildFile; productRef = DA96BAB12D2539880081B93B /* SwiftID */; };
 		DACA6C9B2D68761A009F72B3 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = DACA6C9A2D68761A009F72B3 /* SDWebImageSwiftUI */; };
 		DAE2E7EF2D9E42CD0031BA9E /* ConcurrencyExtras in Frameworks */ = {isa = PBXBuildFile; productRef = DAE2E7EE2D9E42CD0031BA9E /* ConcurrencyExtras */; };
-		DAE2F03A2D9EBBD70031BA9E /* Dependencies in Frameworks */ = {isa = PBXBuildFile; productRef = DAE2F0392D9EBBD70031BA9E /* Dependencies */; };
-		DAE2F03C2D9EBBD70031BA9E /* DependenciesMacros in Frameworks */ = {isa = PBXBuildFile; productRef = DAE2F03B2D9EBBD70031BA9E /* DependenciesMacros */; };
-		DAE2F03E2D9EBBD70031BA9E /* DependenciesTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = DAE2F03D2D9EBBD70031BA9E /* DependenciesTestSupport */; };
 		DAF43D0C2D41E31000D8A5F2 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = DAF43D0B2D41E31000D8A5F2 /* KeychainAccess */; };
 		DAFB9FC32D5DD98600474FF5 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = DAFB9FC22D5DD98600474FF5 /* .swiftlint.yml */; };
 /* End PBXBuildFile section */
@@ -97,11 +94,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DAE2F03C2D9EBBD70031BA9E /* DependenciesMacros in Frameworks */,
 				DA96BAAD2D25397D0081B93B /* HTTPTypes in Frameworks */,
 				DA96BAB22D2539880081B93B /* SwiftID in Frameworks */,
 				DA1DE9E82D4C5B0F00CACE02 /* Collections in Frameworks */,
-				DAE2F03A2D9EBBD70031BA9E /* Dependencies in Frameworks */,
 				DA1DEB092D4E679100CACE02 /* Shimmer in Frameworks */,
 				DAF43D0C2D41E31000D8A5F2 /* KeychainAccess in Frameworks */,
 				DA09FB242D5EDB280078A0AF /* RswiftLibrary in Frameworks */,
@@ -110,7 +105,6 @@
 				DACA6C9B2D68761A009F72B3 /* SDWebImageSwiftUI in Frameworks */,
 				DA0936912D4BC9C700484A5D /* UserDefaultsBrowser in Frameworks */,
 				DA96BAAF2D25397D0081B93B /* HTTPTypesFoundation in Frameworks */,
-				DAE2F03E2D9EBBD70031BA9E /* DependenciesTestSupport in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,9 +209,6 @@
 				DA1DEB082D4E679100CACE02 /* Shimmer */,
 				DA09FB232D5EDB280078A0AF /* RswiftLibrary */,
 				DACA6C9A2D68761A009F72B3 /* SDWebImageSwiftUI */,
-				DAE2F0392D9EBBD70031BA9E /* Dependencies */,
-				DAE2F03B2D9EBBD70031BA9E /* DependenciesMacros */,
-				DAE2F03D2D9EBBD70031BA9E /* DependenciesTestSupport */,
 			);
 			productName = IKEHGitHubAPIDemo;
 			productReference = DA12C5CE2D252C6600296345 /* IKEHGitHubAPIDemo.app */;
@@ -267,7 +258,6 @@
 				DA09FB222D5EDB280078A0AF /* XCRemoteSwiftPackageReference "R" */,
 				DACA6C992D68761A009F72B3 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				DAE2E7ED2D9E42CD0031BA9E /* XCRemoteSwiftPackageReference "swift-concurrency-extras" */,
-				DAE2F0382D9EBBD70031BA9E /* XCRemoteSwiftPackageReference "swift-dependencies" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DA12C5CF2D252C6600296345 /* Products */;
@@ -742,14 +732,6 @@
 				minimumVersion = 1.3.1;
 			};
 		};
-		DAE2F0382D9EBBD70031BA9E /* XCRemoteSwiftPackageReference "swift-dependencies" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pointfreeco/swift-dependencies";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.9.0;
-			};
-		};
 		DAF43D0A2D41E31000D8A5F2 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
@@ -825,21 +807,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DAE2E7ED2D9E42CD0031BA9E /* XCRemoteSwiftPackageReference "swift-concurrency-extras" */;
 			productName = ConcurrencyExtras;
-		};
-		DAE2F0392D9EBBD70031BA9E /* Dependencies */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DAE2F0382D9EBBD70031BA9E /* XCRemoteSwiftPackageReference "swift-dependencies" */;
-			productName = Dependencies;
-		};
-		DAE2F03B2D9EBBD70031BA9E /* DependenciesMacros */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DAE2F0382D9EBBD70031BA9E /* XCRemoteSwiftPackageReference "swift-dependencies" */;
-			productName = DependenciesMacros;
-		};
-		DAE2F03D2D9EBBD70031BA9E /* DependenciesTestSupport */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DAE2F0382D9EBBD70031BA9E /* XCRemoteSwiftPackageReference "swift-dependencies" */;
-			productName = DependenciesTestSupport;
 		};
 		DAF43D0B2D41E31000D8A5F2 /* KeychainAccess */ = {
 			isa = XCSwiftPackageProductDependency;

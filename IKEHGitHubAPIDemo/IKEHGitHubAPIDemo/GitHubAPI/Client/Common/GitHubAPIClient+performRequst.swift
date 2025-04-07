@@ -10,20 +10,13 @@ import HTTPTypes
 
 // MARK: - Public
 
-extension GitHubAPIClient {
-    
+extension GitHubAPIClient {    
     /// リクエストの送信
     func performRequest<Request>(with request: Request) async throws -> Request.Response where Request: GitHubAPIRequestProtocol {
         let (data, httpResponse) = try await sendRequest(with: request)
         try checkResponse(request: request, data: data, httpResponse: httpResponse)
         let response: Request.Response = try decodeResponse(data: data, httpResponse: httpResponse)
         return response
-    }
-                
-    /// リクエストの送信(返り値の無いリクエスト用)
-    func performRequestWithoutResponse<Request>(with request: Request) async throws where Request: GitHubAPIRequestProtocol {
-        let (data, httpResponse) = try await sendRequest(with: request)
-        try checkResponse(request: request, data: data, httpResponse: httpResponse)
     }
 }
 
@@ -134,7 +127,11 @@ extension GitHubAPIClient {
     private func decodeResponse<Response: Decodable>(data: Data, httpResponse: HTTPResponse) throws -> Response {
         var response: Response
         do {
-            response = try JSONDecoder().decode(Response.self, from: data)
+            if Response.self == NoBodyResponse.self {
+                response = try JSONDecoder().decode(Response.self, from: Data("{}".utf8)) // bodyがnilの場合はダミーのjson文字列を利用する
+            } else {
+                response = try JSONDecoder().decode(Response.self, from: data)
+            }
         } catch {
             print(String(data: data, encoding: .utf8)!)
             throw GitHubAPIClientError.responseParseError(error)

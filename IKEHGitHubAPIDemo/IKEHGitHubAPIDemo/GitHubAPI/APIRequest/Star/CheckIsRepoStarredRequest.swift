@@ -18,7 +18,7 @@ extension GitHubAPIRequest {
 
 extension GitHubAPIRequest.CheckIsRepoStarredRequest: GitHubAPIRequestProtocol {
 
-    typealias Response = String
+    typealias Response = NoBodyResponse
     
     var method: HTTPTypes.HTTPRequest.Method {
         .get
