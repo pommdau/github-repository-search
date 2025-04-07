@@ -10,7 +10,7 @@ import Foundation
 @MainActor
 protocol RepoStoreProtocol: AnyObject {
     static var shared: Self { get } // シングルトン
-    var repository: RepoRepository? { get }
+    var repository: RepoRepository? { get } // 
     var valuesDic: [Repo.ID: Repo] { get set } // TODO: Rename
 }
 
