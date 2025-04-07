@@ -12,14 +12,21 @@ import SwiftUI
 final class RepoStore: RepoStoreProtocol {
     static var shared: RepoStore = .init()
     var repository: RepoRepository?
-    var valuesDic: [Repo.ID: Repo] = [:]
+    var valuesDic: [SwiftID<Repo>: Repo] = [:]
     
     // MARK: - LifeCycle
     
-    init() {
-        self.repository = .shared
+    init(repository: RepoRepository? = .shared) {
+        self.repository = repository
         Task {
             try? await self.fetchValues()
         }
     }
+//            
+//    init() {
+//        self.repository = .shared
+//        Task {
+//            try? await self.fetchValues()
+//        }
+//    }
 }

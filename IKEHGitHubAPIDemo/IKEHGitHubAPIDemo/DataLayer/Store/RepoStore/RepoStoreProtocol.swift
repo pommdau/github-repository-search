@@ -11,7 +11,7 @@ import Foundation
 protocol RepoStoreProtocol: AnyObject {
     static var shared: Self { get } // シングルトン
     var repository: RepoRepository? { get } // 
-    var valuesDic: [Repo.ID: Repo] { get set } // TODO: Rename
+    var valuesDic: [SwiftID<Repo>: Repo] { get set } // TODO: Rename
 }
 
 extension RepoStoreProtocol {
@@ -26,19 +26,21 @@ extension RepoStoreProtocol {
 
     // MARK: Create/Update
 
+    // TODO: Renameしてもいい
     func addValue(_ value: Repo, updateStarred: Bool) async throws {
-        let values = Repo.mergeRepos(
-            existingRepos: Array(valuesDic.values),
-            newRepos: [value],
-            updateStarred: updateStarred
-        )
-        guard let value = values.first else {
-            assertionFailure()
-            return
-        }
-        
-        try await repository?.addValue(value)
-        valuesDic[value.id] = value
+//        let values = Repo.mergeRepos(
+//            existingRepos: Array(valuesDic.values),
+//            newRepos: [value],
+//            updateStarred: updateStarred
+//        )
+//        guard let value = values.first else {
+//            assertionFailure()
+//            return
+//        }
+//        
+//        try await repository?.addValue(value)
+//        valuesDic[value.id] = value
+        try await addValues([value], updateStarred: updateStarred)
     }
     
     func addValues(_ values: [Repo], updateStarred: Bool) async throws {

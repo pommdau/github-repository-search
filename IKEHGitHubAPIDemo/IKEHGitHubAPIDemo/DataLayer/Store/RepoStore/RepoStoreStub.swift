@@ -12,7 +12,7 @@ import Foundation
 final class RepoStoreStub: RepoStoreProtocol {
     static var shared: RepoStoreStub = .init()
     private(set) var repository: RepoRepository?
-    var valuesDic: [Repo.ID: Repo] = [:]
+    var valuesDic: [SwiftID<Repo>: Repo] = [:]
     
     // MARK: - LifeCycle
     

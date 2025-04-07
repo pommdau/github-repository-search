@@ -14,11 +14,21 @@ extension Repo {
     enum Mock {
         
         static func random(count: Int) -> [Repo] {
-            (0..<count).map { _ in random() }
+            var repos: [Repo] = []
+            while repos.count <= count {
+                let newRepo = Repo.Mock.random()
+                // IDの被りがないかをチェック
+                if repos.map({ $0.id }).contains(newRepo.id) {
+                    continue
+                }
+                repos.append(newRepo)
+            }
+            
+            return repos
         }
         
         static func random() -> Repo {
-            let randomID = Int.random(in: 1000...9999)
+            let randomID = Int.random(in: 1...Int.max)
             let randomName = ["Tetris", "Chess", "Snake", "Pong", "Breakout"].randomElement() ?? ""
             let randomOwner = User.Mock.random()
             let randomLanguage = ["Swift", "Python", "JavaScript", "C++", "Rust"].randomElement()

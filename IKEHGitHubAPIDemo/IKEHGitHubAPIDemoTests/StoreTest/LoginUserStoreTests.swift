@@ -35,6 +35,7 @@ final class LoginUserStoreTests: XCTestCase {
 // MARK: - Tests
 
 extension LoginUserStoreTests {
+    
     /// CRUDのテスト
     func testCRUDSuccess() async throws {
                 
