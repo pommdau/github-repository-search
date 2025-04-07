@@ -24,7 +24,7 @@ final class SearchSuggestionStore: SearchSuggestionStoreProtocol {
     
     init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
-        // 保存されている値の読込
+        // 保存されている値の読込        
         self.historySuggestions = userDefaults.codableItem(forKey: "suggestions-history") ?? []
 
     }

@@ -28,7 +28,7 @@ final class LoginUserStoreTests: XCTestCase {
     override func tearDown() async throws {
         try await super.tearDown()
         sut = nil
-        try UserDefaults.resetAndRemovePlistUserDefaults(suitName: Self.userDefaultsSuiteName)
+        try UserDefaults.resetAndRemovePlistUserDefaults(suiteName: Self.userDefaultsSuiteName)
     }
 }
 

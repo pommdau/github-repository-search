@@ -36,7 +36,7 @@ final class TokenStoreTests: XCTestCase {
         try await super.tearDown()
         sut = nil
         try keyChain.removeAll()
-        try UserDefaults.resetAndRemovePlistUserDefaults(suitName: Self.userDefaultsSuiteName)
+        try UserDefaults.resetAndRemovePlistUserDefaults(suiteName: Self.userDefaultsSuiteName)
     }
 }
 
