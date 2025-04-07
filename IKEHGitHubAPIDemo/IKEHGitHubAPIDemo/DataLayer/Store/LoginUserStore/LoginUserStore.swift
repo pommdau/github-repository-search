@@ -17,7 +17,7 @@ final class LoginUserStore: LoginUserStoreProtocol {
 
     var loginUser: LoginUser? {
         didSet {
-            UserDefaults.standard.setCodableItem(loginUser, forKey: "ikehgithubapi-login-user")
+            userDefaults.setCodableItem(loginUser, forKey: "ikehgithubapi-login-user")
         }
     }
         

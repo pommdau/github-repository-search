@@ -42,35 +42,74 @@ extension SearchSuggestionStoreTests {
     /// Create/Updateのテスト
     func testAddHistory() async throws {
         
-        // MARK: Given
-        
-        sut.addHistory("hoge")
-        
-        // 空の場合
+        // 空の場合は履歴に追加されない
         print(sut.historySuggestions)
         sut.addHistory("")
-//        XCTAssertEqual(sut.historySuggestions.count, .zero)
-//        
-//        // 履歴の追加
-//        for count in 0..<5 {
-//            let newHistory = "\(count)"
-//            sut.addHistory(newHistory)
-//            XCTAssertEqual(sut.historySuggestions.first, newHistory)
-//            XCTAssertEqual(sut.historySuggestions.count, count + 1)
-//        }
+        XCTAssertEqual(sut.historySuggestions.count, .zero)
+
+        // 履歴の追加
+        let testHistories1 = (0..<sut.maxHistoryCount).map { _ in
+            UUID().uuidString
+        }
+        testHistories1.forEach { testHistory in
+            sut.addHistory(testHistory)
+            XCTAssertEqual(sut.historySuggestions.first, testHistory) // 先頭に配置されていることの確認
+        }
+        XCTAssertEqual(sut.historySuggestions.count, testHistories1.count)
+                    
+        // すでに履歴にある場合、先頭に配置されることの確認
+        let testHistory2 = UUID().uuidString
+        sut.addHistory(testHistory2)
+        XCTAssertEqual(sut.historySuggestions.first, testHistory2)
         
-        // 上限超えた場合
+        // 履歴上限を超えた場合
+        let testHistory3 = UUID().uuidString
+        sut.addHistory(testHistory3)
+        XCTAssertEqual(sut.historySuggestions.count, sut.maxHistoryCount)
+        XCTAssertFalse(sut.historySuggestions.contains(testHistories1.first!)) // 最も古い履歴が削除されている
+    }
+    
+    func testRemoveHistorySuccess() async throws {
         
+        // MARK: Given
         
-        //
-        //        XCTAssertEqual(sut.valuesDic.count, 0)
-        //
-        //        // MARK: When
-        //        let testRepos = Repo.Mock.random(count: 10)
-        //        try await sut.addValues(testRepos, updateStarred: false)
-        //
-        //        // MARK: Then
-        //        // 登録数の確認
-        //        XCTAssertEqual(sut.valuesDic.count, testRepos.count)
+        // 履歴の追加
+        let testHistories = (0..<sut.maxHistoryCount).map { _ in
+            UUID().uuidString
+        }
+        testHistories.forEach { testHistory in
+            sut.addHistory(testHistory)
+        }
+        
+        // MARK: When
+        
+        print(sut.historySuggestions)
+        sut.removeHistory(atOffsets: .init(integer: 0)) // 最新の履歴の削除
+        print(sut.historySuggestions)
+        // MARK: Then
+        
+        XCTAssertEqual(sut.historySuggestions.count, testHistories.count - 1) // 要素数の確認
+        XCTAssertEqual(sut.historySuggestions.first, testHistories[sut.maxHistoryCount - 2]) // 最後から2番目に追加された履歴が先頭に来ていることの確認
+    }
+    
+    func testRemoveAllHistoriesSuccess() async throws {
+        
+        // MARK: Given
+        
+        // 履歴の追加
+        let testHistories = (0..<sut.maxHistoryCount).map { _ in
+            UUID().uuidString
+        }
+        testHistories.forEach { testHistory in
+            sut.addHistory(testHistory)
+        }
+        
+        // MARK: When
+        
+        sut.removeAllHistories()
+        
+        // MARK: Then
+        
+        XCTAssertEqual(sut.historySuggestions.count, .zero)
     }
 }

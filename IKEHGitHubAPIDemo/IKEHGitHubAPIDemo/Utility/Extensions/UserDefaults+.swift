@@ -12,7 +12,7 @@ import Foundation
 extension UserDefaults {
     func codableItem<T>(forKey defaultName: String) -> T? where T: Codable {
         let jsonDecoder = JSONDecoder()
-        guard let itemData = UserDefaults.standard.data(forKey: defaultName),
+        guard let itemData = self.data(forKey: defaultName),
               let item = try? jsonDecoder.decode(T.self, from: itemData) else {
             return nil
         }
@@ -25,7 +25,7 @@ extension UserDefaults {
         guard let valueData = try? jsonEncoder.encode(value) else {
             return
         }
-        UserDefaults.standard.set(valueData, forKey: defaultName)
+        self.set(valueData, forKey: defaultName)
     }
 }
 
