@@ -53,7 +53,7 @@ extension SearchScreenViewStateTest {
         // MARK: When
         
         // MARK: 検索開始
-        sut.searchText = "testText"
+        sut.searchText = "SwiftUI"
 //        async let search: Void = sut.handleSearch()
         sut.handleSearch()
         

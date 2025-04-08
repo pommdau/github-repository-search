@@ -82,7 +82,7 @@ final actor GitHubAPIClientStub: GitHubAPIClientProtocol {
         return .init(totalCount: 1, items: [Repo.Mock.random()])
     }
     
-//    var fetchUserReposResponse: ListResponse<Repo> = .init(items: Repo.Mock.random(count: 10), relationLink: <#T##RelationLink?#>)
+    var fetchUserReposResponse: ListResponse<Repo> = .init(items: Repo.Mock.random(count: 10), relationLink: nil)
     func fetchUserRepos(userName: String, page: Int? = nil) async throws -> ListResponse<Repo> {
         return .init(items: [Repo.Mock.random()])
     }
