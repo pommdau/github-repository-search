@@ -27,7 +27,7 @@ final class StarredRepoResultViewState {
     var sortedBy: FetchStarredReposSortedBy = .recentlyStarred
         
     var loginUser: LoginUser? {
-        loginUserStore.value
+        loginUserStore.loginUser
     }
     
     var loginUserName: String? {

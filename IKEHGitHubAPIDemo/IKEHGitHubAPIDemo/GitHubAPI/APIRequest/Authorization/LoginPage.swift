@@ -17,8 +17,7 @@ extension GitHubAPIRequest {
 
 extension GitHubAPIRequest.LoginPage: GitHubAPIRequestProtocol {
     
-    // unused
-    typealias Response = String
+    typealias Response = NoBodyResponse
     
     // unused
     var method: HTTPTypes.HTTPRequest.Method {

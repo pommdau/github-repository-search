@@ -8,14 +8,11 @@
 import SwiftUI
 
 struct RootTabView: View {
-    
-    @AppStorage("roottabview-selected-tab")
-    private var selectedTab: RootTabType = .profile
-    
+            
     @State private var state: RootTabViewState = .init()
         
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView(selection: $state.selectedTab) {
             Tab(RootTabType.profile.title, systemImage: RootTabType.profile.icon, value: RootTabType.profile) {
                 ProfileView()
             }

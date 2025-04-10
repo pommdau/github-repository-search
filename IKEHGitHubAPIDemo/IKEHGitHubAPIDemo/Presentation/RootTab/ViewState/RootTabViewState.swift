@@ -15,6 +15,14 @@ final class RootTabViewState {
         
     let loginUserStore: LoginUserStore
     let githubAPIClient: GitHubAPIClient
+    
+    /// 選択中のタブ
+    var selectedTab: RootTabType {
+        didSet {
+            UserDefaults.standard.set(selectedTab.rawValue, forKey: "RootTabViewState.selectedTab")
+        }
+    }
+    
     var error: Error?
 
     // MARK: - LifeCycle
@@ -25,6 +33,13 @@ final class RootTabViewState {
     ) {
         self.loginUserStore = loginUserStore
         self.githubAPIClient = githubAPIClient
+        
+        if let selectedTabRawValue = UserDefaults.standard.string(forKey: "RootTabViewState.selectedTab"),
+           let selectedTab = RootTabType(rawValue: selectedTabRawValue) {
+            self.selectedTab = selectedTab
+        } else {
+            self.selectedTab = .profile
+        }
     }
     
     // MARK: - Action
@@ -32,7 +47,8 @@ final class RootTabViewState {
     func handleOnCallbackURL(_ url: URL) {
         Task {
             do {
-                let loginUser = try await githubAPIClient.handleLoginCallBackURL(url)
+                try await githubAPIClient.handleLoginCallBackURL(url)
+                let loginUser = try await githubAPIClient.fetchLoginUser()                
                 withAnimation {
                     loginUserStore.addValue(loginUser)
                 }

@@ -10,23 +10,26 @@ import Foundation
 
 enum GitHubAPIClientError: Error {
     
-    // ログインに失敗
+    /// ログインに失敗
     case loginError(String)
     
-    // 認証関係のエラー
-    case oauthError(String)
+    /// 認証トークンのエラー
+    case tokenError(String)
     
-    // APIのリクエストの作成に失敗
+    /// APIのリクエストの作成に失敗
     case invalidRequest
     
-    // 通信に失敗
+    /// 通信に失敗
     case connectionError(Error)
     
-    // レスポンスの解釈に失敗
+    /// レスポンスのデータのデコードに失敗
     case responseParseError(Error)
     
-    // APIからエラーレスポンスを受け取った
-    case apiError(GitHubAPIErrorProtocol)
+    // API実行後にエラーレスポンスを受け取った
+    case apiError(GitHubAPIError)
+    
+    // OAuthのAPI実行後にエラーレスポンスを受け取った
+    case oauthAPIError(OAuthError)
 }
 
 // MARK: - LocalizedError
@@ -36,7 +39,7 @@ extension GitHubAPIClientError: LocalizedError {
         switch self {
         case .loginError(let message):
             return "ログインに失敗しました: \(message)"
-        case .oauthError(let message):
+        case .tokenError(let message):
             return "APIの認証でエラーが発生しました: \(message)"
         case .invalidRequest:
             return "APIリクエストの作成に失敗しました"
@@ -46,6 +49,8 @@ extension GitHubAPIClientError: LocalizedError {
             return "データの取得に失敗しました"
         case .apiError(let gitHubAPIError):
             return "APIでエラーが発生しました: \(gitHubAPIError.localizedDescription)"
+        case .oauthAPIError(let oAuthError):
+            return "APIでエラーが発生しました: \(oAuthError.localizedDescription)"
         }
     }
 }

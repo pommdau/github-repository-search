@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol GitHubAPIErrorProtocol: Sendable, Decodable, Error, LocalizedError {
-    var statusCode: Int? { get set }
-}
+//protocol GitHubAPIErrorProtocol: Sendable, Decodable, Error, LocalizedError {
+//    var statusCode: Int? { get set }
+//}

@@ -23,7 +23,11 @@ struct SearchSuggestionView: View {
                             .searchCompletion(history)
                             .foregroundStyle(.primary)
                         
+                    }                    
+                    .onDelete { indexPath in
+                        searchSuggestionStore.removeHistory(atOffsets: indexPath)
                     }
+
                     /* TODO: クリア時に候補のViewが閉じてしまう
                     Button("履歴のクリア") {
                         searchSuggestionStore.removeAllHistories()
@@ -34,7 +38,7 @@ struct SearchSuggestionView: View {
             }
             
             Section("おすすめ") {
-                ForEach(SearchSuggestionStore.recommendedSuggestions, id: \.self) { suggestion in
+                ForEach(searchSuggestionStore.recommendedSuggestions, id: \.self) { suggestion in
                     Label(suggestion, systemImage: "magnifyingglass")
                         .searchCompletion(suggestion)
                         .foregroundStyle(.primary)

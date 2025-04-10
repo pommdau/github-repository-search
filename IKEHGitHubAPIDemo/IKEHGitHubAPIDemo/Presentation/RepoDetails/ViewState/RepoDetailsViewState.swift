@@ -31,7 +31,7 @@ final class RepoDetailsViewState {
     }
     
     var loginUser: LoginUser? {
-        loginUserStore.value
+        loginUserStore.loginUser
     }
     
     var disableStarButton: Bool {

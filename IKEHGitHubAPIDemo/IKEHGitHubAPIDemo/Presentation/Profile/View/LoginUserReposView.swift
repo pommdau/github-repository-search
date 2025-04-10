@@ -44,7 +44,7 @@ final class LoginUserReposViewState {
     
     private(set) var searchTask: Task<(), Never>?
         
-    let gitHubAPIClient: GitHubAPIClient
+    let gitHubAPIClient: GitHubAPIClientProtocol
     let repoStore: RepoStore
     let loginUserStore: LoginUserStore
     let searchSuggestionStore: SearchSuggestionStore
@@ -53,7 +53,7 @@ final class LoginUserReposViewState {
     
     init(
         url: URL,
-        gitHubAPIClient: GitHubAPIClient = .shared,
+        gitHubAPIClient: GitHubAPIClientProtocol = GitHubAPIClient.shared,
         repoStore: RepoStore = .shared,
         loginUserStore: LoginUserStore = .shared,
         searchSuggestionStore: SearchSuggestionStore = .shared
@@ -80,7 +80,6 @@ final class LoginUserReposViewState {
             try? await Task.sleep(for: .seconds(1))
             do {
                 // 検索の実行
-                                        
                 let response: ListResponse<Repo> = try await gitHubAPIClient.fetchWithURL(url: url)
 
                 // 検索に成功

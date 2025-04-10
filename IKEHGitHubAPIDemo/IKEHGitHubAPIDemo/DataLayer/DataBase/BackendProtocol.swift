@@ -9,6 +9,7 @@ import Foundation
 
 protocol BackendProtocol: Actor {
     associatedtype Item: Identifiable & Codable where Item.ID: Codable
+    var userDefaults: UserDefaults? { get }
     func addValue(_ value: Item) async throws
     func addValues(_ values: [Item]) async throws
     func fetchValue(for id: Item.ID) async throws -> Item?
@@ -28,13 +29,13 @@ extension BackendProtocol {
         
     private var values: [Item.ID: Item] {
         get {
-            guard let values: [Item.ID: Item] = UserDefaults.standard.codableItem(forKey: valuesUserDefaultsKey) else {
+            guard let values: [Item.ID: Item] = userDefaults?.codableItem(forKey: valuesUserDefaultsKey) else {
                 return [:]
             }
             return values
         }
         set {
-            UserDefaults.standard.setCodableItem(newValue, forKey: valuesUserDefaultsKey)
+            userDefaults?.setCodableItem(newValue, forKey: valuesUserDefaultsKey)
         }
     }
     

@@ -8,17 +8,74 @@
 
 import Foundation
 
+// MARK: - Mock
+
 extension GitHubAPIError {
     enum Mock {
-        static let sampleData: [GitHubAPIError] = [
-            .init(message: "API rate limit exceeded for 121.112.2.169. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)\",\"documentation_url\":\"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting")
-        ]
-        static var missingQueryPatemeterError: GitHubAPIError {
-            .init(message: "Validation Failed",
-                  errors: [
-                    .init(resource: "Search", field: "q", code: "missing")
-                  ]
+        static var badCredentials: GitHubAPIError {
+            .init(
+                message: "Bad credentials",
+                errors: nil,
+                status: "401",
+                documentationPath: "https://docs.github.com/rest"
             )
         }
+        
+        static var notFound: GitHubAPIError {
+            .init(
+                message: "Not Found",
+                errors: nil,
+                status: "404",
+                documentationPath: "https://docs.github.com/rest/apps/oauth-applications#delete-an-app-authorization"
+            )
+        }
+        
+        static var validationFailed: GitHubAPIError {
+            .init(
+                message: "Validation Failed",
+                errors: [
+                    .init(resource: "Search", field: "q", code: "missing")
+                ],
+                status: "422",
+                documentationPath: "https://docs.github.com/v3/search"
+            )
+        }
+    }
+}
+
+// MARK: - JSONString
+
+extension GitHubAPIError.Mock {
+    enum JSONString {
+        static let badCredentials = """
+{
+  "message":"Bad credentials",
+  "documentation_url":"https://docs.github.com/rest",
+  "status":"401"
+}
+"""
+        
+        static let notFount = """
+{
+  "message": "Not Found",
+  "documentation_url": "https://docs.github.com/rest/apps/oauth-applications#delete-an-app-authorization",
+  "status": "404"
+}
+"""
+        
+        static let validationFailed = """
+{
+  "message": "Validation Failed",
+  "errors": [
+    {
+      "resource": "Search",
+      "field": "q",
+      "code": "missing"
+    }
+  ],
+  "documentation_url": "https://docs.github.com/v3/search",
+  "status": "422"
+}
+"""
     }
 }

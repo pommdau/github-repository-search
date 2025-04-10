@@ -101,3 +101,66 @@ extension RelationLink {
         print("Completed")
     }
 }
+
+extension RelationLink {
+
+    enum Mock {
+        static let fetchSearchReposResponse: RelationLink = {
+            guard let nextLinkURL = URL(string: "https://api.github.com/search/repositories?q=SwiftUI&per_page=10&page=2"),
+                  let lastLinkURL = URL(string: "https://api.github.com/search/repositories?q=SwiftUI&per_page=10&page=100")
+            else {
+                fatalError("Failed to create URL")
+            }
+            let nextLink: RelationLink.Link = .init(id: "next", url: nextLinkURL, queryItems: [
+                .init(name: "q", value: "SwiftUI"),
+                .init(name: "per_page", value: "10"),
+                .init(name: "page", value: "2")
+            ])
+            let lastLink: RelationLink.Link = .init(id: "last", url: lastLinkURL, queryItems: [
+                .init(name: "q", value: "SwiftUI"),
+                .init(name: "per_page", value: "10"),
+                .init(name: "page", value: "100")
+            ])
+            return .init(
+                prev: nil,
+                next: nextLink,
+                last: lastLink,
+                first: nil
+            )
+        }()
+        
+        static let fetchStarredReposResponse: RelationLink = {
+            guard let nextLinkURL = URL(string: "https://api.github.com/user/29433103/starred?sort=created&direction=desc&per_page=5&page=2"),
+                  let lastLinkURL = URL(string: "https://api.github.com/user/29433103/starred?sort=created&direction=desc&per_page=5&page=12")
+            else {
+                fatalError("Failed to create URL")
+            }
+            let nextLink: RelationLink.Link = .init(id: "next", url: nextLinkURL, queryItems: [
+                .init(name: "sort", value: "created"),
+                .init(name: "direction", value: "desc"),
+                .init(name: "per_page", value: "5"),
+                .init(name: "page", value: "2")
+            ])
+            let lastLink: RelationLink.Link = .init(id: "last", url: lastLinkURL, queryItems: [
+                .init(name: "sort", value: "created"),
+                .init(name: "direction", value: "desc"),
+                .init(name: "per_page", value: "5"),
+                .init(name: "page", value: "12")
+            ])
+            return .init(
+                prev: nil,
+                next: nextLink,
+                last: lastLink,
+                first: nil
+            )
+        }()
+    }
+}
+
+extension RelationLink.Mock {
+    enum RawString {
+        static let fetchStarredReposResponse = """
+<https://api.github.com/user/29433103/starred?sort=created&direction=desc&per_page=5&page=2>; rel=\"next\", <https://api.github.com/user/29433103/starred?sort=created&direction=desc&per_page=5&page=12>; rel=\"last\"
+"""
+    }
+}

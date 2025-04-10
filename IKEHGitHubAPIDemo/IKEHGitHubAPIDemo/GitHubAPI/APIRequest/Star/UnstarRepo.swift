@@ -18,7 +18,7 @@ extension GitHubAPIRequest {
 
 extension GitHubAPIRequest.UnstarRepo: GitHubAPIRequestProtocol {
 
-    typealias Response = String // unused
+    typealias Response = NoBodyResponse
     
     var method: HTTPTypes.HTTPRequest.Method {
         .delete
