@@ -1,0 +1,36 @@
+fragment RepositoryFields on Repository {
+  createdAt
+  description
+  forkCount
+  homepageUrl
+  id
+  isFork
+  isPrivate
+  languages(first: 10) {
+    edges {
+      node {
+        ...LanguageFields
+      }
+      size
+    }
+    totalCount
+    totalSize
+    
+  }
+  name
+  owner {
+    avatarUrl
+    id
+    login
+    url
+  }
+  primaryLanguage {
+    ...LanguageFields
+  }
+  pushedAt
+  stargazerCount
+  # stargazers
+  updatedAt
+  url
+  # watchers
+}

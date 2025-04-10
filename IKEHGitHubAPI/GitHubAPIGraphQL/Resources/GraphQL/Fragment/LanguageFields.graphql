@@ -1,0 +1,5 @@
+fragment LanguageFields on Language {
+  color
+  id
+  name
+}
