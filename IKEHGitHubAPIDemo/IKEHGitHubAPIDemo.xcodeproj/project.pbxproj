@@ -10,8 +10,6 @@
 		DA0936912D4BC9C700484A5D /* UserDefaultsBrowser in Frameworks */ = {isa = PBXBuildFile; productRef = DA0936902D4BC9C700484A5D /* UserDefaultsBrowser */; };
 		DA09FB242D5EDB280078A0AF /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = DA09FB232D5EDB280078A0AF /* RswiftLibrary */; };
 		DA09FF9C2D65CB0F0078A0AF /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = DA09FF9B2D65CB0B0078A0AF /* README.md */; };
-		DA12C5E22D252C8000296345 /* IKEHGitHubAPI in Frameworks */ = {isa = PBXBuildFile; productRef = DA12C5E12D252C8000296345 /* IKEHGitHubAPI */; };
-		DA12C5EF2D2533C800296345 /* IKEHGitHubAPI in Frameworks */ = {isa = PBXBuildFile; productRef = DA12C5EE2D2533C800296345 /* IKEHGitHubAPI */; };
 		DA1DE9E82D4C5B0F00CACE02 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = DA1DE9E72D4C5B0F00CACE02 /* Collections */; };
 		DA1DEB092D4E679100CACE02 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = DA1DEB082D4E679100CACE02 /* Shimmer */; };
 		DA96BAAD2D25397D0081B93B /* HTTPTypes in Frameworks */ = {isa = PBXBuildFile; productRef = DA96BAAC2D25397D0081B93B /* HTTPTypes */; };
@@ -100,8 +98,6 @@
 				DA1DEB092D4E679100CACE02 /* Shimmer in Frameworks */,
 				DAF43D0C2D41E31000D8A5F2 /* KeychainAccess in Frameworks */,
 				DA09FB242D5EDB280078A0AF /* RswiftLibrary in Frameworks */,
-				DA12C5E22D252C8000296345 /* IKEHGitHubAPI in Frameworks */,
-				DA12C5EF2D2533C800296345 /* IKEHGitHubAPI in Frameworks */,
 				DACA6C9B2D68761A009F72B3 /* SDWebImageSwiftUI in Frameworks */,
 				DA0936912D4BC9C700484A5D /* UserDefaultsBrowser in Frameworks */,
 				DA96BAAF2D25397D0081B93B /* HTTPTypesFoundation in Frameworks */,
@@ -198,8 +194,6 @@
 			);
 			name = IKEHGitHubAPIDemo;
 			packageProductDependencies = (
-				DA12C5E12D252C8000296345 /* IKEHGitHubAPI */,
-				DA12C5EE2D2533C800296345 /* IKEHGitHubAPI */,
 				DA96BAAC2D25397D0081B93B /* HTTPTypes */,
 				DA96BAAE2D25397D0081B93B /* HTTPTypesFoundation */,
 				DA96BAB12D2539880081B93B /* SwiftID */,
@@ -247,7 +241,6 @@
 			mainGroup = DA12C5C52D252C6600296345;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				DA12C5ED2D2533C800296345 /* XCLocalSwiftPackageReference "../IKEHGitHubAPI" */,
 				DA96BAAB2D25397D0081B93B /* XCRemoteSwiftPackageReference "swift-http-types" */,
 				DA96BAB02D2539880081B93B /* XCRemoteSwiftPackageReference "swift-id" */,
 				DAF43D0A2D41E31000D8A5F2 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
@@ -660,13 +653,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		DA12C5ED2D2533C800296345 /* XCLocalSwiftPackageReference "../IKEHGitHubAPI" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../IKEHGitHubAPI;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
 		DA09368F2D4BC9C700484A5D /* XCRemoteSwiftPackageReference "UserDefaultsBrowser" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -764,14 +750,6 @@
 		DA09FB262D5EDB5D0078A0AF /* RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
-		};
-		DA12C5E12D252C8000296345 /* IKEHGitHubAPI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = IKEHGitHubAPI;
-		};
-		DA12C5EE2D2533C800296345 /* IKEHGitHubAPI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = IKEHGitHubAPI;
 		};
 		DA1DE9E72D4C5B0F00CACE02 /* Collections */ = {
 			isa = XCSwiftPackageProductDependency;

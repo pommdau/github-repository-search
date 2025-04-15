@@ -1,0 +1,22 @@
+query SearchRepos($query: String!, $first: Int = 10, $after: String) {
+  search(
+    after: $after
+    first: $first
+    query: $query
+    type: REPOSITORY
+  ) {
+    repositoryCount
+    edges {
+      cursor
+      node {
+        ... on Repository {
+          ...RepositoryFields
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+    }
+  }
+}

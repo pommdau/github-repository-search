@@ -1,0 +1,23 @@
+fragment UserFields on User {
+  avatarUrl
+  bio
+  # followers
+  # following
+  id
+  isFollowingViewer
+  location
+  login
+  name
+  # pinneditems
+  repositories(first: 0) {
+    totalCount
+  }
+  # socialAccounts
+  starredRepositories(first: 0) {
+    totalCount
+  }
+  twitterUsername
+  updatedAt
+  viewerCanFollow
+  viewerIsFollowing
+}
