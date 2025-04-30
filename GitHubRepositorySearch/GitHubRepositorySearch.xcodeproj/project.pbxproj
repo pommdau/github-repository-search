@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		DAA487282DC1E6F4003581BF /* IKEHGitHubAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = DAA487272DC1E6F4003581BF /* IKEHGitHubAPIClient */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		DAA485AE2DC1C1B0003581BF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -29,9 +33,22 @@
 		DAA485B72DC1C1B0003581BF /* GitHubRepositorySearchUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GitHubRepositorySearchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DAA4873F2DC1E856003581BF /* Exceptions for "GitHubRepositorySearch" folder in "GitHubRepositorySearch" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DAA4859F2DC1C1AE003581BF /* GitHubRepositorySearch */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DAA485A22DC1C1AE003581BF /* GitHubRepositorySearch */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DAA4873F2DC1E856003581BF /* Exceptions for "GitHubRepositorySearch" folder in "GitHubRepositorySearch" target */,
+			);
 			path = GitHubRepositorySearch;
 			sourceTree = "<group>";
 		};
@@ -52,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAA487282DC1E6F4003581BF /* IKEHGitHubAPIClient in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +130,7 @@
 			);
 			name = GitHubRepositorySearch;
 			packageProductDependencies = (
+				DAA487272DC1E6F4003581BF /* IKEHGitHubAPIClient */,
 			);
 			productName = GitHubRepositorySearch;
 			productReference = DAA485A02DC1C1AE003581BF /* GitHubRepositorySearch.app */;
@@ -195,6 +214,9 @@
 			);
 			mainGroup = DAA485972DC1C1AE003581BF;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DAA487262DC1E6F4003581BF /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DAA485A12DC1C1AE003581BF /* Products */;
 			projectDirPath = "";
@@ -400,6 +422,7 @@
 				DEVELOPMENT_TEAM = BWMJMJK727;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GitHubRepositorySearch/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -428,6 +451,7 @@
 				DEVELOPMENT_TEAM = BWMJMJK727;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GitHubRepositorySearch/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -558,6 +582,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		DAA487262DC1E6F4003581BF /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pommdau/ikeh-github-api-client";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DAA487272DC1E6F4003581BF /* IKEHGitHubAPIClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DAA487262DC1E6F4003581BF /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */;
+			productName = IKEHGitHubAPIClient;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = DAA485982DC1C1AE003581BF /* Project object */;
 }
