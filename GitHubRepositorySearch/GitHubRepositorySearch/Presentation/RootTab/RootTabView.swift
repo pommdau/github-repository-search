@@ -14,8 +14,7 @@ struct RootTabView: View {
     var body: some View {
         TabView(selection: $state.selectedTab) {
             Tab(RootTabType.profile.title, systemImage: RootTabType.profile.icon, value: RootTabType.profile) {
-//                ProfileView()
-                Text("Hoge")
+                ProfileView()
             }
 
             Tab(RootTabType.search.title, systemImage: RootTabType.search.icon, value: RootTabType.search) {

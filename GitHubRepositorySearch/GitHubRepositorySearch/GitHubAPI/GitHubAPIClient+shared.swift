@@ -7,7 +7,7 @@
 
 
 import Foundation
-import IKEHGitHubAPIClient
+import class IKEHGitHubAPIClient.GitHubAPIClient
 
 extension GitHubAPIClient {
     static let shared: GitHubAPIClient = .init(
