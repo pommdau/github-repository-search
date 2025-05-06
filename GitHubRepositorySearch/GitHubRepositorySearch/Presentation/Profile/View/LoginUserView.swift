@@ -7,48 +7,6 @@
 
 import SwiftUI
 import SDWebImageSwiftUI
-import struct IKEHGitHubAPIClient.LoginUser
-import IKEHGitHubAPIClient
-
-@MainActor
-@Observable
-final class LoginUserViewState {
-       
-    let tokenStore: TokenStoreProtocol
-    let loginUserStore: LoginUserStoreProtocol
-    let namespace: Namespace.ID?
-    var error: Error?
-    
-    // TODO: 再検討
-    var loginUser: LoginUser {
-        loginUserStore.loginUser ?? .Mock.ikeh
-    }
-        
-    init(
-        tokenStore: TokenStoreProtocol = TokenStore.shared,
-        loginUserStore: LoginUserStoreProtocol = LoginUserStore.shared,
-        namespace: Namespace.ID?,
-        error: Error? = nil
-    ) {
-        self.tokenStore = tokenStore
-        self.loginUserStore = loginUserStore
-        self.namespace = namespace
-        self.error = error
-    }
-    
-    func handleLogoutButtonTapped() {
-        Task {
-            do {
-                try await tokenStore.logout()
-                withAnimation {
-                    loginUserStore.deleteValue()
-                }
-            } catch {
-                self.error = error
-            }
-        }
-    }
-}
 
 struct LoginUserView: View {
     
@@ -62,6 +20,8 @@ struct LoginUserView: View {
             namespace: namespace,
         ))
     }
+    
+    // MARK: - View
         
     var body: some View {
         Content(
@@ -72,7 +32,6 @@ struct LoginUserView: View {
             }
         )
     }
-
 }
 
 extension LoginUserView {
@@ -217,8 +176,9 @@ extension LoginUserView {
     }
 }
 
-
 // MARK: - Preview
+
+import struct IKEHGitHubAPIClient.LoginUser
 
 #Preview {
     LoginUserView.Content(loginUser: .Mock.ikeh)

@@ -9,15 +9,6 @@ import Foundation
 import KeychainAccess
 import IKEHGitHubAPIClient
 
-protocol TokenStoreProtocol: Actor {
-    // MARK: - Property
-    var accessToken: String? { get set }
-    // MARK: - GitHub API
-    func openLoginPageInBrowser() async throws
-    func fetchAccessTokenWithCallbackURL(_ url: URL) async throws
-    func logout() async throws
-}
-
 final actor TokenStore: TokenStoreProtocol {
 
     // MARK: - Property
@@ -69,16 +60,3 @@ final actor TokenStore: TokenStoreProtocol {
     }
 }
 
-final actor TokenStoreStub: TokenStoreProtocol {
-    
-    var accessToken: String?
-    
-    func openLoginPageInBrowser() async throws {}
-    
-    func fetchAccessTokenWithCallbackURL(_ url: URL) async throws {}
-    
-    func logout() async throws {
-        accessToken = nil
-    }
-    
-}

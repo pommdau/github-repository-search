@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		DA44E0D32DCA02F0001EDD36 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = DA44E0D22DCA02F0001EDD36 /* KeychainAccess */; };
+		DA44E0F22DCA1D5B001EDD36 /* SwiftID in Frameworks */ = {isa = PBXBuildFile; productRef = DA44E0F12DCA1D5B001EDD36 /* SwiftID */; };
 		DAA487282DC1E6F4003581BF /* IKEHGitHubAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = DAA487272DC1E6F4003581BF /* IKEHGitHubAPIClient */; };
 		DABD5A2A2DC1EB71005EDCE8 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = DABD5A292DC1EB71005EDCE8 /* SDWebImageSwiftUI */; };
 /* End PBXBuildFile section */
@@ -72,6 +73,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DABD5A2A2DC1EB71005EDCE8 /* SDWebImageSwiftUI in Frameworks */,
+				DA44E0F22DCA1D5B001EDD36 /* SwiftID in Frameworks */,
 				DAA487282DC1E6F4003581BF /* IKEHGitHubAPIClient in Frameworks */,
 				DA44E0D32DCA02F0001EDD36 /* KeychainAccess in Frameworks */,
 			);
@@ -137,6 +139,7 @@
 				DAA487272DC1E6F4003581BF /* IKEHGitHubAPIClient */,
 				DABD5A292DC1EB71005EDCE8 /* SDWebImageSwiftUI */,
 				DA44E0D22DCA02F0001EDD36 /* KeychainAccess */,
+				DA44E0F12DCA1D5B001EDD36 /* SwiftID */,
 			);
 			productName = GitHubRepositorySearch;
 			productReference = DAA485A02DC1C1AE003581BF /* GitHubRepositorySearch.app */;
@@ -224,6 +227,7 @@
 				DAA487262DC1E6F4003581BF /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */,
 				DABD5A282DC1EB71005EDCE8 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				DA44E0F02DCA1D5B001EDD36 /* XCRemoteSwiftPackageReference "swift-id" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DAA485A12DC1C1AE003581BF /* Products */;
@@ -606,6 +610,14 @@
 				kind = branch;
 			};
 		};
+		DA44E0F02DCA1D5B001EDD36 /* XCRemoteSwiftPackageReference "swift-id" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/koher/swift-id";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		DAA487262DC1E6F4003581BF /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pommdau/ikeh-github-api-client";
@@ -629,6 +641,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
 			productName = KeychainAccess;
+		};
+		DA44E0F12DCA1D5B001EDD36 /* SwiftID */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA44E0F02DCA1D5B001EDD36 /* XCRemoteSwiftPackageReference "swift-id" */;
+			productName = SwiftID;
 		};
 		DAA487272DC1E6F4003581BF /* IKEHGitHubAPIClient */ = {
 			isa = XCSwiftPackageProductDependency;
