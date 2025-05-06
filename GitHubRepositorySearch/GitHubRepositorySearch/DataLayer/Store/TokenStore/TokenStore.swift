@@ -59,4 +59,3 @@ final actor TokenStore: TokenStoreProtocol {
         try await gitHubAPIClient.logout(accessToken: accessToken) // サーバ上の情報の削除
     }
 }
-

@@ -1,13 +1,13 @@
 {
-  "originHash" : "f19ed6394542a14ffc2d2c0bea83862d9dcae2c2975d4e1b9545049239cda50e",
+  "originHash" : "df2e93b7b17fbb7f301f9a78a41b311afaeb1b237e0841548fc198702f4f9d38",
   "pins" : [
     {
       "identity" : "ikeh-github-api-client",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pommdau/ikeh-github-api-client",
       "state" : {
-        "revision" : "e44de851b24d3e466da48ec91828a911f4b0d2d9",
-        "version" : "1.0.1"
+        "revision" : "75640976b8b0734763c00bdbdb1444094181a037",
+        "version" : "1.0.2"
       }
     },
     {
@@ -80,6 +80,15 @@
       "state" : {
         "revision" : "8545ddf4de043e6f2051c5cf204f39ef778ebf6b",
         "version" : "0.59.1"
+      }
+    },
+    {
+      "identity" : "swiftui-shimmer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/markiv/SwiftUI-Shimmer",
+      "state" : {
+        "revision" : "0226e21f9bf355d40e07e5f5e1c33679d50e167f",
+        "version" : "1.5.1"
       }
     },
     {

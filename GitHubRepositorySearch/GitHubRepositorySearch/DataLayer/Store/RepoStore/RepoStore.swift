@@ -14,11 +14,16 @@ final class RepoStore: RepoStoreProtocol {
     static var shared: RepoStore = .init()
     var repository: RepoRepository?
     var valuesDic: [SwiftID<Repo>: Repo] = [:]
+    let gitHubAPIClient: GitHubAPIClientProtocol
     
     // MARK: - LifeCycle
     
-    init(repository: RepoRepository? = .shared) {
+    init(
+        repository: RepoRepository? = .shared,
+        gitHubAPIClient: GitHubAPIClientProtocol = GitHubAPIClient.shared
+    ) {
         self.repository = repository
+        self.gitHubAPIClient = gitHubAPIClient
         Task {
             try? await self.fetchValues()
         }
@@ -29,4 +34,24 @@ final class RepoStore: RepoStoreProtocol {
 
 extension RepoStore {
     
+    func searchRepos(
+        searchText: String,
+        accessToken: String?,
+        sort: String?,
+        order: String?,
+        perPage: Int?,
+        page: Int?
+    ) async throws -> SearchResponse<Repo> {
+        try? await Task.sleep(for: .seconds(2))
+        let response = try await gitHubAPIClient.searchRepos(
+            searchText: searchText,
+            accessToken: accessToken,
+            sort: sort,
+            order: order,
+            perPage: perPage,
+            page: page
+        )
+        try await addValues(response.items)
+        return response
+    }
 }

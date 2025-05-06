@@ -10,12 +10,15 @@ import struct IKEHGitHubAPIClient.Repo
 
 struct RepoCell: View {
     
-    // セルに表示する情報のタイプ
+    // MARK: - Property
+    
+    /// セルに表示する情報のタイプ
     enum StatusType {
         case updatedAt
         case starredAt
     }
 
+    let languageStore: LanguageStore = .shared
     let repo: Repo
     let starredAt: Date?
     let statusType: StatusType
@@ -35,13 +38,24 @@ struct RepoCell: View {
         }
     }
     
+    var language: Language? {
+        guard let languageName = repo.language else {
+            return nil
+        }
+        return languageStore.getWithName(languageName)
+    }
+    
+    // MARK: - LifeCycle
+        
     // swiftlint:disable:next type_contents_order
     init(repo: Repo, starredAt: Date? = nil, statusType: StatusType = .updatedAt) {
         self.repo = repo
         self.starredAt = starredAt
         self.statusType = statusType
     }
-
+    
+    // MARK: - View
+    
     var body: some View {
         VStack(alignment: .leading) {
             userLabel()
@@ -60,7 +74,7 @@ struct RepoCell: View {
         }
     }
 
-    // MARK: - ViewBuilder
+    // MARK: - View Parts
 
     @ViewBuilder
     private func userLabel() -> some View {
@@ -100,6 +114,8 @@ struct RepoCell: View {
            !description.isEmpty {
             Text(description)
                 .lineLimit(3)
+        } else {
+            EmptyView()
         }
     }
 
@@ -116,18 +132,18 @@ struct RepoCell: View {
 
     @ViewBuilder
     private func languageLabel() -> some View {
-        // TODO:
-//        if let languageName = repo.language,
-//           let language = LanguageStore.shared.get(with: languageName) {
-//            HStack(spacing: 2) {
-//                Circle()
-//                    .frame(width: 12, height: 12)
-//                    .foregroundStyle(language.color)
-//                Text(language.name)
-//                    .foregroundStyle(.secondary)
-//                    .font(.footnote)
-//            }
-//        }
+        if let language {
+            HStack(spacing: 2) {
+                Circle()
+                    .frame(width: 12, height: 12)
+                    .foregroundStyle(language.color)
+                Text(language.name)
+                    .foregroundStyle(.secondary)
+                    .font(.footnote)
+            }
+        } else {
+            EmptyView()
+        }
     }
 }
 
@@ -142,13 +158,3 @@ struct RepoCell: View {
     RepoCell(repo: Repo.Mock.random(), starredAt: Date.random(inPastYears: 3), statusType: .starredAt)
         .padding()
 }
-
-//#Preview("長文あり", traits: .sizeThatFitsLayout) {
-//    RepoCell(repo: Repo.Mock.sampleDataWithLongWord)
-//        .padding()
-//}
-//
-//#Preview("空情報あり(言語/bio)", traits: .sizeThatFitsLayout) {
-//    RepoCell(repo: Repo.Mock.sampleDataWithoutSomeInfo)
-//        .padding()
-//}

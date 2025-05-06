@@ -10,6 +10,7 @@
 		DA44E0D32DCA02F0001EDD36 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = DA44E0D22DCA02F0001EDD36 /* KeychainAccess */; };
 		DA44E0F22DCA1D5B001EDD36 /* SwiftID in Frameworks */ = {isa = PBXBuildFile; productRef = DA44E0F12DCA1D5B001EDD36 /* SwiftID */; };
 		DA8BECE92DCA42C6002983CA /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = DA8BECE82DCA42C6002983CA /* RswiftLibrary */; };
+		DA8BEDC12DCA4BF4002983CA /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = DA8BEDC02DCA4BF4002983CA /* Shimmer */; };
 		DAA487282DC1E6F4003581BF /* IKEHGitHubAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = DAA487272DC1E6F4003581BF /* IKEHGitHubAPIClient */; };
 		DABD5A2A2DC1EB71005EDCE8 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = DABD5A292DC1EB71005EDCE8 /* SDWebImageSwiftUI */; };
 /* End PBXBuildFile section */
@@ -73,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA8BEDC12DCA4BF4002983CA /* Shimmer in Frameworks */,
 				DA8BECE92DCA42C6002983CA /* RswiftLibrary in Frameworks */,
 				DABD5A2A2DC1EB71005EDCE8 /* SDWebImageSwiftUI in Frameworks */,
 				DA44E0F22DCA1D5B001EDD36 /* SwiftID in Frameworks */,
@@ -145,6 +147,7 @@
 				DA44E0D22DCA02F0001EDD36 /* KeychainAccess */,
 				DA44E0F12DCA1D5B001EDD36 /* SwiftID */,
 				DA8BECE82DCA42C6002983CA /* RswiftLibrary */,
+				DA8BEDC02DCA4BF4002983CA /* Shimmer */,
 			);
 			productName = GitHubRepositorySearch;
 			productReference = DAA485A02DC1C1AE003581BF /* GitHubRepositorySearch.app */;
@@ -234,6 +237,7 @@
 				DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				DA44E0F02DCA1D5B001EDD36 /* XCRemoteSwiftPackageReference "swift-id" */,
 				DA8BECE72DCA42C6002983CA /* XCRemoteSwiftPackageReference "R" */,
+				DA8BEDBF2DCA4BF4002983CA /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DAA485A12DC1C1AE003581BF /* Products */;
@@ -658,6 +662,14 @@
 				minimumVersion = 7.8.0;
 			};
 		};
+		DA8BEDBF2DCA4BF4002983CA /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/markiv/SwiftUI-Shimmer";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.1;
+			};
+		};
 		DAA487262DC1E6F4003581BF /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pommdau/ikeh-github-api-client";
@@ -695,6 +707,11 @@
 		DA8BECEA2DCA42FA002983CA /* RswiftGenerateInternalResources */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = "plugin:RswiftGenerateInternalResources";
+		};
+		DA8BEDC02DCA4BF4002983CA /* Shimmer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA8BEDBF2DCA4BF4002983CA /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */;
+			productName = Shimmer;
 		};
 		DAA487272DC1E6F4003581BF /* IKEHGitHubAPIClient */ = {
 			isa = XCSwiftPackageProductDependency;

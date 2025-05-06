@@ -18,8 +18,7 @@ struct RootTabView: View {
             }
 
             Tab(RootTabType.search.title, systemImage: RootTabType.search.icon, value: RootTabType.search) {
-//                SearchScreen()
-                Text("Hoge")
+                SearchReposView()
             }
             
             Tab(RootTabType.starredRepos.title, systemImage: RootTabType.starredRepos.icon, value: RootTabType.starredRepos) {

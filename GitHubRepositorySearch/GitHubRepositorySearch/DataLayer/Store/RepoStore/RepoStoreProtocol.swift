@@ -13,6 +13,15 @@ protocol RepoStoreProtocol: AnyObject {
     static var shared: Self { get }
     var repository: RepoRepository? { get }
     var valuesDic: [SwiftID<Repo>: Repo] { get set }
+    
+    func searchRepos(
+        searchText: String,
+        accessToken: String?,
+        sort: String?,
+        order: String?,
+        perPage: Int?,
+        page: Int?
+    ) async throws -> SearchResponse<Repo>
 }
 
 extension RepoStoreProtocol {
