@@ -14,24 +14,24 @@ import IKEHGitHubAPIClient
 @Observable
 final class LoginUserViewState {
        
-    let loginUser: LoginUser
+    let tokenStore: TokenStoreProtocol
     let loginUserStore: LoginUserStoreProtocol
-    let githubAPIClient: GitHubAPIClientProtocol
-//    let tokenStore: Token
     let namespace: Namespace.ID?
     var error: Error?
+    
+    // TODO: 再検討
+    var loginUser: LoginUser {
+        loginUserStore.loginUser ?? .Mock.ikeh
+    }
         
-
     init(
-        loginUser: LoginUser,
+        tokenStore: TokenStoreProtocol = TokenStore.shared,
         loginUserStore: LoginUserStoreProtocol = LoginUserStore.shared,
-        githubAPIClient: GitHubAPIClientProtocol = GitHubAPIClient.shared,
         namespace: Namespace.ID?,
         error: Error? = nil
     ) {
-        self.loginUser = loginUser
+        self.tokenStore = tokenStore
         self.loginUserStore = loginUserStore
-        self.githubAPIClient = githubAPIClient
         self.namespace = namespace
         self.error = error
     }
@@ -39,7 +39,12 @@ final class LoginUserViewState {
     func handleLogoutButtonTapped() {
         Task {
             do {
-//                try await githubAPIClient.logout(accessToken: <#T##String#>)
+                try await tokenStore.logout()
+                withAnimation {
+                    loginUserStore.deleteValue()
+                }
+            } catch {
+                self.error = error
             }
         }
     }
@@ -52,13 +57,10 @@ struct LoginUserView: View {
     @State private var state: LoginUserViewState
     
     // swiftlint:disable:next type_contents_order
-    init(loginUser: LoginUser, namespace: Namespace.ID? = nil) {
-        _state = .init(
-            wrappedValue: LoginUserViewState(
-                loginUser: loginUser,
-                namespace: namespace,
-            )
-        )
+    init(namespace: Namespace.ID? = nil) {
+        _state = .init(wrappedValue: LoginUserViewState(
+            namespace: namespace,
+        ))
     }
         
     var body: some View {

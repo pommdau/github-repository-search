@@ -14,20 +14,9 @@ protocol TokenStoreProtocol: Actor {
     var accessToken: String? { get set }
     // MARK: - GitHub API
     func openLoginPageInBrowser() async throws
-    func fetchTokenWithCallbackURL(_ url: URL) async throws
+    func fetchAccessTokenWithCallbackURL(_ url: URL) async throws
     func logout() async throws
 }
-
-// MARK: - CRUD
-
-//extension TokenStoreProtocol {
-//    func addValue(_ accessToken: String) {
-//        self.accessToken = accessToken
-//    }
-//    func deleteValue() {
-//        self.accessToken = nil
-//    }
-//}
 
 final actor TokenStore: TokenStoreProtocol {
 
@@ -64,7 +53,7 @@ final actor TokenStore: TokenStoreProtocol {
        try await gitHubAPIClient.openLoginPageInBrowser()
     }
     
-    func fetchTokenWithCallbackURL(_ url: URL) async throws {
+    func fetchAccessTokenWithCallbackURL(_ url: URL) async throws {
         self.accessToken = try await gitHubAPIClient.recieveLoginCallBackURLAndFetchAccessToken(url)
     }
     
@@ -86,7 +75,7 @@ final actor TokenStoreStub: TokenStoreProtocol {
     
     func openLoginPageInBrowser() async throws {}
     
-    func fetchTokenWithCallbackURL(_ url: URL) async throws {}
+    func fetchAccessTokenWithCallbackURL(_ url: URL) async throws {}
     
     func logout() async throws {
         accessToken = nil

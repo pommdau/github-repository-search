@@ -48,7 +48,7 @@ final class RootTabViewState {
     func handleOnCallbackURL(_ url: URL) {
         Task {
             do {
-                try await tokenStore.fetchTokenWithCallbackURL(url)
+                try await tokenStore.fetchAccessTokenWithCallbackURL(url)
                 try await loginUserStore.fetchLoginUser()
             } catch {
                 self.error = error
