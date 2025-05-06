@@ -10,6 +10,8 @@ import Foundation
 import class IKEHGitHubAPIClient.GitHubAPIClient
 
 extension GitHubAPIClient {
+    
+    /// GitHubAPIClientのシングルトン
     static let shared: GitHubAPIClient = .init(
         clientID: GitHubAPICredentials.clientID,
         clientSecret: GitHubAPICredentials.clientSecret,
@@ -20,3 +22,7 @@ extension GitHubAPIClient {
         urlSession: URLSession.shared
     )
 }
+
+
+/// Protocolはライブラリで実装済みのメソッドのみなので継承のみ
+extension GitHubAPIClient: GitHubAPIClientProtocol {}

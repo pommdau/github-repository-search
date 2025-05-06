@@ -16,6 +16,10 @@ protocol GitHubAPIClientProtocol: Actor {
     func recieveLoginCallBackURLAndFetchAccessToken(_ url: URL) async throws -> String
     func logout(accessToken: String) async throws
     
+    // MARK: GitHubAPIClient+Common
+    
+    func fetchWithURL<Response: Decodable>(url: URL, accessToken: String?) async throws -> Response
+    
     // MARK: GitHubAPIClient+FetchRepos
     
     func searchRepos(
@@ -43,9 +47,10 @@ protocol GitHubAPIClientProtocol: Actor {
         accessToken: String?
     ) async throws -> Repo
     
-    // MARK: GitHubAPIClient+fetchWithURL
+    // MARK: GitHubAPIClient+FetchUser
     
-    func fetchWithURL<Response: Decodable>(url: URL, accessToken: String?) async throws -> Response
+    func fetchLoginUser(accessToken: String) async throws -> LoginUser
+    func fetchUser(accessToken: String, login: String) async throws -> User
     
     // MARK: GitHubAPIClient+Starred
     
@@ -66,4 +71,93 @@ protocol GitHubAPIClientProtocol: Actor {
     
     func starRepo(accessToken: String, ownerName: String, repoName: String) async throws
     func unstarRepo(accessToken: String, ownerName: String, repoName: String) async throws
+}
+
+// MARK: - デフォルト実装
+
+extension GitHubAPIClientProtocol {
+
+    // MARK: GitHubAPIClient+Authorization
+
+    func openLoginPageInBrowser() async throws {}
+
+    func recieveLoginCallBackURLAndFetchAccessToken(_ url: URL) async throws -> String {
+        return ""
+    }
+
+    func logout(accessToken: String) async throws {}
+    
+    // MARK: GitHubAPIClient+Common
+
+    func fetchWithURL<Response: Decodable>(url: URL, accessToken: String?) async throws -> Response {
+        throw MessageError(description: "Unused method")
+    }
+    
+    // MARK: GitHubAPIClient+FetchUser
+    
+    func fetchLoginUser(accessToken: String) async throws -> LoginUser {
+        throw MessageError(description: "Unused method")
+    }
+    
+    func fetchUser(accessToken: String, login: String) async throws -> User {
+        throw MessageError(description: "Unused method")
+    }
+
+    // MARK: GitHubAPIClient+FetchRepos
+
+    func searchRepos(
+        searchText: String,
+        accessToken: String?,
+        sort: String?,
+        order: String?,
+        perPage: Int?,
+        page: Int?
+    ) async throws -> SearchResponse<Repo> {
+        throw MessageError(description: "Unused method")
+    }
+
+    func fetchUserRepos(
+        userName: String,
+        accessToken: String?,
+        type: String?,
+        sort: String?,
+        direction: String?,
+        perPage: Int?,
+        page: Int?
+    ) async throws -> ListResponse<Repo> {
+        throw MessageError(description: "Unused method")
+    }
+
+    func fetchRepo(
+        owner: String,
+        repo: String,
+        accessToken: String?
+    ) async throws -> Repo {
+        throw MessageError(description: "Unused method")
+    }
+
+    // MARK: GitHubAPIClient+Starred
+
+    func fetchStarredRepos(
+        userName: String,
+        accessToken: String?,
+        sort: String?,
+        direction: String?,
+        perPage: Int?,
+        page: Int?,
+    ) async throws -> StarredReposResponse {
+        throw MessageError(description: "Unused method")
+    }
+
+    func checkIsRepoStarred(
+        accessToken: String,
+        ownerName: String,
+        repoName: String
+    ) async throws -> Bool {
+        return true
+    }
+
+    func starRepo(accessToken: String, ownerName: String, repoName: String) async throws {}
+
+    func unstarRepo(accessToken: String, ownerName: String, repoName: String) async throws {}
 }

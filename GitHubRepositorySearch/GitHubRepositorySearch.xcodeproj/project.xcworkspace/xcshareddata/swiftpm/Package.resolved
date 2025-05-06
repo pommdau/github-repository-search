@@ -1,13 +1,22 @@
 {
-  "originHash" : "07e1a49ff377b77cf79ff6e51fd23aa56e1c433b112403fc8f87044af62758db",
+  "originHash" : "8b103c73fed0d1d23281e2b6487b3e274a9e66e0cc96089d2c55ffbce995d542",
   "pins" : [
     {
       "identity" : "ikeh-github-api-client",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pommdau/ikeh-github-api-client",
       "state" : {
-        "revision" : "3b8bff8fd698e35175c82b8a0298e16d157ee7e6",
-        "version" : "1.0.0"
+        "revision" : "e44de851b24d3e466da48ec91828a911f4b0d2d9",
+        "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "keychainaccess",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kishikawakatsumi/KeychainAccess",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e0c7eebc5a4465a3c4680764f26b7a61f567cdaf"
       }
     },
     {

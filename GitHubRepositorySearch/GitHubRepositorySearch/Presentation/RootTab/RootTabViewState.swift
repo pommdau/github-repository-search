@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import IKEHGitHubAPIClient
 
 @MainActor
 @Observable
@@ -13,13 +14,13 @@ final class RootTabViewState {
     
     // MARK: - Property
         
-//    let loginUserStore: LoginUserStore
-//    let githubAPIClient: GitHubAPIClient
+    let tokenStore: TokenStoreProtocol
+    let loginUserStore: LoginUserStoreProtocol
     
     /// 選択中のタブ
     var selectedTab: RootTabType {
         didSet {
-            UserDefaults.standard.set(selectedTab.rawValue, forKey: "RootTabViewState.selectedTab")
+            UserDefaults.standard.set(selectedTab.rawValue, forKey: UserDefaults.Key.RootTabViewState.selectedTab)
         }
     }
     
@@ -28,13 +29,13 @@ final class RootTabViewState {
     // MARK: - LifeCycle
     
     init(
-//        loginUserStore: LoginUserStore = .shared,
-//        githubAPIClient: GitHubAPIClient = .shared
+        tokenStore: TokenStoreProtocol = TokenStore.shared,
+        loginUserStore: LoginUserStoreProtocol = LoginUserStore.shared,
     ) {
-//        self.loginUserStore = loginUserStore
-//        self.githubAPIClient = githubAPIClient
+        self.tokenStore = tokenStore
+        self.loginUserStore = loginUserStore
         
-        if let selectedTabRawValue = UserDefaults.standard.string(forKey: "RootTabViewState.selectedTab"),
+        if let selectedTabRawValue = UserDefaults.standard.string(forKey: UserDefaults.Key.RootTabViewState.selectedTab),
            let selectedTab = RootTabType(rawValue: selectedTabRawValue) {
             self.selectedTab = selectedTab
         } else {
@@ -47,11 +48,8 @@ final class RootTabViewState {
     func handleOnCallbackURL(_ url: URL) {
         Task {
             do {
-//                try await githubAPIClient.handleLoginCallBackURL(url)
-//                let loginUser = try await githubAPIClient.fetchLoginUser()                
-                withAnimation {
-//                    loginUserStore.addValue(loginUser)
-                }
+                try await tokenStore.fetchTokenWithCallbackURL(url)
+                try await loginUserStore.fetchLoginUser()
             } catch {
                 self.error = error
             }

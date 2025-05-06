@@ -15,4 +15,8 @@ extension UserDefaults.Key {
     enum LoginUserStore {
         static let loginUser = "loginUser"
     }
+    
+    enum RootTabViewState {
+        static let selectedTab = "selectedTab"
+    }
 }

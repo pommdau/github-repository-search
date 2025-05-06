@@ -6,13 +6,22 @@
 //
 
 import SwiftUI
+import class IKEHGitHubAPIClient.GitHubAPIClient
 
 struct LoginView: View {
     
     // MARK: - Property
-        
-    var namespace: Namespace.ID?
-    var logInButtonTapped: () -> Void = {}
+            
+    @State private var viewState: LoginViewState
+    
+    init(namespace: Namespace.ID? = nil) {
+        _viewState = State(wrappedValue: LoginViewState(namespace: namespace))
+    }
+    
+    /// Preview用のイニシャライザ
+    fileprivate init(viewState: LoginViewState) {
+        _viewState = State(wrappedValue: viewState)
+    }
     
     // MARK: - View
     
@@ -22,7 +31,7 @@ struct LoginView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 100)
-                .matchedGeometryEffect(id: NamespaceID.LoginView.image1, in: namespace)
+                .matchedGeometryEffect(id: NamespaceID.LoginView.image1, in: viewState.namespace)
                 .accessibilityLabel(Text("GitHub icon"))
             
             Text("Log in to GitHub")
@@ -30,11 +39,11 @@ struct LoginView: View {
                 .padding(.bottom, 60)
             
             Button("Log in") {
-                logInButtonTapped()
+                viewState.handleLoginButtonTapped()
             }
             .gitHubButtonStyle(.logIn)
             .padding(.bottom, 8)
-            .matchedGeometryEffect(id: NamespaceID.LoginView.button1, in: namespace)
+            .matchedGeometryEffect(id: NamespaceID.LoginView.button1, in: viewState.namespace)
             
             Text("When you log in to GitHub, you can star repositories and browse a list of repositories you’ve starred.")
                 .foregroundStyle(.secondary)
@@ -44,6 +53,13 @@ struct LoginView: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
-    LoginView()
+    let viewState = LoginViewState(
+        tokenStore: TokenStoreStub(),
+        loginUserStore: LoginUserStoreStub(),
+        namespace: nil,
+    )
+    LoginView(viewState: viewState)
 }

@@ -10,19 +10,16 @@ import struct IKEHGitHubAPIClient.LoginUser
 
 @MainActor
 protocol LoginUserStoreProtocol: AnyObject {
-    // プロセスのライフサイクルを考えて、アプリの起動中ずっと存在してかつSingle Sourceなのでここではシングルトンとする
-    static var shared: Self { get }
     var loginUser: LoginUser? { get set }
+    func fetchLoginUser() async throws
 }
 
+// MARK: - CRUD
+
 extension LoginUserStoreProtocol {
-    
-    // MARK: - CRUD
-        
     func addValue(_ loginUser: LoginUser) {
         self.loginUser = loginUser
     }
-    
     func deleteValue() {
         self.loginUser = nil
     }
