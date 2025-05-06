@@ -6,7 +6,6 @@
 //
 
 import Foundation
-//import SwiftUI
 import IKEHGitHubAPIClient
 
 @MainActor
@@ -24,4 +23,10 @@ final class RepoStore: RepoStoreProtocol {
             try? await self.fetchValues()
         }
     }
+}
+
+// MARK: - GitHub API
+
+extension RepoStore {
+    
 }

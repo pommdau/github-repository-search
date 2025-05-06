@@ -5,7 +5,6 @@
 //  Created by HIROKI IKEUCHI on 2025/04/30.
 //
 
-
 import Foundation
 import class IKEHGitHubAPIClient.GitHubAPIClient
 
@@ -22,7 +21,6 @@ extension GitHubAPIClient {
         urlSession: URLSession.shared
     )
 }
-
 
 /// Protocolはライブラリで実装済みのメソッドのみなので継承のみ
 extension GitHubAPIClient: GitHubAPIClientProtocol {}

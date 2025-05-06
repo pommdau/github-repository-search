@@ -38,7 +38,7 @@ disabled_rules:
   #- force_cast
   #- force_try
   #- function_body_length
-  #- function_parameter_count
+  - function_parameter_count # GitHubAPIのメソッドで5つ以上の引数が必要となるため
   #- generic_type_name
   #- identifier_name
   #- implicit_getter
