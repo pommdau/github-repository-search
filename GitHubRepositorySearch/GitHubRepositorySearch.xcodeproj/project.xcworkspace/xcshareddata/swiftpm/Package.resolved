@@ -1,5 +1,5 @@
 {
-  "originHash" : "b801af94c727633548155aeb6cb15a4605b6947bb933fedfa140f520462c4837",
+  "originHash" : "f19ed6394542a14ffc2d2c0bea83862d9dcae2c2975d4e1b9545049239cda50e",
   "pins" : [
     {
       "identity" : "ikeh-github-api-client",
@@ -20,6 +20,15 @@
       }
     },
     {
+      "identity" : "r.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mac-cain13/R.swift",
+      "state" : {
+        "revision" : "a9abc6b0afe0fc4a5a71e1d7d2872143dff2d2f1",
+        "version" : "7.8.0"
+      }
+    },
+    {
       "identity" : "sdwebimage",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage.git",
@@ -35,6 +44,15 @@
       "state" : {
         "revision" : "451c6dfd5ecec2cf626d1d9ca81c2d4a60355172",
         "version" : "3.1.3"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser",
+      "state" : {
+        "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
+        "version" : "1.5.0"
       }
     },
     {
@@ -62,6 +80,15 @@
       "state" : {
         "revision" : "8545ddf4de043e6f2051c5cf204f39ef778ebf6b",
         "version" : "0.59.1"
+      }
+    },
+    {
+      "identity" : "xcodeedit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tomlokhorst/XcodeEdit",
+      "state" : {
+        "revision" : "0e550cdee72844b35431afc3a1e176042be6d0f0",
+        "version" : "2.13.0"
       }
     }
   ],
