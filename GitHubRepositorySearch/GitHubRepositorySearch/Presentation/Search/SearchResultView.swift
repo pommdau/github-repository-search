@@ -111,6 +111,7 @@ struct SearchResultView: View {
                     .padding(.vertical, 4)
                     .matchedTransitionSource(id: "\(repo.id)", in: namespace)
                     .onAppear {
+                        // 一番したのセルが表示されたことを検出する
                         guard let lastRepo = asyncRepos.values.last else {
                             return
                         }
