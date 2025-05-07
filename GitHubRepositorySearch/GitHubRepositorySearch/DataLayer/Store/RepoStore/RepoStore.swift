@@ -42,7 +42,6 @@ extension RepoStore {
         perPage: Int?,
         page: Int?
     ) async throws -> SearchResponse<Repo> {
-        try? await Task.sleep(for: .seconds(2))
         let response = try await gitHubAPIClient.searchRepos(
             searchText: searchText,
             accessToken: accessToken,

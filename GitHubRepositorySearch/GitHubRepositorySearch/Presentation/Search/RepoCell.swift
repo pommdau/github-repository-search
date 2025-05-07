@@ -14,7 +14,9 @@ struct RepoCell: View {
     
     /// セルに表示する情報のタイプ
     enum StatusType {
+        /// 最終更新日時
         case updatedAt
+        /// スター日時
         case starredAt
     }
 
@@ -149,12 +151,17 @@ struct RepoCell: View {
 
 // MARK: - Previews
 
-#Preview("通常(作成日時)", traits: .sizeThatFitsLayout) {
+#Preview("通常(最終更新日時の表示)", traits: .sizeThatFitsLayout) {
     RepoCell(repo: Repo.Mock.random())
         .padding()
 }
 
-#Preview("通常(スター)", traits: .sizeThatFitsLayout) {
+#Preview("通常(スター日時の表示)", traits: .sizeThatFitsLayout) {
     RepoCell(repo: Repo.Mock.random(), starredAt: Date.random(inPastYears: 3), statusType: .starredAt)
+        .padding()
+}
+
+#Preview("いくつか情報が空の場合", traits: .sizeThatFitsLayout) {
+    RepoCell(repo: Repo.Mock.sampleDataWithoutSomeInfo)
         .padding()
 }
