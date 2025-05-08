@@ -43,6 +43,7 @@ final class SearchReposViewState {
     
     private var tokenStore: TokenStoreProtocol
     private var repoStore: RepoStoreProtocol
+    private var searchReposSuggestionStore: SearchReposSuggestionStoreProtocol
     
     /// リポジトリの検索結果(このViewではIDのみを保持)
     private var asyncRepoIDs: AsyncValues<Repo.ID, Error>
@@ -62,6 +63,7 @@ final class SearchReposViewState {
         error: Error? = nil,
         tokenStore: TokenStore,
         repoStore: RepoStoreProtocol,
+        searchReposSuggestionStore: SearchReposSuggestionStoreProtocol,
         asyncRepoIDs: AsyncValues<Repo.ID, Error>,
         searchReposRelationLink: RelationLink? = nil,
         searchReposTask: Task<(), Never>? = nil
@@ -71,6 +73,7 @@ final class SearchReposViewState {
         self.error = error
         self.tokenStore = tokenStore
         self.repoStore = repoStore
+        self.searchReposSuggestionStore = searchReposSuggestionStore
         self.asyncRepoIDs = asyncRepoIDs
         self.searchReposRelationLink = searchReposRelationLink
         self.searchReposTask = searchReposTask
@@ -84,6 +87,7 @@ final class SearchReposViewState {
             error: nil,
             tokenStore: TokenStore.shared,
             repoStore: RepoStore.shared,
+            searchReposSuggestionStore: SearchReposSuggestionStore.shared,
             asyncRepoIDs: .initial,
             searchReposRelationLink: nil,
             searchReposTask: nil
@@ -101,7 +105,7 @@ extension SearchReposViewState {
             return
         }
         
-        //        searchSuggestionStore.addHistory(searchText) // 検索履歴へ保存
+        searchReposSuggestionStore.addValue(searchText) // 検索履歴へ保存
         asyncRepoIDs = .loading(asyncRepoIDs.values)
         searchReposRelationLink = nil
         
@@ -255,7 +259,7 @@ struct SearchReposView: View {
         }
         .searchable(text: $state.searchText, prompt: "Enter Keyword")
         .searchSuggestions {
-//            SearchSuggestionView()
+            SearchReposSuggestionView()
         }
         .onSubmit(of: .search) {
             state.searchRepos()

@@ -35,8 +35,9 @@ final class StarredRepoStore: StarredRepoStoreProtocol {
 extension StarredRepoStore {
     
     // MARK: Update
-    
-    func updateIsStarred(repoID: Repo.ID, isStarred: Bool, starredAt: String = ISO8601DateFormatter.shared.string(from: .now)) async throws {
+        
+    /// ローカルのスター状態の更新
+    func updateStarredInLocal(repoID: Repo.ID, isStarred: Bool, starredAt: String = ISO8601DateFormatter.shared.string(from: .now)) async throws {
         try await addValue(
             .init(
                 repoID: repoID,
@@ -45,7 +46,6 @@ extension StarredRepoStore {
             )
         )
     }
-    
 }
 
 // MARK: - GitHub API

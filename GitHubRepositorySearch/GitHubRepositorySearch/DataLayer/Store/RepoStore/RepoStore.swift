@@ -36,8 +36,8 @@ extension RepoStore {
     
     // MARK: Update
     
-    /// スター数の情報を更新
-    func updateStarsCount(repoID: Repo.ID, starsCount: Int) async throws {
+    /// ローカルのスター数の情報を更新
+    func updateStarsCountInLocal(repoID: Repo.ID, starsCount: Int) async throws {
         guard var repo = valuesDic[repoID] else {
             return
         }
