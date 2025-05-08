@@ -12,7 +12,7 @@ import IKEHGitHubAPIClient
 protocol RepoStoreProtocol: AnyObject {
     static var shared: Self { get }
     var repository: RepoRepository? { get }
-    var valuesDic: [SwiftID<Repo>: Repo] { get set }
+    var valuesDic: [Repo.ID: Repo] { get set }
     
     func searchRepos(
         searchText: String,

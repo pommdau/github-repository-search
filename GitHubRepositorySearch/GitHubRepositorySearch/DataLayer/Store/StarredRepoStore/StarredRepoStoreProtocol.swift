@@ -12,7 +12,7 @@ import IKEHGitHubAPIClient
 protocol StarredRepoStoreProtocol: AnyObject {
     static var shared: Self { get }
     var repository: StarredRepoRepository? { get }
-    var valuesDic: [SwiftID<StarredRepo>: StarredRepo] { get set }
+    var valuesDic: [StarredRepo.ID: StarredRepo] { get set }
 }
 
 extension StarredRepoStoreProtocol {

@@ -6,10 +6,9 @@
 //
 
 import SwiftUI
-import struct IKEHGitHubAPIClient.SwiftID
 
 struct Language: Identifiable, Equatable, Sendable {
-    let id: SwiftID<Self>
+    let id: String
     var name: String
     var color: Color
 
@@ -18,7 +17,7 @@ struct Language: Identifiable, Equatable, Sendable {
     ///   - name: Language name
     ///   - hex: e.g.  "#00cafe"
     init(name: String, hex: String) {
-        self.id = .init(rawValue: UUID().uuidString)
+        self.id = UUID().uuidString
         self.name = name
         self.color = Color(hex: hex.replacingOccurrences(of: "#", with: ""))
     }

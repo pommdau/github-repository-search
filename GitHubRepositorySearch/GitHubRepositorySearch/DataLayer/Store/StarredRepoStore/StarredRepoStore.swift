@@ -13,7 +13,7 @@ import IKEHGitHubAPIClient
 final class StarredRepoStore: StarredRepoStoreProtocol {
     static var shared: StarredRepoStore = .init()
     var repository: StarredRepoRepository?
-    var valuesDic: [SwiftID<StarredRepo>: StarredRepo] = [:]
+    var valuesDic: [StarredRepo.ID: StarredRepo] = [:]
     let gitHubAPIClient: GitHubAPIClientProtocol
     
     // MARK: - LifeCycle
@@ -36,7 +36,7 @@ extension StarredRepoStore {
     
     @discardableResult
     func checkIsRepoStarred(
-        repoID: SwiftID<Repo>,
+        repoID: Repo.ID,
         accessToken: String,
         ownerName: String,
         repoName: String
@@ -46,11 +46,11 @@ extension StarredRepoStore {
             ownerName: ownerName,
             repoName: repoName
         )
-        let starredRepoID: SwiftID<StarredRepo> = .init(rawValue: repoID.rawValue)
         try await addValue(
             .init(
                 repoID: repoID,
-                starredAt: valuesDic[starredRepoID]?.starredAt,
+                // スター済みでかつ既にスター日時の情報を持っている場合はそれを利用する
+                starredAt: isStarred ? valuesDic[repoID]?.starredAt : nil,
                 isStarred: isStarred
             )
         )

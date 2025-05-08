@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pommdau/ikeh-github-api-client",
       "state" : {
-        "revision" : "75640976b8b0734763c00bdbdb1444094181a037",
-        "version" : "1.0.2"
+        "revision" : "b8d2e1bbed6d34060d37973206a7fa1ba315bed4",
+        "version" : "1.0.3"
       }
     },
     {

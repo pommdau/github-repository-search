@@ -6,7 +6,7 @@ extension Repo.Mock {
     // MARK: - 固定値のMock
     
     static let sampleDataWithLongWord: Repo =
-        .init(rawID: 44838949,
+        .init(id: 44838949,
               name: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
               fullName: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
               owner: User.Mock.random(),
@@ -23,7 +23,7 @@ extension Repo.Mock {
         )
     
     static let sampleDataWithoutSomeInfo: Repo =
-        .init(rawID: 44838949,
+        .init(id: 44838949,
               name: "swift",
               fullName: "apple/swift",
               owner: User.Mock.random(),
@@ -40,7 +40,7 @@ extension Repo.Mock {
         )
     
     static let sampleDataForReposCellSkelton = Repo(
-        rawID: 44838949,
+        id: 44838949,
         name: "Lorem ipsum dol",
         fullName: "apple/swift",
         owner: User.Mock.random(),

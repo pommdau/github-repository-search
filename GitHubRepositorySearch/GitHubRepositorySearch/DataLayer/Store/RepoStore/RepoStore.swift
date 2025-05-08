@@ -13,7 +13,7 @@ import IKEHGitHubAPIClient
 final class RepoStore: RepoStoreProtocol {
     static var shared: RepoStore = .init()
     var repository: RepoRepository?
-    var valuesDic: [SwiftID<Repo>: Repo] = [:]
+    var valuesDic: [Repo.ID: Repo] = [:]
     let gitHubAPIClient: GitHubAPIClientProtocol
     
     // MARK: - LifeCycle

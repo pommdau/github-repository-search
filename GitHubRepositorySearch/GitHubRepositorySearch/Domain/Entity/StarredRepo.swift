@@ -11,10 +11,10 @@ import IKEHGitHubAPIClient
 struct StarredRepo: Identifiable, Equatable, Sendable, Codable {
     
     /// For Identifiable
-    var id: SwiftID<Self> { "\(repoID.rawValue)" }
+    var id: Repo.ID { repoID }
     
     /// リポジトリのID
-    let repoID: SwiftID<Repo>
+    let repoID: Repo.ID
     
     /// スター日時
     var starredAt: String? // e.g. "2024-12-17T01:54:20Z"
