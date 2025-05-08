@@ -53,4 +53,25 @@ extension RepoStore {
         try await addValues(response.items)
         return response
     }
+    
+    func fetchStarredRepos(
+        userName: String,
+        accessToken: String?,
+        sort: String?,
+        direction: String?,
+        perPage: Int?,
+        page: Int?
+    ) async throws -> StarredReposResponse {
+        let response = try await gitHubAPIClient.fetchStarredRepos(
+            userName: userName,
+            accessToken: accessToken,
+            sort: sort,
+            direction: direction,
+            perPage: perPage,
+            page: page
+        )
+//        try await addValues(response.starredRepos.map { StarredRepoTranslator.translate(from: $0) })
+        try await addValues(response.starredRepos.map { $0.repo })
+        return response
+    }
 }
