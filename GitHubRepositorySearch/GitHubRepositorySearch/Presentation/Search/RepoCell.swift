@@ -22,7 +22,7 @@ struct RepoCell: View {
 
     let languageStore: LanguageStore = .shared
     let repo: Repo
-    let starredAt: Date?
+    let starredRepo: StarredRepo?
     let statusType: StatusType
 
     var statusText: String {
@@ -33,10 +33,12 @@ struct RepoCell: View {
             }
             return "Updated \(date.convertToRelativeDateText())"
         case .starredAt:
-            guard let starredAt else {
+            guard
+                let starredAt = starredRepo?.starredAt,
+                let date = ISO8601DateFormatter.shared.date(from: starredAt) else {
                 return ""
             }
-            return "Starred \(starredAt.convertToRelativeDateText())"
+            return "Starred \(date.convertToRelativeDateText())"
         }
     }
     
@@ -50,9 +52,13 @@ struct RepoCell: View {
     // MARK: - LifeCycle
         
     // swiftlint:disable:next type_contents_order
-    init(repo: Repo, starredAt: Date? = nil, statusType: StatusType = .updatedAt) {
+    init(
+        repo: Repo,
+        starredRepo: StarredRepo? = nil,
+        statusType: StatusType = .updatedAt
+    ) {
         self.repo = repo
-        self.starredAt = starredAt
+        self.starredRepo = starredRepo
         self.statusType = statusType
     }
     
@@ -124,12 +130,22 @@ struct RepoCell: View {
     @ViewBuilder
     private func starsLabel() -> some View {
         HStack(spacing: 0) {
-            Image(systemName: "star")
-                .accessibilityLabel(Text("Star Image"))
+            if let isStarred = starredRepo?.isStarred,
+               isStarred {
+                // スター済みの場合
+                Image(systemName: "star.fill")
+                    .accessibilityLabel(Text("Star Image"))
+                    .foregroundStyle(Color(uiColor: .systemYellow))
+            } else {
+                // 未スターの場合
+                Image(systemName: "star")
+                    .accessibilityLabel(Text("Star Image"))
+                    .foregroundStyle(.secondary)
+            }
             Text("\(repo.starsCount)")
+                .foregroundStyle(.secondary)
         }
         .font(.footnote)
-        .foregroundStyle(.secondary)
     }
 
     @ViewBuilder
@@ -157,8 +173,13 @@ struct RepoCell: View {
 }
 
 #Preview("通常(スター日時の表示)", traits: .sizeThatFitsLayout) {
-    RepoCell(repo: Repo.Mock.random(), starredAt: Date.random(inPastYears: 3), statusType: .starredAt)
-        .padding()
+    let repo = Repo.Mock.random()
+    RepoCell(
+        repo: Repo.Mock.random(),
+        starredRepo: StarredRepo.Mock.randomWithRepos([repo]).first!,
+        statusType: .starredAt
+    )
+    .padding()
 }
 
 #Preview("いくつか情報が空の場合", traits: .sizeThatFitsLayout) {
