@@ -8,37 +8,172 @@
 import SwiftUI
 import struct IKEHGitHubAPIClient.Repo
 
+import IKEHGitHubAPIClient
+
+@MainActor
+@Observable
+final class RepoDetailsViewState {
+    
+    // MARK: - Property
+    
+    let repoID: Repo.ID
+    let tokenStore: TokenStore
+    let loginUserStore: LoginUserStore
+    let repoStore: RepoStore
+    let starredRepoStore: StarredRepoStore
+
+    var checkIsStarredInProcessing: Bool = false
+    private var starredInProcessing: Bool = false
+    
+    var error: Error?
+    
+    var repo: Repo? {
+        repoStore.valuesDic[repoID]
+    }
+    
+    var loginUser: LoginUser? {
+        loginUserStore.loginUser
+    }
+    
+    var disableStarButton: Bool {
+        (loginUser == nil) ||
+        checkIsStarredInProcessing ||
+        starredInProcessing
+    }
+    
+    var isStarred: Bool {
+        starredRepoStore.valuesDic[repoID]?.isStarred ?? false
+    }
+    
+    // MARK: - LifeCycle
+        
+    init(
+        repoID: Repo.ID,
+        tokenStore: TokenStore = TokenStore.shared,
+        loginUserStore: LoginUserStore = LoginUserStore.shared,
+        repoStore: RepoStore = RepoStore.shared,
+        starredRepoStore: StarredRepoStore = StarredRepoStore.shared,
+    ) {
+        self.repoID = repoID
+        self.tokenStore = tokenStore
+        self.loginUserStore = loginUserStore
+        self.repoStore = repoStore
+        self.starredRepoStore = starredRepoStore
+    }
+    
+    func handleStarButtonTapped() {
+        Task {
+            // すでに処理中の場合は何もしない
+            if starredInProcessing {
+                return
+            }
+            
+            // 必要な情報のチェック
+            guard let repo,
+                  let accessToken = await tokenStore.accessToken
+            else {
+                return
+            }
+            
+            // 状態の更新
+            starredInProcessing = true
+            defer {
+                starredInProcessing = false
+            }
+            // スター状態を更新
+            let currentIsStarred = isStarred
+            let currentStarsCount = repo.starsCount
+            do {
+                if isStarred {
+                    // スターを取り消す
+                    // 一時的に値を更新する
+                    try await repoStore.updateStarsCount(repoID: repo.id, starsCount: max(currentStarsCount - 1, .zero)) // スター数は0未満にならない
+                    try await starredRepoStore.updateIsStarred(repoID: repoID, isStarred: false)
+                    // 実際の更新処理
+                    try await starredRepoStore.unstarRepo(repoID: repoID, accessToken: accessToken, owner: repo.owner.login, repo: repo.name)
+                } else {
+                    // スターをつける
+                    // 一時的に値を更新する
+                    try await repoStore.updateStarsCount(repoID: repo.id, starsCount: currentStarsCount + 1)
+                    try await starredRepoStore.updateIsStarred(repoID: repoID, isStarred: true)
+                    // 実際の更新処理
+                    try await starredRepoStore.starRepo(repoID: repoID, accessToken: accessToken, owner: repo.owner.login, repo: repo.name)
+                }
+            } catch {
+                // スターの状態をもとに戻す
+                try await starredRepoStore.updateIsStarred(repoID: repoID, isStarred: currentIsStarred)
+                try await repoStore.updateStarsCount(repoID: repo.id, starsCount: currentStarsCount)
+                self.error = error
+            }
+        }
+    }
+    
+    func checkIfRepoIsStarred() {
+        Task {
+            // 必要な情報の確認
+            guard let repo,
+                  loginUser != nil,
+                  let accessToken = await tokenStore.accessToken
+            else {
+                return
+            }
+            // 状態の更新
+            checkIsStarredInProcessing = true
+            defer {
+                checkIsStarredInProcessing = false
+            }
+            
+            // スター状態の取得
+            do {
+                try await starredRepoStore.checkIsRepoStarred(
+                    repoID: repo.id,
+                    accessToken: accessToken,
+                    owner: repo.owner.login,
+                    repo: repo.name,
+                )
+            } catch {
+                self.error = error
+            }
+        }
+    }
+    
+    func onAppear() {
+        checkIfRepoIsStarred()
+    }
+}
+
 struct RepoDetailsView: View {
     
-//    @State private var state: RepoDetailsViewState
-//            
-//    // MARK: - LifeCycle
-//    
-//    // swiftlint:disable:next type_contents_order
-//    init(repoID: Repo.ID) {
-//        _state = .init(wrappedValue: RepoDetailsViewState(repoID: repoID))
-//    }
+    @State private var state: RepoDetailsViewState
+            
+    // MARK: - LifeCycle
+    
+    // swiftlint:disable:next type_contents_order
+    init(repoID: Repo.ID) {
+        _state = .init(wrappedValue: RepoDetailsViewState(repoID: repoID))
+    }
 
     // MARK: - View
     
     var body: some View {
-        Text("hoge")
-//        Group {
-//            if let repo = state.repo {
-//                Content(
-//                    repo: repo,
-//                    disableStarButton: state.disableStarButton
-//                ) {
-//                    state.handleStarButtonTapped()
-//                }
-//                .onAppear {
-//                    state.onAppear()
-//                }
-//            } else {
-//                ProgressView()
-//            }
-//        }
-//        .errorAlert(error: $state.error)
+        Group {
+            if let repo = state.repo {
+                Content(
+                    repo: repo,
+                    isStarred: state.isStarred,
+                    checkIsStarredInProcessing: state.checkIsStarredInProcessing,
+                    disableStarButton: state.disableStarButton
+                ) {
+                    state.handleStarButtonTapped()
+                }
+                .onAppear {
+                    state.onAppear()
+                }
+            } else {
+                ProgressView()
+            }
+        }
+        .errorAlert(error: $state.error)
     }
 }
 
@@ -53,6 +188,8 @@ extension RepoDetailsView {
         let languageStore: LanguageStore = .shared
         let repo: Repo
         let isStarred: Bool
+        
+        let checkIsStarredInProcessing: Bool
         
         /// スターボタンを非活性にするか
         let disableStarButton: Bool
@@ -90,7 +227,7 @@ extension RepoDetailsView {
                 repoLabel(repo: repo)
             }
             
-            StarButton(isStarred: isStarred) {
+            StarButton(isStarred: isStarred, isLoading: checkIsStarredInProcessing) {
                 starButtonTapped()
             }
 //            .disabled(disableStarButton)
@@ -265,9 +402,19 @@ extension RepoDetailsView {
 }
 
 #Preview("通常") {
-    RepoDetailsView.Content(repo: Repo.Mock.random(), isStarred: true, disableStarButton: false)
+    RepoDetailsView.Content(
+        repo: Repo.Mock.random(),
+        isStarred: true,
+        checkIsStarredInProcessing: false,
+        disableStarButton: false
+    )
 }
 
 #Preview("説明と言語が空") {
-    RepoDetailsView.Content(repo: Repo.Mock.sampleDataWithoutSomeInfo, isStarred: true, disableStarButton: false)
+    RepoDetailsView.Content(
+        repo: Repo.Mock.sampleDataWithoutSomeInfo,
+        isStarred: true,
+        checkIsStarredInProcessing: false,
+        disableStarButton: false
+    )
 }

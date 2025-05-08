@@ -16,7 +16,7 @@ final actor TokenStore: TokenStoreProtocol {
     static let shared: TokenStore = .init()
     
     let keychain: Keychain?
-    let gitHubAPIClient: GitHubAPIClientProtocol
+    let gitHubAPIClient: GitHubAPIClient
 
     var accessToken: String? {
         didSet {
@@ -28,7 +28,7 @@ final actor TokenStore: TokenStoreProtocol {
     
     init(
         keyChain: Keychain? = Keychain(service: Keychain.Service.oauth),
-        gitHubAPIClient: GitHubAPIClientProtocol = GitHubAPIClient.shared,
+        gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared,
     ) {
         // DI
         self.keychain = keyChain

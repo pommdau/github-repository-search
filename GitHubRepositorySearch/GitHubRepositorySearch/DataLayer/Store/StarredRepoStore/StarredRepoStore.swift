@@ -14,13 +14,13 @@ final class StarredRepoStore: StarredRepoStoreProtocol {
     static var shared: StarredRepoStore = .init()
     var repository: StarredRepoRepository?
     var valuesDic: [StarredRepo.ID: StarredRepo] = [:]
-    let gitHubAPIClient: GitHubAPIClientProtocol
+    let gitHubAPIClient: GitHubAPIClient
     
     // MARK: - LifeCycle
     
     init(
         repository: StarredRepoRepository? = .shared,
-        gitHubAPIClient: GitHubAPIClientProtocol = GitHubAPIClient.shared
+        gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared
     ) {
         self.repository = repository
         self.gitHubAPIClient = gitHubAPIClient
@@ -28,6 +28,24 @@ final class StarredRepoStore: StarredRepoStoreProtocol {
             try? await self.fetchValues()
         }
     }
+}
+
+// MARK: - CRUD
+
+extension StarredRepoStore {
+    
+    // MARK: Update
+    
+    func updateIsStarred(repoID: Repo.ID, isStarred: Bool, starredAt: String = ISO8601DateFormatter.shared.string(from: .now)) async throws {
+        try await addValue(
+            .init(
+                repoID: repoID,
+                starredAt: isStarred ? starredAt : nil,
+                isStarred: isStarred
+            )
+        )
+    }
+    
 }
 
 // MARK: - GitHub API
@@ -38,13 +56,13 @@ extension StarredRepoStore {
     func checkIsRepoStarred(
         repoID: Repo.ID,
         accessToken: String,
-        ownerName: String,
-        repoName: String
+        owner: String,
+        repo: String
     ) async throws -> Bool {
         let isStarred = try await gitHubAPIClient.checkIsRepoStarred(
             accessToken: accessToken,
-            ownerName: ownerName,
-            repoName: repoName
+            owner: owner,
+            repo: repo
         )
         try await addValue(
             .init(
@@ -60,13 +78,13 @@ extension StarredRepoStore {
     func starRepo(
         repoID: Repo.ID,
         accessToken: String,
-        ownerName: String,
-        repoName: String,
+        owner: String,
+        repo: String,
     ) async throws {
         try await gitHubAPIClient.starRepo(
             accessToken: accessToken,
-            ownerName: ownerName,
-            repoName: repoName,
+            owner: owner,
+            repo: repo,
         )
         try await addValue(
             StarredRepo(
@@ -79,13 +97,13 @@ extension StarredRepoStore {
     func unstarRepo(
         repoID: Repo.ID,
         accessToken: String,
-        ownerName: String,
-        repoName: String,
+        owner: String,
+        repo: String,
     ) async throws {
         try await gitHubAPIClient.unstarRepo(
             accessToken: accessToken,
-            ownerName: ownerName,
-            repoName: repoName,
+            owner: owner,
+            repo: repo,
         )
         try await addValue(
             StarredRepo(

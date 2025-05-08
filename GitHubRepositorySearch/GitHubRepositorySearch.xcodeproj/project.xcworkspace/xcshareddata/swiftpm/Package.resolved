@@ -1,5 +1,5 @@
 {
-  "originHash" : "df2e93b7b17fbb7f301f9a78a41b311afaeb1b237e0841548fc198702f4f9d38",
+  "originHash" : "c8c4f4cc913b3dfcf676bcfc9d3d9d4e9b83398440ee6dc70fadaae2b8b4fe26",
   "pins" : [
     {
       "identity" : "ikeh-github-api-client",
@@ -62,15 +62,6 @@
       "state" : {
         "revision" : "a0a57e949a8903563aba4615869310c0ebf14c03",
         "version" : "1.4.0"
-      }
-    },
-    {
-      "identity" : "swift-id",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/koher/swift-id",
-      "state" : {
-        "revision" : "d7ae15c49d1157e6f3c235e47e6075041ba6c51e",
-        "version" : "1.0.0"
       }
     },
     {

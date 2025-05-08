@@ -104,8 +104,8 @@ struct SearchResultView: View {
     private func reposList(asyncRepos: AsyncValues<Repo, Error>) -> some View {
         ForEach(asyncRepos.values) { repo in
             NavigationLink {
-//                RepoDetailsView(repoID: repo.id)
-//                    .navigationTransition(.zoom(sourceID: "\(repo.id)", in: namespace))
+                RepoDetailsView(repoID: repo.id)
+                    .navigationTransition(.zoom(sourceID: "\(repo.id)", in: namespace))
             } label: {
                 RepoCell(repo: repo)
                     .padding(.vertical, 4)

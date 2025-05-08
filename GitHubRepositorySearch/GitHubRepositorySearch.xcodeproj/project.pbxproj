@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		DA44E0D32DCA02F0001EDD36 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = DA44E0D22DCA02F0001EDD36 /* KeychainAccess */; };
-		DA44E0F22DCA1D5B001EDD36 /* SwiftID in Frameworks */ = {isa = PBXBuildFile; productRef = DA44E0F12DCA1D5B001EDD36 /* SwiftID */; };
 		DA8BECE92DCA42C6002983CA /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = DA8BECE82DCA42C6002983CA /* RswiftLibrary */; };
 		DA8BEDC12DCA4BF4002983CA /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = DA8BEDC02DCA4BF4002983CA /* Shimmer */; };
 		DAA487282DC1E6F4003581BF /* IKEHGitHubAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = DAA487272DC1E6F4003581BF /* IKEHGitHubAPIClient */; };
@@ -77,7 +76,6 @@
 				DA8BEDC12DCA4BF4002983CA /* Shimmer in Frameworks */,
 				DA8BECE92DCA42C6002983CA /* RswiftLibrary in Frameworks */,
 				DABD5A2A2DC1EB71005EDCE8 /* SDWebImageSwiftUI in Frameworks */,
-				DA44E0F22DCA1D5B001EDD36 /* SwiftID in Frameworks */,
 				DAA487282DC1E6F4003581BF /* IKEHGitHubAPIClient in Frameworks */,
 				DA44E0D32DCA02F0001EDD36 /* KeychainAccess in Frameworks */,
 			);
@@ -145,7 +143,6 @@
 				DAA487272DC1E6F4003581BF /* IKEHGitHubAPIClient */,
 				DABD5A292DC1EB71005EDCE8 /* SDWebImageSwiftUI */,
 				DA44E0D22DCA02F0001EDD36 /* KeychainAccess */,
-				DA44E0F12DCA1D5B001EDD36 /* SwiftID */,
 				DA8BECE82DCA42C6002983CA /* RswiftLibrary */,
 				DA8BEDC02DCA4BF4002983CA /* Shimmer */,
 			);
@@ -235,7 +232,6 @@
 				DAA487262DC1E6F4003581BF /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */,
 				DABD5A282DC1EB71005EDCE8 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
-				DA44E0F02DCA1D5B001EDD36 /* XCRemoteSwiftPackageReference "swift-id" */,
 				DA8BECE72DCA42C6002983CA /* XCRemoteSwiftPackageReference "R" */,
 				DA8BEDBF2DCA4BF4002983CA /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 			);
@@ -646,14 +642,6 @@
 				kind = branch;
 			};
 		};
-		DA44E0F02DCA1D5B001EDD36 /* XCRemoteSwiftPackageReference "swift-id" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/koher/swift-id";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		DA8BECE72DCA42C6002983CA /* XCRemoteSwiftPackageReference "R" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mac-cain13/R.swift";
@@ -693,11 +681,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
 			productName = KeychainAccess;
-		};
-		DA44E0F12DCA1D5B001EDD36 /* SwiftID */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DA44E0F02DCA1D5B001EDD36 /* XCRemoteSwiftPackageReference "swift-id" */;
-			productName = SwiftID;
 		};
 		DA8BECE82DCA42C6002983CA /* RswiftLibrary */ = {
 			isa = XCSwiftPackageProductDependency;

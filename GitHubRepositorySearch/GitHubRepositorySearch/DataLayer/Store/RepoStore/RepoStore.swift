@@ -14,13 +14,13 @@ final class RepoStore: RepoStoreProtocol {
     static var shared: RepoStore = .init()
     var repository: RepoRepository?
     var valuesDic: [Repo.ID: Repo] = [:]
-    let gitHubAPIClient: GitHubAPIClientProtocol
+    let gitHubAPIClient: GitHubAPIClient
     
     // MARK: - LifeCycle
     
     init(
         repository: RepoRepository? = .shared,
-        gitHubAPIClient: GitHubAPIClientProtocol = GitHubAPIClient.shared
+        gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared
     ) {
         self.repository = repository
         self.gitHubAPIClient = gitHubAPIClient
@@ -28,6 +28,23 @@ final class RepoStore: RepoStoreProtocol {
             try? await self.fetchValues()
         }
     }
+}
+
+// MARK: - CRUD
+
+extension RepoStore {
+    
+    // MARK: Update
+    
+    /// スター数の情報を更新
+    func updateStarsCount(repoID: Repo.ID, starsCount: Int) async throws {
+        guard var repo = valuesDic[repoID] else {
+            return
+        }
+        repo.starsCount = starsCount
+        try await addValue(repo)
+    }
+    
 }
 
 // MARK: - GitHub API
@@ -43,7 +60,7 @@ extension RepoStore {
         page: Int?
     ) async throws -> SearchResponse<Repo> {
         let response = try await gitHubAPIClient.searchRepos(
-            searchText: searchText,
+            query: searchText,
             accessToken: accessToken,
             sort: sort,
             order: order,

@@ -23,4 +23,4 @@ extension GitHubAPIClient {
 }
 
 /// Protocolはライブラリで実装済みのメソッドのみなので継承のみ
-extension GitHubAPIClient: GitHubAPIClientProtocol {}
+//extension GitHubAPIClient: GitHubAPIClientProtocol {}
