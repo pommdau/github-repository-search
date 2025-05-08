@@ -39,11 +39,15 @@ extension Repo.Mock {
               updatedAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
         )
     
-    static let sampleDataForReposCellSkelton = Repo(
+    static let skeltonRepoCell = Repo(
         id: 44838949,
         name: "Lorem ipsum dol",
         fullName: "apple/swift",
-        owner: User.Mock.random(),
+        owner: User(
+            id: 99999,
+            login: "login-name",
+            avatarImagePath: "https://avatars.githubusercontent.com/u/29433103?v=4"
+        ),
         starsCount: 61308,
         watchersCount: 61308,
         forksCount: 9858,

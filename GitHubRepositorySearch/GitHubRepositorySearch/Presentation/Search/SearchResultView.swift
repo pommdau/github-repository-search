@@ -71,6 +71,7 @@ struct SearchResultView: View {
                 }
             }
         }
+        .scrollContentBackground(.hidden)
         .onChange(of: isSearching) {
             if !isSearching {
                 // 検索がキャンセルされた場合
@@ -84,7 +85,6 @@ struct SearchResultView: View {
     @ViewBuilder
     private func initialLabel() -> some View {
         ContentUnavailableView("Search GitHub Repositories!", systemImage: "magnifyingglass")
-            .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
     
@@ -92,7 +92,7 @@ struct SearchResultView: View {
     private func loadingView() -> some View {
         Group {
             ForEach(0..<5, id: \.self) { _ in
-                RepoCell(repo: Repo.Mock.sampleDataForReposCellSkelton)
+                RepoCell(repo: Repo.Mock.skeltonRepoCell)
                     .redacted(reason: .placeholder)
                     .shimmering()
             }
@@ -129,8 +129,7 @@ struct SearchResultView: View {
     @ViewBuilder
     private func searchProgressView() -> some View {
         // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
-        ProgressView("Searching...")
-            .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
+        ProgressView()
             .frame(maxWidth: .infinity, alignment: .center)
             .id(UUID())
     }

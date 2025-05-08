@@ -37,8 +37,7 @@ enum FetchStarredReposSortedBy: String, CaseIterable, Identifiable, Equatable, C
         case .recentlyStarred, .leastRecentlyStarred: // リポジトリへのスター日時
             return "created"
         case .recentlyActive, .leastRecentlyActive: // リポジトリへの最終Push日時
-            return "updated"
-            
+            return "updated"            
         }
     }
     
