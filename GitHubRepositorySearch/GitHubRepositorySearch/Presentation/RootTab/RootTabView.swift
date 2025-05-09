@@ -23,7 +23,7 @@ struct RootTabView: View {
             
             Tab(RootTabType.starredRepos.title, systemImage: RootTabType.starredRepos.icon, value: RootTabType.starredRepos) {
 //                StarredReposView()
-                StarredReposList()
+                StarredReposListView()
             }
             
             Tab(RootTabType.debug.title, systemImage: RootTabType.debug.icon, value: RootTabType.debug) {

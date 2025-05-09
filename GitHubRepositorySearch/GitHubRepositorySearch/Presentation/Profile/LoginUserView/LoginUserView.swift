@@ -183,7 +183,7 @@ extension LoginUserView {
                 }
                 
                 NavigationLink {
-                    Text("repos")
+                    StarredReposListView()
                 } label: {
                     HStack {
                         Image(systemName: "star.square.fill")

@@ -137,7 +137,6 @@ struct SearchResultView: View {
     @ViewBuilder
     private func noResultView() -> some View {
         ContentUnavailableView.search(text: searchText)
-            .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
 }

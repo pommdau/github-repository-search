@@ -202,32 +202,18 @@ struct AsyncValuesView<
     var loadingView: LoadingView
     var dataView: ([T]) -> DataView
     var noResultView: NoResultView
-    var handlePullToRefresh: (() -> Void)?
-    
-    /// Pull to Refreshを動作させるかどうか
-    private var allowPullToRefresh: Bool {
-        if handlePullToRefresh == nil {
-            return false
-        }
-        switch asyncValues {
-        case .loaded, .error:
-            return true
-        default:
-            return false
-        }
-    }
-    
+        
     // MARK: - LifeCycle
     
     // swiftlint:disable:next type_contents_order
     init(
-        asyncValuesa: AsyncValues<T, E>,
+        asyncValues: AsyncValues<T, E>,
         @ViewBuilder initialView: @escaping () -> InitialView,
         @ViewBuilder loadingView: @escaping () -> LoadingView,
         @ViewBuilder dataView: @escaping ([T]) -> DataView,
-        @ViewBuilder noResultView: @escaping () -> NoResultView
+        @ViewBuilder noResultView: @escaping () -> NoResultView,
     ) {
-        self.asyncValues = asyncValuesa
+        self.asyncValues = asyncValues
         self.initialView = initialView()
         self.loadingView = loadingView()
         self.dataView = dataView
@@ -239,65 +225,30 @@ struct AsyncValuesView<
     var body: some View {
         List {
             switch asyncValues {
+            case .initial:
+                initialView
+            case .loading:
+                loadingView
             case let .loaded(values), let .loadingMore(values), let .error(_, values):
-                Group {
+                if values.isEmpty {
+                    noResultView
+                } else {
                     dataView(values)
                     if case .loadingMore = asyncValues {
                         progressView()
                     }
                 }
-            default:
-                EmptyView()
             }
         }
-        .if(allowPullToRefresh) {
-            $0.refreshable {
-                await handleRefreshable()
-            }
-        }
-        .overlay {
-            switch asyncValues {
-            case .initial:
-                initialView
-            case .loading:
-                loadingView
-            case .loaded, .loadingMore, .error:
-                if asyncValues.values.isEmpty {
-                    noResultView
-                }
-            }
-        }
+        .scrollContentBackground(.hidden)
     }
     
-    // MARK: - Helpers
-    
-    private func handleRefreshable() async {
-        guard let handlePullToRefresh else {
-            return
-        }
-        handlePullToRefresh()
-        // クロージャを抜けるとインジケータが消えてしまうので、Sleepで生存期間を管理する
-        while true {
-            let isRefreshCompleted: Bool
-            switch asyncValues {
-            case .loaded, .error:
-                isRefreshCompleted = true
-            default:
-                isRefreshCompleted = false
-            }
-            if isRefreshCompleted {
-                break
-            } else {
-                try? await Task.sleep(for: .milliseconds(100))
-            }
-        }
-    }
+    // MARK: - View Components
     
     @ViewBuilder
     private func progressView() -> some View {
         // https://zenn.dev/oka_yuuji/articles/807a9662f087f7
         ProgressView<EmptyView, EmptyView>()
-            .listRowBackground(Color(uiColor: UIColor.systemGroupedBackground))
             .frame(maxWidth: .infinity, alignment: .center)
             .id(UUID())
     }
@@ -321,7 +272,7 @@ private struct PreviewView: View {
     let asyncValues: AsyncValues<PreviewModel, Error>
     
     var body: some View {
-        AsyncValuesView(asyncValuesa: asyncValues) {
+        AsyncValuesView(asyncValues: asyncValues) {
             ContentUnavailableView.search
         } loadingView: {
             ProgressView("Loading...")

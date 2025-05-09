@@ -1,8 +1,8 @@
 //
-//  SearchReposView.swift
+//  SearchReposViewState.swift
 //  GitHubRepositorySearch
 //
-//  Created by HIROKI IKEUCHI on 2025/05/06.
+//  Created by HIROKI IKEUCHI on 2025/05/09.
 //
 
 import SwiftUI
@@ -49,7 +49,7 @@ final class SearchReposViewState {
     private var asyncRepoIDs: AsyncValues<Repo.ID, Error>
     
     /// リポジトリ検索のページング情報
-    private var searchReposRelationLink: RelationLink?
+    private var searchReposRelationLink: RelationLink? // TODO: Linkだけでいい
     
     /// リポジトリ検索処理のTask
     private var searchReposTask: Task<(), Never>?
@@ -97,6 +97,7 @@ final class SearchReposViewState {
 
 extension SearchReposViewState {
     
+    // TODO: 検索処理を一つのメソッドにまとめたい
     /// リポジトリの検索
     func searchRepos() {
         // 「すでに検索中」または「検索ワード未入力」の場合は何もしない
@@ -233,64 +234,4 @@ extension SearchReposViewState {
         searchReposTask?.cancel()
         searchReposTask = nil
     }
-}
-
-struct SearchReposView: View {
-    
-    @State private var state: SearchReposViewState = .init()
-    
-    var body: some View {
-        NavigationStack {
-            SearchResultView(
-                asyncRepos: state.asyncRepos,
-                searchText: state.searchText,
-                cancelSearching: {
-                    state.cancelSearchRepos()
-                },
-                bottomCellOnAppear: { _ in
-                    state.searchReposMore()
-                }
-            )
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    sortedByToolbarItemContent()
-                }
-            }
-        }
-        .searchable(text: $state.searchText, prompt: "Enter Keyword")
-        .searchSuggestions {
-            SearchReposSuggestionView()
-        }
-        .onSubmit(of: .search) {
-            state.searchRepos()
-        }
-        .errorAlert(error: $state.error)
-    }
-    
-    // MARK: - UI Parts
-    
-    @ViewBuilder
-    private func sortedByToolbarItemContent() -> some View {
-        Menu {
-            Picker("Sorted By", selection: $state.sortedBy) {
-                ForEach(SearchReposSortedBy.allCases) { type in
-                    /// 選択項目の一覧
-                    Text(type.title).tag(type)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-            }
-            .onChange(of: state.sortedBy) { _, _ in
-                state.handleSortedChanged()
-            }
-        } label: {
-            Image(systemName: "arrow.up.arrow.down")
-                .accessibilityLabel(Text("SortedBy icon"))
-        }
-    }
-}
-
-// MARK: - Preview
-
-#Preview {
-    SearchReposView()
 }

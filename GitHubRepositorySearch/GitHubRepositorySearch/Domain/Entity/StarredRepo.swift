@@ -26,7 +26,7 @@ struct StarredRepo: Identifiable, Equatable, Sendable, Codable {
 // MARK: - Mock
 
 extension StarredRepo {
-    public enum Mock {
+    enum Mock {
         static func randomWithRepos(_ repos: [Repo]) -> [StarredRepo] {
             repos.map { repo in
                 StarredRepo(

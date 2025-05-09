@@ -176,7 +176,7 @@ struct RepoCell: View {
     let repo = Repo.Mock.random()
     RepoCell(
         repo: Repo.Mock.random(),
-        starredRepo: StarredRepo.Mock.randomWithRepos([repo]).first!,
+        starredRepo: StarredRepo.Mock.randomWithRepos([repo]).first,
         statusType: .starredAt
     )
     .padding()
