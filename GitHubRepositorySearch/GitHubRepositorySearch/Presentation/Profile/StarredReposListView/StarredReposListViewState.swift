@@ -56,6 +56,10 @@ final class StarredReposListViewState {
         }
     }
     
+    // MARK: - Property
+    
+    // MARK: - LifeCycle    
+        
     // MARK: - Actions
     
     private func performFetchStarrredRepos(isLoadingMore: Bool, page: Int?) {

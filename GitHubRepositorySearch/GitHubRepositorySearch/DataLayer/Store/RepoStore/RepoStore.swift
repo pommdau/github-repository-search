@@ -8,6 +8,11 @@
 import Foundation
 import IKEHGitHubAPIClient
 
+//@MainActor
+//@Observable
+//final class RepoStoreStub: RepoStoreProtocol {
+//}
+
 @MainActor
 @Observable
 final class RepoStore: RepoStoreProtocol {

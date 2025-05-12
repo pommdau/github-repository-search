@@ -14,6 +14,14 @@ protocol RepoStoreProtocol: AnyObject {
     var repository: RepoRepository? { get }
     var valuesDic: [Repo.ID: Repo] { get set }
     
+    // MARK: - CRUD
+    
+    /// ローカルのスター数の情報を更新
+    func updateStarsCountInLocal(repoID: Repo.ID, starsCount: Int) async throws
+    
+    // MARK: - GitHub API
+    
+    /// レポジトリの検索
     func searchRepos(
         searchText: String,
         accessToken: String?,
@@ -22,6 +30,26 @@ protocol RepoStoreProtocol: AnyObject {
         perPage: Int?,
         page: Int?
     ) async throws -> SearchResponse<Repo>
+    
+    /// ユーザのリポジトリを取得
+    func fetchUserRepos(
+        userName: String,
+        accessToken: String?,
+        sort: String?,
+        direction: String?,
+        perPage: Int?,
+        page: Int?
+    ) async throws -> ListResponse<Repo>
+    
+    /// ユーザのスター済みリポジトリを取得
+    func fetchStarredRepos(
+        userName: String,
+        accessToken: String?,
+        sort: String?,
+        direction: String?,
+        perPage: Int?,
+        page: Int?
+    ) async throws -> StarredReposResponse
 }
 
 extension RepoStoreProtocol {

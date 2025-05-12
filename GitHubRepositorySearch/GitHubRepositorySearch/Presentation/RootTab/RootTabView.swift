@@ -27,8 +27,7 @@ struct RootTabView: View {
             }
             
             Tab(RootTabType.debug.title, systemImage: RootTabType.debug.icon, value: RootTabType.debug) {
-//                LoginDebugView()
-                Text("Hoge")
+                DebugView()
             }
         }
         .onOpenURL { url in
