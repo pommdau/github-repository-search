@@ -7,6 +7,8 @@
 
 import XCTest
 @testable import GitHubRepositorySearch
+import ConcurrencyExtras
+import IKEHGitHubAPIClient
 
 @MainActor
 final class StarredReposListViewStateTests: XCTestCase {
@@ -31,32 +33,52 @@ final class StarredReposListViewStateTests: XCTestCase {
 
 extension StarredReposListViewStateTests {
     
-    // MARK: 成功
-    func testFetchStarredReposSuccess() async {
+    // MARK: 成功(.initialの状態から)
+    func testFetchStarredReposFromInitialSuccess() async throws {
         
-        // MARK: Given
-        let loginUserStore: LoginUserStoreStub = .init()
-        let tokenStore: TokenStoreStub = .init()
-        let repoStore: RepoStoreStub = .init()
-        let starredRepoStore: StarredRepoStoreStub = .init()
+        func test() async throws {
+            
+            // MARK: Given
+            
+            let testStarredRepos: [IKEHGitHubAPIClient.StarredRepo] = IKEHGitHubAPIClient.StarredRepo.Mock.random(count: 10)
+            let testRelationLink: RelationLink = .Mock.fetchStarredReposResponse
+            
+            let loginUserStore: LoginUserStoreStub = .init(loginUser: .Mock.ikeh)
+            let tokenStore: TokenStoreStub = .init(accessToken: "accessToken")
+            let repoStore: RepoStoreStub = .init()
+            repoStore.stubbedFetchStarredReposResponse = .init(
+                starredRepos: testStarredRepos,
+                relationLink: testRelationLink
+            )
+            let starredRepoStore: StarredRepoStoreStub = .init()
+            
+            sut = .init(
+                loginUserStore: loginUserStore,
+                tokenStore: tokenStore,
+                repoStore: repoStore,
+                starredRepoStore: starredRepoStore
+            )
+            
+            // MARK: When
+            
+            XCTAssertTrue(sut.asyncStarredRepoIDs.isInitial)
+            let task = Task {
+                await sut.handleFetchStarredRepos()
+            }
+
+            // MARK: Then
+            await Task.yield()
+            XCTAssertTrue(sut.asyncStarredRepoIDs.isLoading)
+            _ = await task.value // 全処理の完了を待つ
+            XCTAssertTrue(sut.asyncStarredRepoIDs.isLoaded)
+            XCTAssertEqual(sut.asyncStarredRepoIDs.values, testStarredRepos.map { $0.id })
+            XCTAssertEqual(sut.nextLinkForFetchingStarredRepos, testRelationLink.next)
+        }
         
-        sut = .init(
-            loginUserStore: loginUserStore,
-            tokenStore: tokenStore,
-            repoStore: repoStore,
-            starredRepoStore: starredRepoStore
-        )
-        
-        // MARK: When
-        sut.fetchStarredRepos()
-                                                
-        // MARK: Then
-        
-        switch sut.asyncStarredRepoIDs {
-        case .initial:
-            break
-        default:
-            XCTFail("unexpected asyncStarredRepoIDs: \(sut.asyncStarredRepoIDs)")
+        for _ in 0..<1 {
+            try await withMainSerialExecutor {
+                try await test()
+            }
         }
     }
 }

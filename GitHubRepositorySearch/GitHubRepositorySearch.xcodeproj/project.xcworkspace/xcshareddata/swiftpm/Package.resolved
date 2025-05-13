@@ -1,13 +1,13 @@
 {
-  "originHash" : "c8c4f4cc913b3dfcf676bcfc9d3d9d4e9b83398440ee6dc70fadaae2b8b4fe26",
+  "originHash" : "3c5e2f3571551361eca80a6e9e49a70adcadd816391cb50d92178aff19a13feb",
   "pins" : [
     {
       "identity" : "ikeh-github-api-client",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pommdau/ikeh-github-api-client",
       "state" : {
-        "revision" : "fde4caabfd4f7f0b178920771777aa3a0522d9c0",
-        "version" : "1.0.4"
+        "revision" : "6c6daf86097d4da83902e5a24d0bff0769f91ecd",
+        "version" : "1.0.6"
       }
     },
     {
@@ -53,6 +53,15 @@
       "state" : {
         "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
         "version" : "1.5.0"
+      }
+    },
+    {
+      "identity" : "swift-concurrency-extras",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-concurrency-extras",
+      "state" : {
+        "revision" : "82a4ae7170d98d8538ec77238b7eb8e7199ef2e8",
+        "version" : "1.3.1"
       }
     },
     {
