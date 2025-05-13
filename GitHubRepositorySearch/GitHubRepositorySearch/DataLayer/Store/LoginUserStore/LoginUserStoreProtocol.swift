@@ -10,8 +10,14 @@ import struct IKEHGitHubAPIClient.LoginUser
 
 @MainActor
 protocol LoginUserStoreProtocol: AnyObject {
+
+    // MARK: - Property
+
     var loginUser: LoginUser? { get set }
     var userDefaults: UserDefaults? { get }
+
+    // MARK: - GitHubAPI
+
     func fetchLoginUser() async throws
 }
 
@@ -29,13 +35,13 @@ extension LoginUserStoreProtocol {
     // MARK: Read
 
     func fetchValue() {
-        self.loginUser = userDefaults?.codableItem(forKey: UserDefaults.Key.LoginUserStore.loginUser)
+        loginUser = userDefaults?.codableItem(forKey: UserDefaults.Key.LoginUserStore.loginUser)
     }
 
     // MARK: Delete
     
     func deleteValue() {
-        self.loginUser = nil
+        loginUser = nil
         userDefaults?.set(nil, forKey: UserDefaults.Key.LoginUserStore.loginUser)
     }
 }
