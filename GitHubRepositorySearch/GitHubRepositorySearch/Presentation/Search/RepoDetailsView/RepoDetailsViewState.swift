@@ -15,10 +15,10 @@ final class RepoDetailsViewState {
     // MARK: - Property
     
     let repoID: Repo.ID
-    let tokenStore: TokenStore
-    let loginUserStore: LoginUserStore
-    let repoStore: RepoStore
-    let starredRepoStore: StarredRepoStore
+    let tokenStore: TokenStoreProtocol
+    let loginUserStore: LoginUserStoreProtocol
+    let repoStore: RepoStoreProtocol
+    let starredRepoStore: StarredRepoStoreProtocol
 
     var isFetchingStarred: Bool = false
     private var isUpdatingStarred: Bool = false
@@ -47,10 +47,10 @@ final class RepoDetailsViewState {
         
     init(
         repoID: Repo.ID,
-        tokenStore: TokenStore = TokenStore.shared,
-        loginUserStore: LoginUserStore = LoginUserStore.shared,
-        repoStore: RepoStore = RepoStore.shared,
-        starredRepoStore: StarredRepoStore = StarredRepoStore.shared,
+        tokenStore: TokenStoreProtocol = TokenStore.shared,
+        loginUserStore: LoginUserStoreProtocol = LoginUserStore.shared,
+        repoStore: RepoStoreProtocol = RepoStore.shared,
+        starredRepoStore: StarredRepoStoreProtocol = StarredRepoStore.shared,
     ) {
         self.repoID = repoID
         self.tokenStore = tokenStore
@@ -63,6 +63,7 @@ final class RepoDetailsViewState {
 // MARK: - Actions
 
 extension RepoDetailsViewState {
+    
     func onAppear() {
         Task {
             await checkIfRepoIsStarred()

@@ -17,9 +17,8 @@ final actor TokenStore: TokenStoreProtocol {
     
     let keychain: Keychain?
     var accessToken: String?
-    
-    private let gitHubAPIClient: GitHubAPIClient
-    
+    var gitHubAPIClient: GitHubAPIClient?
+        
     // MARK: - LifeCycle
     
     init(
@@ -33,30 +32,5 @@ final actor TokenStore: TokenStoreProtocol {
         Task {
             await fetchValue()
         }
-    }
-}
-
-// MARK: - GitHub API
-
-extension TokenStore {
-        
-    func openLoginPageInBrowser() async throws {
-       try await gitHubAPIClient.openLoginPageInBrowser()
-    }
-    
-    func fetchAccessTokenWithCallbackURL(_ url: URL) async throws {
-        let accessToken = try await gitHubAPIClient.recieveLoginCallBackURLAndFetchAccessToken(url)
-        addValue(accessToken)
-    }
-    
-    func logout() async throws {
-        guard let accessToken else {
-            return
-        }
-        defer {
-            // サーバ上の情報を削除できない場合もローカル上の情報を削除する
-            deleteValue()
-        }
-        try await gitHubAPIClient.logout(accessToken: accessToken) // サーバ上の情報の削除
     }
 }
