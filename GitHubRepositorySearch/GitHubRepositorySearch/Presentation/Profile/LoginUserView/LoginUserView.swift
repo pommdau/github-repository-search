@@ -57,6 +57,8 @@ extension LoginUserView {
                     }
                     .listRowBackground(Color.clear)
                     .listRowSeparator(.hidden)
+                    
+                    userItems()
                     Spacer()
                     logoutButton()
                 }
@@ -159,6 +161,39 @@ extension LoginUserView {
                     .bold()
                 Text("following")
                     .foregroundStyle(.secondary)
+            }
+        }
+        
+        @ViewBuilder
+        private func userItems() -> some View {
+            Section {
+                NavigationLink {
+                    // swiftlint:disable:next force_unwrapping
+                    //                LoginUserReposView(url: URL(string: "https://api.github.com/users/octocat/repo")!)
+                    Text("hoge")
+                } label: {
+                    HStack {
+                        Image(.bookClosedSquareFill)
+                            .font(.title)
+                        Text("Your Repositories")
+                        Spacer()
+                        Text("\(loginUser.publicRepos)")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                
+                NavigationLink {
+                    StarredReposListView()
+                } label: {
+                    HStack {
+                        Image(systemName: "star.square.fill")
+                            .font(.title)
+                            .foregroundStyle(.yellow)
+                            .accessibilityLabel(Text("Star icon"))
+                        Text("Starred Repositories")
+                        Spacer()
+                    }
+                }
             }
         }
         

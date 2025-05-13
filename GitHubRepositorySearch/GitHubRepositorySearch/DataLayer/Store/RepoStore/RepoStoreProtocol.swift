@@ -10,10 +10,15 @@ import IKEHGitHubAPIClient
 
 @MainActor
 protocol RepoStoreProtocol: AnyObject {
-    static var shared: Self { get }
+    
+    // MARK: - Property
+    
     var repository: RepoRepository? { get }
     var valuesDic: [Repo.ID: Repo] { get set }
+            
+    // MARK: - GitHub API
     
+    /// レポジトリの検索
     func searchRepos(
         searchText: String,
         accessToken: String?,
@@ -22,18 +27,40 @@ protocol RepoStoreProtocol: AnyObject {
         perPage: Int?,
         page: Int?
     ) async throws -> SearchResponse<Repo>
+    
+    /// ユーザのリポジトリを取得
+    func fetchUserRepos(
+        userName: String,
+        accessToken: String?,
+        sort: String?,
+        direction: String?,
+        perPage: Int?,
+        page: Int?
+    ) async throws -> ListResponse<Repo>
+    
+    /// ユーザのスター済みリポジトリを取得
+    func fetchStarredRepos(
+        userName: String,
+        accessToken: String?,
+        sort: String?,
+        direction: String?,
+        perPage: Int?,
+        page: Int?
+    ) async throws -> StarredReposResponse
 }
 
+// MARK: - Computed Property
+
 extension RepoStoreProtocol {
-    
-    // MARK: - Property
-    
     var repos: [Repo] {
         Array(valuesDic.values)
     }
-    
-    // MARK: - CRUD
+}
 
+// MARK: - CRUD
+
+extension RepoStoreProtocol {
+    
     // MARK: Create/Update
 
     func addValue(_ value: Repo) async throws {
@@ -47,6 +74,17 @@ extension RepoStoreProtocol {
                 (value.id, value)
             })
         valuesDic.merge(newValuesDic) { _, new in new }
+    }
+    
+    // MARK: Update
+        
+    /// ローカルのスター数の情報を更新
+    func update(repoID: Repo.ID, starsCount: Int) async throws {
+        guard var repo = valuesDic[repoID] else {
+            return
+        }
+        repo.starsCount = starsCount
+        try await addValue(repo)
     }
     
     // MARK: Read

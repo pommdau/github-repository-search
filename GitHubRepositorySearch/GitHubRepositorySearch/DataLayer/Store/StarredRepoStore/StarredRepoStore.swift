@@ -11,10 +11,13 @@ import IKEHGitHubAPIClient
 @MainActor
 @Observable
 final class StarredRepoStore: StarredRepoStoreProtocol {
+
     static var shared: StarredRepoStore = .init()
+
     var repository: StarredRepoRepository?
     var valuesDic: [StarredRepo.ID: StarredRepo] = [:]
-    let gitHubAPIClient: GitHubAPIClient
+
+    private let gitHubAPIClient: GitHubAPIClient
     
     // MARK: - LifeCycle
     
@@ -27,24 +30,6 @@ final class StarredRepoStore: StarredRepoStoreProtocol {
         Task {
             try? await self.fetchValues()
         }
-    }
-}
-
-// MARK: - CRUD
-
-extension StarredRepoStore {
-    
-    // MARK: Update
-        
-    /// ローカルのスター状態の更新
-    func updateStarredInLocal(repoID: Repo.ID, isStarred: Bool, starredAt: String = ISO8601DateFormatter.shared.string(from: .now)) async throws {
-        try await addValue(
-            .init(
-                repoID: repoID,
-                starredAt: isStarred ? starredAt : nil,
-                isStarred: isStarred
-            )
-        )
     }
 }
 
@@ -67,7 +52,7 @@ extension StarredRepoStore {
         try await addValue(
             .init(
                 repoID: repoID,
-                // スター済みでかつ既にスター日時の情報を持っている場合はそれを利用する
+                // スター済みでかつ既にローカルにスター日時の情報を持っている場合はそれを利用する
                 starredAt: isStarred ? valuesDic[repoID]?.starredAt : nil,
                 isStarred: isStarred
             )

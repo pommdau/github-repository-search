@@ -22,3 +22,20 @@ struct StarredRepo: Identifiable, Equatable, Sendable, Codable {
     /// スター済みかどうか
     var isStarred: Bool = false
 }
+
+// MARK: - Mock
+
+extension StarredRepo {
+    enum Mock {
+        static func randomWithRepos(_ repos: [Repo]) -> [StarredRepo] {
+            repos.map { repo in
+                StarredRepo(
+                    repoID: repo.id,
+                    starredAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 3)),
+                    isStarred: true
+                )
+            }
+        }        
+    }
+}
+        

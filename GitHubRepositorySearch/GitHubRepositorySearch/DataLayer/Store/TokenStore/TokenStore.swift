@@ -10,19 +10,15 @@ import KeychainAccess
 import IKEHGitHubAPIClient
 
 final actor TokenStore: TokenStoreProtocol {
-
+    
     // MARK: - Property
-        
+    
     static let shared: TokenStore = .init()
     
     let keychain: Keychain?
-    let gitHubAPIClient: GitHubAPIClient
-
-    var accessToken: String? {
-        didSet {
-            keychain?[Keychain.Key.accessToken] = accessToken
-        }
-    }
+    var accessToken: String?
+    
+    private let gitHubAPIClient: GitHubAPIClient
     
     // MARK: - LifeCycle
     
@@ -34,18 +30,23 @@ final actor TokenStore: TokenStoreProtocol {
         self.keychain = keyChain
         self.gitHubAPIClient = gitHubAPIClient
         
-        // 保存値の復元
-        self.accessToken = keychain?[Keychain.Key.accessToken]
+        Task {
+            await fetchValue()
+        }
     }
-    
-    // MARK: - GitHub API
-    
+}
+
+// MARK: - GitHub API
+
+extension TokenStore {
+        
     func openLoginPageInBrowser() async throws {
        try await gitHubAPIClient.openLoginPageInBrowser()
     }
     
     func fetchAccessTokenWithCallbackURL(_ url: URL) async throws {
-        self.accessToken = try await gitHubAPIClient.recieveLoginCallBackURLAndFetchAccessToken(url)
+        let accessToken = try await gitHubAPIClient.recieveLoginCallBackURLAndFetchAccessToken(url)
+        addValue(accessToken)
     }
     
     func logout() async throws {
@@ -54,7 +55,7 @@ final actor TokenStore: TokenStoreProtocol {
         }
         defer {
             // サーバ上の情報を削除できない場合もローカル上の情報を削除する
-            self.accessToken = nil
+            deleteValue()
         }
         try await gitHubAPIClient.logout(accessToken: accessToken) // サーバ上の情報の削除
     }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-/// 言語のタイトルと色のDataStore
+/// 言語のタイトルと色を管理するStore
 /// - SeeAlso: [github-colors/colors.json](https://github.com/ozh/github-colors/blob/master/colors.json)
 struct LanguageStore {
 
@@ -20,12 +20,13 @@ struct LanguageStore {
     // MARK: - LifeCycle
 
     private init() {
-        self.languages = Self.loadLanguages()
+        self.languages = Self.loadLanguageFromLocalFile()
     }
     
     // MARK: Setup
     
-    private static func loadLanguages() -> [Language] {
+    /// ローカルの設定ファイルから情報を読み込む
+    private static func loadLanguageFromLocalFile() -> [Language] {
         guard let url = R.file.githubLangColorsJson(),
               let data = try? Data(contentsOf: url),
               let json = try? JSONSerialization.jsonObject(with: data) as? [String: [String: String?]]  // color: null があるためString?としている

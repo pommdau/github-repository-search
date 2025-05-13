@@ -23,12 +23,11 @@ struct RootTabView: View {
             
             Tab(RootTabType.starredRepos.title, systemImage: RootTabType.starredRepos.icon, value: RootTabType.starredRepos) {
 //                StarredReposView()
-                Text("Hoge")
+                StarredReposListView()
             }
             
             Tab(RootTabType.debug.title, systemImage: RootTabType.debug.icon, value: RootTabType.debug) {
-//                LoginDebugView()
-                Text("Hoge")
+                DebugView()
             }
         }
         .onOpenURL { url in
