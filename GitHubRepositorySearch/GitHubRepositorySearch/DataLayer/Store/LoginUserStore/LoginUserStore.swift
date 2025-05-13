@@ -16,15 +16,11 @@ final class LoginUserStore: LoginUserStoreProtocol {
         
     static let shared: LoginUserStore = .init()
     
-    let userDefaults: UserDefaults
-    let tokenStore: TokenStoreProtocol
-    let gitHubAPIClient: GitHubAPIClient
+    private(set) var userDefaults: UserDefaults?
+    private let tokenStore: TokenStoreProtocol
+    private let gitHubAPIClient: GitHubAPIClient
 
-    var loginUser: LoginUser? {
-        didSet {
-            userDefaults.setCodableItem(loginUser, forKey: UserDefaults.Key.LoginUserStore.loginUser)
-        }
-    }
+    var loginUser: LoginUser?
         
     // MARK: - LifeCycle
 
@@ -36,8 +32,9 @@ final class LoginUserStore: LoginUserStoreProtocol {
         self.userDefaults = userDefaults
         self.tokenStore = tokenStore
         self.gitHubAPIClient = gitHubAPIClient
-        // 保存されている情報が有れば読み込み
-        self.loginUser = userDefaults.codableItem(forKey: UserDefaults.Key.LoginUserStore.loginUser)
+        Task {
+            fetchValue()
+        }
     }
     
     // MARK: - GitHubAPI
@@ -48,7 +45,8 @@ final class LoginUserStore: LoginUserStoreProtocol {
         }        
         let loginUser = try await gitHubAPIClient.fetchLoginUser(accessToken: accessToken)
         withAnimation {
-            self.loginUser = loginUser
+            // TODO: remove withAnimation
+            addValue(loginUser)
         }
     }
 }

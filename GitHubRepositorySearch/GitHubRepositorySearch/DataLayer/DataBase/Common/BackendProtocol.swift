@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// Backendの汎用型
+/// - Note: 本来はRealmSwiftやCoreDataの想定で、今回は簡易的にUserDefaultsとする
+/// - SeeAlso: [chatwork/svvs-sample](https://github.com/chatwork/svvs-sample)
 protocol BackendProtocol: Actor {
     associatedtype Item: Identifiable & Codable where Item.ID: Codable & Sendable
     var userDefaults: UserDefaults? { get }
@@ -19,7 +22,7 @@ protocol BackendProtocol: Actor {
     func deleteAll() async throws
 }
 
-/// 本来はRealmSwiftやCoreDataの想定で、今回は簡易的にUserDefaultsとする
+
 extension BackendProtocol {
     
     private var valuesUserDefaultsKey: String {

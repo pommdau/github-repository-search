@@ -8,18 +8,17 @@
 import Foundation
 import IKEHGitHubAPIClient
 
-//@MainActor
-//@Observable
-//final class RepoStoreStub: RepoStoreProtocol {
-//}
-
 @MainActor
 @Observable
 final class RepoStore: RepoStoreProtocol {
+    
+    // MARK: - Property
+
     static var shared: RepoStore = .init()
-    var repository: RepoRepository?
+    let repository: RepoRepository?
     var valuesDic: [Repo.ID: Repo] = [:]
-    let gitHubAPIClient: GitHubAPIClient
+    
+    private let gitHubAPIClient: GitHubAPIClient
     
     // MARK: - LifeCycle
     
@@ -33,23 +32,6 @@ final class RepoStore: RepoStoreProtocol {
             try? await self.fetchValues()
         }
     }
-}
-
-// MARK: - CRUD
-
-extension RepoStore {
-    
-    // MARK: Update
-    
-    /// ローカルのスター数の情報を更新
-    func updateStarsCountInLocal(repoID: Repo.ID, starsCount: Int) async throws {
-        guard var repo = valuesDic[repoID] else {
-            return
-        }
-        repo.starsCount = starsCount
-        try await addValue(repo)
-    }
-    
 }
 
 // MARK: - GitHub API

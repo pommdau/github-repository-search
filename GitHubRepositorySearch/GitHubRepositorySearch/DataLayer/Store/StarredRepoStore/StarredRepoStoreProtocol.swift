@@ -10,21 +10,49 @@ import IKEHGitHubAPIClient
 
 @MainActor
 protocol StarredRepoStoreProtocol: AnyObject {
-    static var shared: Self { get }
-    var repository: StarredRepoRepository? { get }
-    var valuesDic: [StarredRepo.ID: StarredRepo] { get set }
-}
-
-extension StarredRepoStoreProtocol {
     
     // MARK: - Property
     
+    var repository: StarredRepoRepository? { get }
+    var valuesDic: [StarredRepo.ID: StarredRepo] { get set }
+    
+    // MARK: - GitHub API
+    
+    @discardableResult
+    func checkIsRepoStarred(
+        repoID: Repo.ID,
+        accessToken: String,
+        owner: String,
+        repo: String
+    ) async throws -> Bool
+    
+    func starRepo(
+        repoID: Repo.ID,
+        accessToken: String,
+        owner: String,
+        repo: String,
+    ) async throws
+    
+    func unstarRepo(
+        repoID: Repo.ID,
+        accessToken: String,
+        owner: String,
+        repo: String,
+    ) async throws
+}
+
+// MARK: - Computed Property
+
+extension StarredRepoStoreProtocol {
     var repos: [StarredRepo] {
         Array(valuesDic.values)
     }
-    
-    // MARK: - CRUD
+}
 
+// MARK: - CRUD
+
+extension StarredRepoStoreProtocol {
+            
     // MARK: Create/Update
 
     func addValue(_ value: StarredRepo) async throws {
@@ -38,6 +66,19 @@ extension StarredRepoStoreProtocol {
                 (value.id, value)
             })
         valuesDic.merge(newValuesDic) { _, new in new }
+    }
+    
+    // MARK: Update
+    
+    /// ローカルのスター状態の更新
+    func update(repoID: Repo.ID, isStarred: Bool, starredAt: String = ISO8601DateFormatter.shared.string(from: .now)) async throws {
+        try await addValue(
+            .init(
+                repoID: repoID,
+                starredAt: isStarred ? starredAt : nil,
+                isStarred: isStarred
+            )
+        )
     }
     
     // MARK: Read

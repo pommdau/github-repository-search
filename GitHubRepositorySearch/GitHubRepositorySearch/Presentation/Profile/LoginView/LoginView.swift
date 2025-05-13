@@ -55,11 +55,11 @@ struct LoginView: View {
 
 // MARK: - Preview
 
-#Preview {
-    let viewState = LoginViewState(
-        tokenStore: TokenStoreStub(),
-        loginUserStore: LoginUserStoreStub(),
-        namespace: nil,
-    )
-    LoginView(viewState: viewState)
-}
+//#Preview {
+//    let viewState = LoginViewState(
+//        tokenStore: TokenStoreStub(),
+//        loginUserStore: LoginUserStoreStub(),
+//        namespace: nil,
+//    )
+//    LoginView(viewState: viewState)
+//}

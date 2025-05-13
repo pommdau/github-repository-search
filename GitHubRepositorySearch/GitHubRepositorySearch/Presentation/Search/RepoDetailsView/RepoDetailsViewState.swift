@@ -132,22 +132,22 @@ extension RepoDetailsViewState {
             if isStarred {
                 // スターを取り消す
                 // 一時的に値を更新する
-                try await repoStore.updateStarsCountInLocal(repoID: repo.id, starsCount: max(currentStarsCount - 1, .zero)) // スター数は0未満にならない
-                try await starredRepoStore.updateStarredInLocal(repoID: repoID, isStarred: false)
+                try await repoStore.update(repoID: repo.id, starsCount: max(currentStarsCount - 1, .zero)) // スター数は0未満にならない
+                try await starredRepoStore.update(repoID: repoID, isStarred: false)
                 // 実際の更新処理
                 try await starredRepoStore.unstarRepo(repoID: repoID, accessToken: accessToken, owner: repo.owner.login, repo: repo.name)
             } else {
                 // スターをつける
                 // 一時的に値を更新する
-                try await repoStore.updateStarsCountInLocal(repoID: repo.id, starsCount: currentStarsCount + 1)
-                try await starredRepoStore.updateStarredInLocal(repoID: repoID, isStarred: true)
+                try await repoStore.update(repoID: repo.id, starsCount: currentStarsCount + 1)
+                try await starredRepoStore.update(repoID: repoID, isStarred: true)
                 // 実際の更新処理
                 try await starredRepoStore.starRepo(repoID: repoID, accessToken: accessToken, owner: repo.owner.login, repo: repo.name)
             }
         } catch {
             // スターの状態をもとに戻す
-            try? await starredRepoStore.updateStarredInLocal(repoID: repoID, isStarred: currentIsStarred)
-            try? await repoStore.updateStarsCountInLocal(repoID: repo.id, starsCount: currentStarsCount)
+            try? await starredRepoStore.update(repoID: repoID, isStarred: currentIsStarred)
+            try? await repoStore.update(repoID: repo.id, starsCount: currentStarsCount)
             self.error = error
         }
     }

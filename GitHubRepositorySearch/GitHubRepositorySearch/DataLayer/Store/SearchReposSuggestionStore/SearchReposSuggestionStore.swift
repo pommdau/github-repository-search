@@ -25,6 +25,5 @@ final class SearchReposSuggestionStore: SearchReposSuggestionStoreProtocol {
         self.userDefaults = userDefaults
         // 保存されている値の読込
         self.histories = userDefaults.codableItem(forKey: UserDefaults.Key.SearchReposSuggestionStore.histories) ?? []
-
     }
 }

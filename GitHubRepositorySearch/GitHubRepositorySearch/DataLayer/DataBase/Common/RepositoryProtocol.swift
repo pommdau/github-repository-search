@@ -7,6 +7,8 @@
 
 import Foundation
 
+/// Repositoryの汎用型
+/// - SeeAlso: [chatwork/svvs-sample](https://github.com/chatwork/svvs-sample)
 protocol RepositoryProtocol {
     
     associatedtype Item: Identifiable & Codable & Sendable where Item.ID: Codable & Sendable

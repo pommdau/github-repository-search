@@ -10,15 +10,12 @@ import IKEHGitHubAPIClient
 
 @MainActor
 protocol RepoStoreProtocol: AnyObject {
-    static var shared: Self { get }
+    
+    // MARK: - Property
+    
     var repository: RepoRepository? { get }
     var valuesDic: [Repo.ID: Repo] { get set }
-    
-    // MARK: - CRUD
-    
-    /// ローカルのスター数の情報を更新
-    func updateStarsCountInLocal(repoID: Repo.ID, starsCount: Int) async throws
-    
+            
     // MARK: - GitHub API
     
     /// レポジトリの検索
@@ -52,16 +49,18 @@ protocol RepoStoreProtocol: AnyObject {
     ) async throws -> StarredReposResponse
 }
 
+// MARK: - Computed Property
+
 extension RepoStoreProtocol {
-    
-    // MARK: - Property
-    
     var repos: [Repo] {
         Array(valuesDic.values)
     }
-    
-    // MARK: - CRUD
+}
 
+// MARK: - CRUD
+
+extension RepoStoreProtocol {
+    
     // MARK: Create/Update
 
     func addValue(_ value: Repo) async throws {
@@ -75,6 +74,17 @@ extension RepoStoreProtocol {
                 (value.id, value)
             })
         valuesDic.merge(newValuesDic) { _, new in new }
+    }
+    
+    // MARK: Update
+        
+    /// ローカルのスター数の情報を更新
+    func update(repoID: Repo.ID, starsCount: Int) async throws {
+        guard var repo = valuesDic[repoID] else {
+            return
+        }
+        repo.starsCount = starsCount
+        try await addValue(repo)
     }
     
     // MARK: Read
