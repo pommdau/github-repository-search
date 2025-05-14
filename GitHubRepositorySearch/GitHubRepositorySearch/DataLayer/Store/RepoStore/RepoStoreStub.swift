@@ -42,6 +42,10 @@ extension RepoStoreStub {
         perPage: Int?,
         page: Int?
     ) async throws -> SearchResponse<Repo> {
+        await Task.yield() // テスト用に実行を1サイクル遅らせる
+        if Task.isCancelled {
+            throw CancellationError()
+        }
         try await addValues(stubbedSearchReposResponse.items)
         return stubbedSearchReposResponse
     }
@@ -54,6 +58,10 @@ extension RepoStoreStub {
         perPage: Int?,
         page: Int?
     ) async throws -> ListResponse<Repo> {
+        await Task.yield() // テスト用に実行を1サイクル遅らせる
+        if Task.isCancelled {
+            throw CancellationError()
+        }
         try await addValues(stubbedFetchUserReposResponse.items)
         return stubbedFetchUserReposResponse
     }
@@ -66,6 +74,10 @@ extension RepoStoreStub {
         perPage: Int?,
         page: Int?
     ) async throws -> StarredReposResponse {
+        await Task.yield() // テスト用に実行を1サイクル遅らせる
+        if Task.isCancelled {
+            throw CancellationError()
+        }
         try await addValues(stubbedFetchStarredReposResponse.starredRepos.map { $0.repo })
         return stubbedFetchStarredReposResponse
     }

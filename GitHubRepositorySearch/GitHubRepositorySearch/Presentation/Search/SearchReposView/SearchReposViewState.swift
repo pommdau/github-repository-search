@@ -61,7 +61,7 @@ final class SearchReposViewState {
         searchText: String,
         sortedBy: SearchReposSortedBy,
         error: Error? = nil,
-        tokenStore: TokenStore,
+        tokenStore: TokenStoreProtocol,
         repoStore: RepoStoreProtocol,
         searchReposSuggestionStore: SearchReposSuggestionStoreProtocol,
         asyncRepoIDs: AsyncValues<Repo.ID, Error>,

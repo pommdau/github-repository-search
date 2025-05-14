@@ -7,6 +7,7 @@
 
 import Foundation
 import KeychainAccess
+import IKEHGitHubAPIClient
 
 final actor TokenStoreStub: TokenStoreProtocol {
     
@@ -14,20 +15,11 @@ final actor TokenStoreStub: TokenStoreProtocol {
     
     var accessToken: String?
     let keychain: Keychain? = nil // Stubではデータの永続化を行わないのでnil
+    let gitHubAPIClient: GitHubAPIClient? = nil // Stubではデータの通信を行わないのでnil
     
     // MARK: - LifeCycle
     
     init(accessToken: String? = nil) {
         self.accessToken = accessToken
-    }
-        
-    // MARK: - GitHubAPI
-    
-    func openLoginPageInBrowser() async throws {}
-    
-    func fetchAccessTokenWithCallbackURL(_ url: URL) async throws {}
-    
-    func logout() async throws {
-        deleteValue()
     }
 }

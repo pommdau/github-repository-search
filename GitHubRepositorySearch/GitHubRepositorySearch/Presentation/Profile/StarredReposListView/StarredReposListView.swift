@@ -19,7 +19,9 @@ struct StarredReposListView: View {
                 starredRepos: state.starredRepos,
                 repoCellStatusType: state.repoCellStatusType,
                 bottomCellOnAppear: { _ in
-                    state.fetchStarredReposMore()
+                    Task {
+                        await state.handleFetchStarredReposMore()
+                    }
                 }
             )
             .errorAlert(error: $state.error)
@@ -30,7 +32,9 @@ struct StarredReposListView: View {
                 }
             }
             .onAppear {
-                state.onAppear()
+                Task {
+                    await state.onAppear()
+                }
             }
         }
     }
@@ -46,7 +50,9 @@ struct StarredReposListView: View {
                 }
             }
             .onChange(of: state.sortedBy) { _, _ in
-                state.handleSortedChanged()
+                Task {
+                    await state.handleSortedChanged()
+                }
             }
         } label: {
             Image(systemName: "arrow.up.arrow.down")
