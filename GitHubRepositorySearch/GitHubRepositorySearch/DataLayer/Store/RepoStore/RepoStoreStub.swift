@@ -18,7 +18,7 @@ final class RepoStoreStub: RepoStoreProtocol {
     var valuesDic: [Repo.ID: Repo] = [:]
     
     // MARK: Stubbed Response (GitHub API)
-    
+    var stubbedError: Error? // GitHub APIの処理でエラーを発生させる場合に値をセット
     var stubbedSearchReposResponse: SearchResponse<Repo> = .init(totalCount: .zero, items: [])
     var stubbedFetchUserReposResponse: ListResponse<Repo> = .init(items: [], relationLink: nil)
     var stubbedFetchStarredReposResponse: StarredReposResponse = .init(starredRepos: [])
@@ -43,9 +43,7 @@ extension RepoStoreStub {
         page: Int?
     ) async throws -> SearchResponse<Repo> {
         await Task.yield() // テスト用に実行を1サイクル遅らせる
-        if Task.isCancelled {
-            throw CancellationError()
-        }
+        try throwErrorIfNeeded()
         try await addValues(stubbedSearchReposResponse.items)
         return stubbedSearchReposResponse
     }
@@ -59,9 +57,7 @@ extension RepoStoreStub {
         page: Int?
     ) async throws -> ListResponse<Repo> {
         await Task.yield() // テスト用に実行を1サイクル遅らせる
-        if Task.isCancelled {
-            throw CancellationError()
-        }
+        try throwErrorIfNeeded()
         try await addValues(stubbedFetchUserReposResponse.items)
         return stubbedFetchUserReposResponse
     }
@@ -75,10 +71,17 @@ extension RepoStoreStub {
         page: Int?
     ) async throws -> StarredReposResponse {
         await Task.yield() // テスト用に実行を1サイクル遅らせる
+        try throwErrorIfNeeded()
+        try await addValues(stubbedFetchStarredReposResponse.starredRepos.map { $0.repo })
+        return stubbedFetchStarredReposResponse
+    }
+    
+    private func throwErrorIfNeeded() throws {
         if Task.isCancelled {
             throw CancellationError()
         }
-        try await addValues(stubbedFetchStarredReposResponse.starredRepos.map { $0.repo })
-        return stubbedFetchStarredReposResponse
+        if let stubbedError = stubbedError {
+            throw stubbedError
+        }
     }
 }

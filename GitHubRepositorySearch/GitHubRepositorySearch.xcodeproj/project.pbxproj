@@ -121,6 +121,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				DA1825162DDC6E7A0082022E /* PBXTargetDependency */,
 				DA5F1BB32DD3082000AACB2F /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
@@ -141,11 +142,11 @@
 				DAA4859C2DC1C1AE003581BF /* Sources */,
 				DAA4859D2DC1C1AE003581BF /* Frameworks */,
 				DAA4859E2DC1C1AE003581BF /* Resources */,
-				DABA8CCD2DCA3F740075CE7C /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				DA1825142DDC6E730082022E /* PBXTargetDependency */,
 				DA8BECEB2DCA42FA002983CA /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
@@ -198,6 +199,7 @@
 				DA8BECE72DCA42C6002983CA /* XCRemoteSwiftPackageReference "R" */,
 				DA8BEDBF2DCA4BF4002983CA /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 				DAC342B92DD32C3B0086BC09 /* XCRemoteSwiftPackageReference "swift-concurrency-extras" */,
+				DA1825102DDC6E5D0082022E /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DAA485A12DC1C1AE003581BF /* Products */;
@@ -228,26 +230,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		DABA8CCD2DCA3F740075CE7C /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed\"\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		DA5F1BAA2DD3082000AACB2F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -266,6 +248,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		DA1825142DDC6E730082022E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = DA1825132DDC6E730082022E /* SwiftLintBuildToolPlugin */;
+		};
+		DA1825162DDC6E7A0082022E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = DA1825152DDC6E7A0082022E /* SwiftLintBuildToolPlugin */;
+		};
 		DA5F1BB32DD3082000AACB2F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DAA4859F2DC1C1AE003581BF /* GitHubRepositorySearch */;
@@ -538,6 +528,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		DA1825102DDC6E5D0082022E /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.59.1;
+			};
+		};
 		DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess";
@@ -589,6 +587,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		DA1825132DDC6E730082022E /* SwiftLintBuildToolPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA1825102DDC6E5D0082022E /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
+			productName = "plugin:SwiftLintBuildToolPlugin";
+		};
+		DA1825152DDC6E7A0082022E /* SwiftLintBuildToolPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DA1825102DDC6E5D0082022E /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
+			productName = "plugin:SwiftLintBuildToolPlugin";
+		};
 		DA44E0D22DCA02F0001EDD36 /* KeychainAccess */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */;

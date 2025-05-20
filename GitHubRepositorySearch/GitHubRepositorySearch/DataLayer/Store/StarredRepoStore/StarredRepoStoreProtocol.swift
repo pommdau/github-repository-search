@@ -61,11 +61,7 @@ extension StarredRepoStoreProtocol {
     
     func addValues(_ values: [StarredRepo]) async throws {
         try await repository?.addValues(values)
-        let newValuesDic = Dictionary(
-            uniqueKeysWithValues: values.map { value in
-                (value.id, value)
-            })
-        valuesDic.merge(newValuesDic) { _, new in new }
+        valuesDic.registerValues(values)
     }
     
     // MARK: Update
@@ -88,7 +84,7 @@ extension StarredRepoStoreProtocol {
             return
         }
         let values = try await repository.fetchValuesAll()
-        valuesDic = Dictionary(uniqueKeysWithValues: values.map { ($0.id, $0) }) // Array -> Dictionary
+        valuesDic.registerValues(values)
     }
 
     // MARK: Delete

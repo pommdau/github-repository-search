@@ -65,11 +65,21 @@ final class StarredReposListViewState {
         tokenStore: TokenStoreProtocol = TokenStore.shared,
         repoStore: RepoStoreProtocol = RepoStore.shared,
         starredRepoStore: StarredRepoStoreProtocol = StarredRepoStore.shared,
+        asyncStarredRepoIDs: AsyncValues<Repo.ID, Error> = .initial,
+        nextLinkForFetchingStarredRepos: RelationLink.Link? = nil,
+//        sortedBy: FetchStarredReposSortedBy = .recentlyStarred,
+        error: Error? = nil,
+
     ) {
         self.loginUserStore = loginUserStore
         self.tokenStore = tokenStore
         self.repoStore = repoStore
         self.starredRepoStore = starredRepoStore
+        self.asyncStarredRepoIDs = asyncStarredRepoIDs
+        self.nextLinkForFetchingStarredRepos = nextLinkForFetchingStarredRepos
+//        self.sortedBy = sortedBysu
+        self.error = error
+
     }
 }
 
