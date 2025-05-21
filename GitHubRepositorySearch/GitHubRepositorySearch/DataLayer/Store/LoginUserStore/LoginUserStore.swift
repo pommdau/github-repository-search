@@ -27,7 +27,7 @@ final class LoginUserStore: LoginUserStoreProtocol {
     init(
         userDefaults: UserDefaults = .standard,
         tokenStore: TokenStoreProtocol = TokenStore.shared,
-        gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared,
+        gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared
     ) {
         self.userDefaults = userDefaults
         self.tokenStore = tokenStore

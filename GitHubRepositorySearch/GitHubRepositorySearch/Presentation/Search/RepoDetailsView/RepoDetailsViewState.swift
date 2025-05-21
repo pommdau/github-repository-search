@@ -50,7 +50,7 @@ final class RepoDetailsViewState {
         tokenStore: TokenStoreProtocol = TokenStore.shared,
         loginUserStore: LoginUserStoreProtocol = LoginUserStore.shared,
         repoStore: RepoStoreProtocol = RepoStore.shared,
-        starredRepoStore: StarredRepoStoreProtocol = StarredRepoStore.shared,
+        starredRepoStore: StarredRepoStoreProtocol = StarredRepoStore.shared
     ) {
         self.repoID = repoID
         self.tokenStore = tokenStore
@@ -105,7 +105,7 @@ extension RepoDetailsViewState {
                 repoID: repo.id,
                 accessToken: accessToken,
                 owner: repo.owner.login,
-                repo: repo.name,
+                repo: repo.name
             )
         } catch {
             self.error = error

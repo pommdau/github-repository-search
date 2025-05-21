@@ -27,7 +27,7 @@ struct LanguageStore {
     
     /// ローカルの設定ファイルから情報を読み込む
     private static func loadLanguageFromLocalFile() -> [Language] {
-        guard let url = R.file.githubLangColorsJson(),
+        guard let url = Bundle.main.url(forResource: "github-lang-colors", withExtension: "json"),
               let data = try? Data(contentsOf: url),
               let json = try? JSONSerialization.jsonObject(with: data) as? [String: [String: String?]]  // color: null があるためString?としている
         else {

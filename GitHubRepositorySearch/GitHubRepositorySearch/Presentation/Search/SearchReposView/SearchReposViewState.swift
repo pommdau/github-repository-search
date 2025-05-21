@@ -210,7 +210,7 @@ extension SearchReposViewState {
                     sort: sortedBy.sort,
                     order: sortedBy.order,
                     perPage: 10,
-                    page: nil,
+                    page: nil
                 )
                 // 検索: 成功
                 withAnimation {

@@ -17,7 +17,7 @@ struct LoginUserView: View {
     // swiftlint:disable:next type_contents_order
     init(namespace: Namespace.ID? = nil) {
         _state = .init(wrappedValue: LoginUserViewState(
-            namespace: namespace,
+            namespace: namespace
         ))
     }
     

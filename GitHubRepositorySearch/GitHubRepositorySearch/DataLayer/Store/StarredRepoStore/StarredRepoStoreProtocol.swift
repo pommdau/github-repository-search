@@ -30,14 +30,14 @@ protocol StarredRepoStoreProtocol: AnyObject {
         repoID: Repo.ID,
         accessToken: String,
         owner: String,
-        repo: String,
+        repo: String
     ) async throws
     
     func unstarRepo(
         repoID: Repo.ID,
         accessToken: String,
         owner: String,
-        repo: String,
+        repo: String
     ) async throws
 }
 

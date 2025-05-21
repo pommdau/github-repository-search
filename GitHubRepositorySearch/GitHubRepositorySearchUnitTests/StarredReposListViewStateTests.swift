@@ -33,7 +33,7 @@ final class StarredReposListViewStateTests: XCTestCase {
 
 extension StarredReposListViewStateTests {
     
-    // MARK: 成功(.initialの状態から)
+    /// スター済みリポジトリの取得_initialの状態から_成功
     func testFetchStarredReposFromInitialSuccess() async throws {
         
         func test() async throws {
@@ -68,7 +68,7 @@ extension StarredReposListViewStateTests {
             _ = await task.value // 全処理の完了を待つ
             XCTAssertTrue(sut.asyncStarredRepoIDs.isLoaded)
             XCTAssertEqual(sut.asyncStarredRepoIDs.values, testStarredRepos.map { $0.id })
-            XCTAssertEqual(sut.nextLinkForFetchingStarredRepos, testRelationLink.next)
+            XCTAssertEqual(sut.nextLink, testRelationLink.next)
         }
         
         for _ in 0..<1 {
@@ -78,6 +78,7 @@ extension StarredReposListViewStateTests {
         }
     }
     
+    /// スター済みリポジトリの取得_initialの状態から_失敗(APIエラー)
     func testFetchStarredReposFromInitialFailed() async throws {
         
         func test() async throws {
@@ -108,7 +109,7 @@ extension StarredReposListViewStateTests {
             // 期待するエラー発生時の状態となっているか
             XCTAssertTrue(sut.asyncStarredRepoIDs.isError)
             XCTAssertEqual(sut.asyncStarredRepoIDs.values, [])
-            XCTAssertNil(sut.nextLinkForFetchingStarredRepos)
+            XCTAssertNil(sut.nextLink)
         }
         
         for _ in 0..<1 {
@@ -118,6 +119,7 @@ extension StarredReposListViewStateTests {
         }
     }
     
+    /// スター済みリポジトリの取得_loadingの状態から_変化無し
     func testFetchStarredReposFromLoading() async throws {
         
         // MARK: Given
@@ -137,12 +139,56 @@ extension StarredReposListViewStateTests {
         XCTAssertTrue(sut.asyncStarredRepoIDs.isLoading)
     }
     
-    // MARK: スター済みリポジトリの取得_開始状態が.loaded
+    /// スター済みリポジトリの取得_loadedの状態から_成功
     func testFetchStarredReposMoreFromLoaded() async throws {
                         
+        struct TestData {
+            let testRepos: [Repo]
+            
+            // 読み込み済みのデータ
+            let loadedRepos: [Repo]
+            let loadedStarredRepos: [GitHubRepositorySearch.StarredRepo]
+            let loadedNextLink: RelationLink.Link
+
+            // 新規に読み込まれるデータ
+            let loadedMoreRepos: [Repo]
+            let loadedoMoreStarredRepos: [IKEHGitHubAPIClient.StarredRepo]
+            let loadedMoreNextLink: RelationLink.Link
+            
+            init() throws {
+                self.testRepos = Repo.Mock.random(count: 20)
+
+                // 読み込み済みのデータ
+                self.loadedRepos = Array(testRepos[0..<10])
+                self.loadedStarredRepos = GitHubRepositorySearch.StarredRepo.Mock.randomWithRepos(loadedRepos)
+                self.loadedNextLink = .init(
+                    id: UUID().uuidString,
+                    url: try XCTUnwrap(URL(string: "https://api.github.com/search/repositories?q=SwiftUI&per_page=10&page=2")),
+                    queryItems: [
+                        .init(name: "q", value: "SwiftUI"),
+                        .init(name: "per_page", value: "10"),
+                        .init(name: "page", value: "2")
+                    ]
+                )
+                                        
+                // 新規に読み込まれるデータ
+                self.loadedMoreRepos = Array(testRepos[10..<20])
+                self.loadedoMoreStarredRepos = IKEHGitHubAPIClient.StarredRepo.Mock.randomWithRepos(loadedMoreRepos)
+                self.loadedMoreNextLink = .init(
+                    id: UUID().uuidString,
+                    url: try XCTUnwrap(URL(string: "https://api.github.com/search/repositories?q=SwiftUI&per_page=10&page=3")),
+                    queryItems: [
+                        .init(name: "q", value: "SwiftUI"),
+                        .init(name: "per_page", value: "10"),
+                        .init(name: "page", value: "3")
+                    ]
+                )
+            }
+        }
+        
         func test() async throws {
             // MARK: Given
-            let testData = try TestCaseData()
+            let testData = try TestData()
                                     
             let repoStore: RepoStoreStub = .init(valuesDic: testData.loadedRepos.convertToValuesDic())
             repoStore.stubbedFetchStarredReposResponse = .init(
@@ -155,7 +201,7 @@ extension StarredReposListViewStateTests {
                 repoStore: repoStore,
                 starredRepoStore: StarredRepoStoreStub(),
                 asyncStarredRepoIDs: .loaded(testData.loadedStarredRepos.map { $0.repoID }),
-                nextLinkForFetchingStarredRepos: testData.loadedNextLink,
+                nextLinkForFetchingStarredRepos: testData.loadedNextLink
             )
             
             // MARK: When
@@ -164,7 +210,7 @@ extension StarredReposListViewStateTests {
                 sut.asyncStarredRepoIDs.values.sorted(by: { $0 < $1 }),
                 testData.loadedRepos.map { $0.id }.sorted(by: { $0 < $1 })
             )
-            XCTAssertEqual(sut.nextLinkForFetchingStarredRepos, testData.loadedNextLink)
+            XCTAssertEqual(sut.nextLink, testData.loadedNextLink)
             let task = Task {
                 await sut.handleFetchStarredReposMore()
             }
@@ -181,7 +227,7 @@ extension StarredReposListViewStateTests {
                 sut.asyncStarredRepoIDs.values.sorted(by: { $0 < $1 }),
                 testData.testRepos.map { $0.id }.sorted(by: { $0 < $1 })
             )
-            XCTAssertEqual(sut.nextLinkForFetchingStarredRepos, testData.loadedMoreNextLink)
+            XCTAssertEqual(sut.nextLink, testData.loadedMoreNextLink)
         }
         
         for _ in 0..<1 {
@@ -191,56 +237,4 @@ extension StarredReposListViewStateTests {
         }
     }
 }
-//extension Array where Element: Identifiable {
-//    func convertToValuesDic() -> [Element.ID: Element] {
-//        Dictionary(
-//            uniqueKeysWithValues: self.map { value in
-//                (value.id, value)
-//            })
-//    }
-//}
 
-// TODO: rename
-struct TestCaseData {
-    let testRepos: [Repo]
-    
-    // 読み込み済みのデータ
-    let loadedRepos: [Repo]
-    let loadedStarredRepos: [GitHubRepositorySearch.StarredRepo]
-    let loadedNextLink: RelationLink.Link
-
-    // 新規に読み込まれるデータ
-    let loadedMoreRepos: [Repo]
-    let loadedoMoreStarredRepos: [IKEHGitHubAPIClient.StarredRepo]
-    let loadedMoreNextLink: RelationLink.Link
-    
-    init() throws {
-        self.testRepos = Repo.Mock.random(count: 20)
-
-        // 読み込み済みのデータ
-        self.loadedRepos = Array(testRepos[0..<10])
-        self.loadedStarredRepos = GitHubRepositorySearch.StarredRepo.Mock.randomWithRepos(loadedRepos)
-        self.loadedNextLink  = .init(
-            id: UUID().uuidString,
-            url: try XCTUnwrap(URL(string: "https://api.github.com/search/repositories?q=SwiftUI&per_page=10&page=2")),
-            queryItems: [
-                .init(name: "q", value: "SwiftUI"),
-                .init(name: "per_page", value: "10"),
-                .init(name: "page", value: "2")
-            ]
-        )
-                                
-        // 新規に読み込まれるデータ
-        self.loadedMoreRepos = Array(testRepos[10..<20])
-        self.loadedoMoreStarredRepos = IKEHGitHubAPIClient.StarredRepo.Mock.randomWithRepos(loadedMoreRepos)
-        self.loadedMoreNextLink = .init(
-            id: UUID().uuidString,
-            url: try XCTUnwrap(URL(string: "https://api.github.com/search/repositories?q=SwiftUI&per_page=10&page=3")),
-            queryItems: [
-                .init(name: "q", value: "SwiftUI"),
-                .init(name: "per_page", value: "10"),
-                .init(name: "page", value: "3")
-            ]
-        )
-    }
-}

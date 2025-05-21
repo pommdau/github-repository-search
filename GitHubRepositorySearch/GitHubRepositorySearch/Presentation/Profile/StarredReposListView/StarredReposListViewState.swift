@@ -14,16 +14,18 @@ final class StarredReposListViewState {
     
     // MARK: - Property
     
-    // MARK: Stores
+    // MARK: Store
     let loginUserStore: LoginUserStoreProtocol
     let tokenStore: TokenStoreProtocol
     let repoStore: RepoStoreProtocol
     let starredRepoStore: StarredRepoStoreProtocol
     
-    var asyncStarredRepoIDs: AsyncValues<Repo.ID, Error> = .initial
-    var nextLinkForFetchingStarredRepos: RelationLink.Link?
+    var asyncStarredRepoIDs: AsyncValues<Repo.ID, Error>
     var sortedBy: FetchStarredReposSortedBy = .recentlyStarred // TODO
+    var nextLink: RelationLink.Link?
     var error: Error?
+    
+    // MARK: Computed Property
     
     var loginUser: LoginUser? {
         loginUserStore.loginUser
@@ -68,7 +70,7 @@ final class StarredReposListViewState {
         asyncStarredRepoIDs: AsyncValues<Repo.ID, Error> = .initial,
         nextLinkForFetchingStarredRepos: RelationLink.Link? = nil,
 //        sortedBy: FetchStarredReposSortedBy = .recentlyStarred,
-        error: Error? = nil,
+        error: Error? = nil
 
     ) {
         self.loginUserStore = loginUserStore
@@ -76,8 +78,8 @@ final class StarredReposListViewState {
         self.repoStore = repoStore
         self.starredRepoStore = starredRepoStore
         self.asyncStarredRepoIDs = asyncStarredRepoIDs
-        self.nextLinkForFetchingStarredRepos = nextLinkForFetchingStarredRepos
-//        self.sortedBy = sortedBysu
+        self.nextLink = nextLinkForFetchingStarredRepos
+//        self.sortedBy = sortedBy
         self.error = error
 
     }
@@ -86,7 +88,7 @@ final class StarredReposListViewState {
 // MARK: - Actions
  
 extension StarredReposListViewState {
-
+    
     private func performFetchStarrredRepos(isLoadingMore: Bool, page: Int?) async {
         
         // 現在の状態によっては何もしない
@@ -112,7 +114,7 @@ extension StarredReposListViewState {
         asyncStarredRepoIDs = isLoadingMore ?
             .loadingMore(asyncStarredRepoIDs.values) :
             .loading(asyncStarredRepoIDs.values)
-        nextLinkForFetchingStarredRepos = nil
+        nextLink = nil
         
         do {
             let response = try await repoStore.fetchStarredRepos(
@@ -121,7 +123,7 @@ extension StarredReposListViewState {
                 sort: sortedBy.sort,
                 direction: sortedBy.direction,
                 perPage: 10,
-                page: page,
+                page: page
             )
             // スター済みリポジトリの取得に成功
             // StarredRepoStoreの更新
@@ -134,7 +136,7 @@ extension StarredReposListViewState {
             withAnimation {
                 asyncStarredRepoIDs = .loaded(combinedIDs)
             }                            
-            nextLinkForFetchingStarredRepos = response.relationLink?.next
+            nextLink = response.relationLink?.next
         } catch {
             // スター済みリポジトリの取得に失敗
             asyncStarredRepoIDs = .error(error, asyncStarredRepoIDs.values)
@@ -150,7 +152,7 @@ extension StarredReposListViewState {
     /// スター済みリポジトリの取得(追加読み込み)
     func handleFetchStarredReposMore() async {
         // 必要な情報のチェック
-        guard let pageString = nextLinkForFetchingStarredRepos?.queryItems["page"],
+        guard let pageString = nextLink?.queryItems["page"],
               let page = Int(pageString)
         else {
             return

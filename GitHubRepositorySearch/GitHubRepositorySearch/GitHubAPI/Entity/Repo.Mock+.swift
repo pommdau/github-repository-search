@@ -36,7 +36,7 @@ extension Repo.Mock {
               websitePath: nil,
               description: nil,
               createdAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
-              updatedAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
+              updatedAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10))
         )
     
     static let skeltonRepoCell = Repo(
@@ -60,6 +60,6 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 """,
         createdAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
-        updatedAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10)),
+        updatedAt: ISO8601DateFormatter.shared.string(from: Date.random(inPastYears: 10))
     )
 }

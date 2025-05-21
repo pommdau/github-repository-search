@@ -46,7 +46,7 @@ struct SearchResultView: View {
         asyncRepos: AsyncValues<Repo, Error>,
         searchText: String = "",
         cancelSearching: @escaping () -> Void = {},
-        bottomCellOnAppear: @escaping (Repo.ID) -> Void = { _ in },
+        bottomCellOnAppear: @escaping (Repo.ID) -> Void = { _ in }
     ) {
         self.asyncRepos = asyncRepos
         self.searchText = searchText
