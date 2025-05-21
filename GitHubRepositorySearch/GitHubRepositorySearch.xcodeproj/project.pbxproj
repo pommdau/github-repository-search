@@ -55,11 +55,6 @@
 			path = GitHubRepositorySearch;
 			sourceTree = "<group>";
 		};
-		DAA485BA2DC1C1B0003581BF /* GitHubRepositorySearchUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = GitHubRepositorySearchUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,7 +84,6 @@
 			isa = PBXGroup;
 			children = (
 				DAA485A22DC1C1AE003581BF /* GitHubRepositorySearch */,
-				DAA485BA2DC1C1B0003581BF /* GitHubRepositorySearchUITests */,
 				DA5F1BAF2DD3082000AACB2F /* GitHubRepositorySearchUnitTests */,
 				DAA485A12DC1C1AE003581BF /* Products */,
 				DA30BDF42DD22A4F0038394C /* .swiftlint.yml */,

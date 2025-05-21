@@ -24,4 +24,8 @@ extension UserDefaults.Key {
     enum RootTabViewState {
         static let selectedTab = "RootTabViewState-selectedTab"
     }
+    
+    enum SearchReposViewState {
+        static let sortedBy = "RootTabViewState-sortedBy"
+    }
 }

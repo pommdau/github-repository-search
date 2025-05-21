@@ -12,18 +12,24 @@ import IKEHGitHubAPIClient
 @Observable
 final class RepoDetailsViewState {
     
-    // MARK: - Property
+    // MARK: - Public Property
     
     let repoID: Repo.ID
-    let tokenStore: TokenStoreProtocol
-    let loginUserStore: LoginUserStoreProtocol
-    let repoStore: RepoStoreProtocol
-    let starredRepoStore: StarredRepoStoreProtocol
-
     var isFetchingStarred: Bool = false
+    var error: Error?
+    
+    // MARK: - Private Property
+    
     private var isUpdatingStarred: Bool = false
     
-    var error: Error?
+    // MARK: Store
+    
+    private let loginUserStore: LoginUserStoreProtocol
+    private let tokenStore: TokenStoreProtocol
+    private let repoStore: RepoStoreProtocol
+    private let starredRepoStore: StarredRepoStoreProtocol
+        
+    // MARK: - Computed Property
     
     var repo: Repo? {
         repoStore.valuesDic[repoID]
@@ -84,7 +90,7 @@ extension RepoDetailsViewState {
 // MARK: - Star Methods
 
 extension RepoDetailsViewState {
-    
+        
     private func checkIfRepoIsStarred() async {
         // 必要な情報の確認
         guard let repo,
@@ -114,7 +120,7 @@ extension RepoDetailsViewState {
         
     private func updateStarred() async {
         
-        // 必要な情報のチェック
+        // 必要な情報の確認
         guard let repo,
               let accessToken = await tokenStore.accessToken
         else {
@@ -126,27 +132,28 @@ extension RepoDetailsViewState {
         defer {
             isUpdatingStarred = false
         }
+        
         // スター状態を更新
         let currentIsStarred = isStarred
         let currentStarsCount = repo.starsCount
         do {
             if isStarred {
                 // スターを取り消す
-                // 一時的に値を更新する
+                // 一時的に値を更新する(ユーザにアクションの完了を意識させない工夫)
                 try await repoStore.update(repoID: repo.id, starsCount: max(currentStarsCount - 1, .zero)) // スター数は0未満にならない
                 try await starredRepoStore.update(repoID: repoID, isStarred: false)
                 // 実際の更新処理
                 try await starredRepoStore.unstarRepo(repoID: repoID, accessToken: accessToken, owner: repo.owner.login, repo: repo.name)
             } else {
                 // スターをつける
-                // 一時的に値を更新する
+                // 一時的に値を更新する(ユーザにアクションの完了を意識させない工夫)
                 try await repoStore.update(repoID: repo.id, starsCount: currentStarsCount + 1)
                 try await starredRepoStore.update(repoID: repoID, isStarred: true)
                 // 実際の更新処理
                 try await starredRepoStore.starRepo(repoID: repoID, accessToken: accessToken, owner: repo.owner.login, repo: repo.name)
             }
         } catch {
-            // スターの状態をもとに戻す
+            // 一時的に値を更新していたスターの状態をもとに戻す
             try? await starredRepoStore.update(repoID: repoID, isStarred: currentIsStarred)
             try? await repoStore.update(repoID: repo.id, starsCount: currentStarsCount)
             self.error = error

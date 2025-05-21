@@ -12,20 +12,23 @@ import IKEHGitHubAPIClient
 @Observable
 final class StarredReposListViewState {
     
-    // MARK: - Property
-    
-    // MARK: Store
-    let loginUserStore: LoginUserStoreProtocol
-    let tokenStore: TokenStoreProtocol
-    let repoStore: RepoStoreProtocol
-    let starredRepoStore: StarredRepoStoreProtocol
+    // MARK: - Public Property
     
     var asyncStarredRepoIDs: AsyncValues<Repo.ID, Error>
-    var sortedBy: FetchStarredReposSortedBy = .recentlyStarred // TODO
+    var sortedBy: FetchStarredReposSortedBy
     var nextLink: RelationLink.Link?
     var error: Error?
     
-    // MARK: Computed Property
+    // MARK: - Private Property
+    
+    // MARK: Store
+    
+    private let loginUserStore: LoginUserStoreProtocol
+    private let tokenStore: TokenStoreProtocol
+    private let repoStore: RepoStoreProtocol
+    private let starredRepoStore: StarredRepoStoreProtocol
+        
+    // MARK: - Computed Property
     
     var loginUser: LoginUser? {
         loginUserStore.loginUser
@@ -60,6 +63,14 @@ final class StarredReposListViewState {
         }
     }
     
+    var nextLinkPage: Int? {
+        guard let pageString = nextLink?.queryItems["page"],
+              let page = Int(pageString) else {
+            return nil
+        }
+        return page
+    }
+            
     // MARK: - LifeCycle
     
     init(
@@ -68,54 +79,44 @@ final class StarredReposListViewState {
         repoStore: RepoStoreProtocol = RepoStore.shared,
         starredRepoStore: StarredRepoStoreProtocol = StarredRepoStore.shared,
         asyncStarredRepoIDs: AsyncValues<Repo.ID, Error> = .initial,
+        sortedBy: FetchStarredReposSortedBy = .recentlyStarred,
         nextLinkForFetchingStarredRepos: RelationLink.Link? = nil,
-//        sortedBy: FetchStarredReposSortedBy = .recentlyStarred,
         error: Error? = nil
-
     ) {
         self.loginUserStore = loginUserStore
         self.tokenStore = tokenStore
         self.repoStore = repoStore
         self.starredRepoStore = starredRepoStore
         self.asyncStarredRepoIDs = asyncStarredRepoIDs
+        self.sortedBy = sortedBy
         self.nextLink = nextLinkForFetchingStarredRepos
-//        self.sortedBy = sortedBy
         self.error = error
-
     }
 }
 
-// MARK: - Actions
+// MARK: - Fetch StarredRepos
  
 extension StarredReposListViewState {
-    
-    private func performFetchStarrredRepos(isLoadingMore: Bool, page: Int?) async {
         
-        // 現在の状態によっては何もしない
+    /// スター済みリポジトリの取得
+    /// - Parameters:
+    ///   - page: ページ番号
+    ///   - isLoadingMore: 続きを読み込むんでいるかどうか
+    private func performFetchStarredRepos(page: Int? = nil, isLoadingMore: Bool = false) async {
+                
         switch asyncStarredRepoIDs {
-        case .loading:
-            return
-        case .loadingMore:
-            if isLoadingMore {
-                // 既にloadingMoreの処理を行っている場合は何もしない
-                return
-            }
-        default:
+        case .initial, .loaded, .error:
             break
-        }
-        
-        // 必要な情報のチェック
-        guard let loginUser,
-              let accessToken = await tokenStore.accessToken
-        else {
+        case .loading, .loadingMore:
             return
         }
-        // 状態の更新
-        asyncStarredRepoIDs = isLoadingMore ?
-            .loadingMore(asyncStarredRepoIDs.values) :
-            .loading(asyncStarredRepoIDs.values)
-        nextLink = nil
+                
+        guard let loginUser,
+              let accessToken = await tokenStore.accessToken else {
+            return
+        }
         
+        updateStatusBefore(isLoadingMore: isLoadingMore)
         do {
             let response = try await repoStore.fetchStarredRepos(
                 userName: loginUser.login,
@@ -125,18 +126,7 @@ extension StarredReposListViewState {
                 perPage: 10,
                 page: page
             )
-            // スター済みリポジトリの取得に成功
-            // StarredRepoStoreの更新
-            let newStarredRepos = response.starredRepos.map { StarredRepoTranslator.translate(from: $0) }
-            try await starredRepoStore.addValues(newStarredRepos)
-            
-            // Viewのスター済みリポジトリのID一覧を更新
-            let newIDs = newStarredRepos.map { $0.repoID }
-            let combinedIDs = isLoadingMore ? (asyncStarredRepoIDs.values + newIDs) : newIDs
-            withAnimation {
-                asyncStarredRepoIDs = .loaded(combinedIDs)
-            }                            
-            nextLink = response.relationLink?.next
+            try await updateStatusAfter(with: response, isLoadingMore: isLoadingMore)
         } catch {
             // スター済みリポジトリの取得に失敗
             asyncStarredRepoIDs = .error(error, asyncStarredRepoIDs.values)
@@ -144,25 +134,53 @@ extension StarredReposListViewState {
         }
     }
     
+    // MARK: - Helpers
+    
+    /// 通信前の状態の更新
+    private func updateStatusBefore(isLoadingMore: Bool) {
+        // 状態の更新
+        asyncStarredRepoIDs = isLoadingMore ?
+            .loadingMore(asyncStarredRepoIDs.values) :
+            .loading(asyncStarredRepoIDs.values)
+        nextLink = nil
+    }
+              
+    // 通信後の状態の更新
+    private func updateStatusAfter(with response: StarredReposResponse, isLoadingMore: Bool) async throws {
+        // StarredRepoStoreの更新
+        let newStarredRepos = response.starredRepos.map { StarredRepoTranslator.translate(from: $0) }
+        try await starredRepoStore.addValues(newStarredRepos)
+        
+        // Viewのスター済みリポジトリのID一覧を更新
+        let newIDs = newStarredRepos.map { $0.repoID }
+        let combinedIDs = isLoadingMore ? (asyncStarredRepoIDs.values + newIDs) : newIDs
+        withAnimation {
+            asyncStarredRepoIDs = .loaded(combinedIDs)
+        }
+        nextLink = response.relationLink?.next
+    }
+}
+
+// MARK: - Actions
+
+extension StarredReposListViewState {
+    
     /// スター済みリポジトリの取得
     func handleFetchStarredRepos() async {
-        await performFetchStarrredRepos(isLoadingMore: false, page: nil)
+        await performFetchStarredRepos()
     }
     
     /// スター済みリポジトリの取得(追加読み込み)
     func handleFetchStarredReposMore() async {
-        // 必要な情報のチェック
-        guard let pageString = nextLink?.queryItems["page"],
-              let page = Int(pageString)
-        else {
+        guard let nextLinkPage else {
             return
         }
-        await performFetchStarrredRepos(isLoadingMore: true, page: page)
+        await performFetchStarredRepos(page: nextLinkPage, isLoadingMore: true)
     }
     
     /// ソート順が変更された
     func handleSortedChanged() async {
-        await performFetchStarrredRepos(isLoadingMore: false, page: nil)
+        await performFetchStarredRepos()
     }
         
     func onAppear() async {
@@ -170,6 +188,6 @@ extension StarredReposListViewState {
         if asyncStarredRepoIDs != .initial {
             return
         }
-        await handleFetchStarredRepos()
+        await performFetchStarredRepos()
     }
 }

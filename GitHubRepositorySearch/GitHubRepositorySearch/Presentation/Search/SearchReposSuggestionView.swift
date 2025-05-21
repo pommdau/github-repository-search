@@ -9,8 +9,18 @@ import SwiftUI
 
 struct SearchReposSuggestionView: View {
     
-    @State private var store = SearchReposSuggestionStore.shared
+    // MARK: - Property
     
+    private var store: SearchReposSuggestionStoreProtocol
+    
+    // MARK: - LifeCycle
+    
+    init(store: SearchReposSuggestionStoreProtocol = SearchReposSuggestionStore.shared) {
+        self.store = store
+    }
+    
+    // MARK: - View
+        
     var body: some View {
         Group {
             Section("History") {
@@ -41,8 +51,13 @@ struct SearchReposSuggestionView: View {
     }
 }
 
-#Preview() {
+// MARK: - Preview
+
+#Preview {
+    
+    @Previewable var store = SearchReposSuggestionStoreStub(histories: ["sample1", "sample2", "sample3" ])
+    
     List {
-        SearchReposSuggestionView()
+        SearchReposSuggestionView(store: store)
     }
 }

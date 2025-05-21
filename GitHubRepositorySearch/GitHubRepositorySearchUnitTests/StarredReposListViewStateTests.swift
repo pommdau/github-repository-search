@@ -47,7 +47,6 @@ extension StarredReposListViewStateTests {
                 starredRepos: testStarredRepos,
                 relationLink: testRelationLink
             )
-            let starredRepoStore: StarredRepoStoreStub = .init()
             
             sut = .init(
                 loginUserStore: LoginUserStoreStub(loginUser: .Mock.ikeh),
@@ -120,7 +119,7 @@ extension StarredReposListViewStateTests {
     }
     
     /// スター済みリポジトリの取得_loadingの状態から_変化無し
-    func testFetchStarredReposFromLoading() async throws {
+    func testFetchStarredReposFromLoadingSuccess() async throws {
         
         // MARK: Given
         sut = .init(
@@ -139,8 +138,8 @@ extension StarredReposListViewStateTests {
         XCTAssertTrue(sut.asyncStarredRepoIDs.isLoading)
     }
     
-    /// スター済みリポジトリの取得_loadedの状態から_成功
-    func testFetchStarredReposMoreFromLoaded() async throws {
+    /// スター済みリポジトリの追加取得_成功
+    func testFetchStarredReposMoreSuccess() async throws {
                         
         struct TestData {
             let testRepos: [Repo]
@@ -162,7 +161,7 @@ extension StarredReposListViewStateTests {
                 self.loadedRepos = Array(testRepos[0..<10])
                 self.loadedStarredRepos = GitHubRepositorySearch.StarredRepo.Mock.randomWithRepos(loadedRepos)
                 self.loadedNextLink = .init(
-                    id: UUID().uuidString,
+                    id: "next",
                     url: try XCTUnwrap(URL(string: "https://api.github.com/search/repositories?q=SwiftUI&per_page=10&page=2")),
                     queryItems: [
                         .init(name: "q", value: "SwiftUI"),
@@ -217,7 +216,6 @@ extension StarredReposListViewStateTests {
             
             // MARK: Then
             await Task.yield()
-            print(sut.asyncStarredRepoIDs)
             XCTAssertTrue(sut.asyncStarredRepoIDs.isLoadingMore)
             _ = await task.value // 全処理の完了を待つ
             
@@ -237,4 +235,3 @@ extension StarredReposListViewStateTests {
         }
     }
 }
-

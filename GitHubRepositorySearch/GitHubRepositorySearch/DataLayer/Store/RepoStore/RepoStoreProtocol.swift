@@ -85,11 +85,12 @@ extension RepoStoreProtocol {
     
     // MARK: Read
     
-    func fetchValues() async throws {
+    func loadSavedValues() async throws {
         guard let repository else {
             return
         }
         let values = try await repository.fetchValuesAll()
+        valuesDic = [:]
         valuesDic.registerValues(values)
     }
 
