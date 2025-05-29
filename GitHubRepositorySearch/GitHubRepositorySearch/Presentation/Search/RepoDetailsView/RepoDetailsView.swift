@@ -144,10 +144,16 @@ extension RepoDetailsView {
                 }
                 UIApplication.shared.open(url)
             } label: {
-                Text(repo.name)
-                    .lineLimit(1)
-                    .font(.title)
-                    .bold()
+                HStack(spacing: 4) {
+                    if repo.isPrivate {
+                        Image(systemName: "lock.fill")
+                            .accessibilityLabel(Text("Private Repository Icon"))                            
+                    }
+                    Text(repo.name)
+                        .lineLimit(1)
+                        .font(.title)
+                        .bold()
+                }
             }
             .foregroundStyle(.primary)
         }

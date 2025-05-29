@@ -22,7 +22,6 @@ protocol BackendProtocol: Actor {
     func deleteAll() async throws
 }
 
-
 extension BackendProtocol {
     
     private var valuesUserDefaultsKey: String {

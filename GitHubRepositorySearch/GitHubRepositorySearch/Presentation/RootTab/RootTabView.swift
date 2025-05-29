@@ -20,10 +20,11 @@ struct RootTabView: View {
             Tab(RootTabType.search.title, systemImage: RootTabType.search.icon, value: RootTabType.search) {
                 SearchReposView()
             }
-
+#if DEBUG
             Tab(RootTabType.debug.title, systemImage: RootTabType.debug.icon, value: RootTabType.debug) {
                 DebugView()
             }
+#endif
         }
         .onOpenURL { url in
             state.handleOnCallbackURL(url)

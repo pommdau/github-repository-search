@@ -1,13 +1,13 @@
 {
-  "originHash" : "07d6689cdb39058b66a01572f20a8e9746de425ff25a33f7efe9db5e1d5a7af2",
+  "originHash" : "3ae49dd68b0e7040a65374b6832433b9f12a4a166f42d7b79718317263de656a",
   "pins" : [
     {
       "identity" : "ikeh-github-api-client",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pommdau/ikeh-github-api-client",
       "state" : {
-        "revision" : "c3ef84b069ab4ab6b35cdcec64fa0927208155cd",
-        "version" : "1.0.10"
+        "revision" : "6aee89a7e4b52b46b3c4e3b39fbdc543f4352cd4",
+        "version" : "1.0.13"
       }
     },
     {

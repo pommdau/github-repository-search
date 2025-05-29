@@ -58,16 +58,15 @@ extension RepoStore {
         return response
     }
         
-    func fetchUserRepos(
-        userName: String,
-        accessToken: String?,
+    func fetchAuthenticatedUserRepos(
+        accessToken: String,
         sort: String?,
         direction: String?,
         perPage: Int?,
         page: Int?
     ) async throws -> ListResponse<Repo> {
-        let response = try await gitHubAPIClient.fetchUserRepos(
-            userName: userName,
+        
+        let response = try await gitHubAPIClient.fetchAuthenticatedUserRepos(
             accessToken: accessToken,
             sort: sort,
             direction: direction,

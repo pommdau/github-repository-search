@@ -28,10 +28,9 @@ protocol RepoStoreProtocol: AnyObject {
         page: Int?
     ) async throws -> SearchResponse<Repo>
     
-    /// ユーザのリポジトリを取得
-    func fetchUserRepos(
-        userName: String,
-        accessToken: String?,
+    /// 認証中ユーザのリポジトリを取得
+    func fetchAuthenticatedUserRepos(
+        accessToken: String,
         sort: String?,
         direction: String?,
         perPage: Int?,
@@ -101,4 +100,3 @@ extension RepoStoreProtocol {
         valuesDic.removeAll()
     }
 }
-
