@@ -23,7 +23,7 @@ final actor TokenStore: TokenStoreProtocol {
     
     init(
         keyChain: Keychain? = Keychain(service: Keychain.Service.oauth),
-        gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared,
+        gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared
     ) {
         // DI
         self.keychain = keyChain

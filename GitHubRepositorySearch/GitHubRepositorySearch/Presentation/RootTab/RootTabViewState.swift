@@ -30,7 +30,7 @@ final class RootTabViewState {
     
     init(
         tokenStore: TokenStoreProtocol = TokenStore.shared,
-        loginUserStore: LoginUserStoreProtocol = LoginUserStore.shared,
+        loginUserStore: LoginUserStoreProtocol = LoginUserStore.shared
     ) {
         self.tokenStore = tokenStore
         self.loginUserStore = loginUserStore

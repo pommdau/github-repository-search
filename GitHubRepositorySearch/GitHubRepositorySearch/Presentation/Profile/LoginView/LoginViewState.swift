@@ -24,7 +24,7 @@ final class LoginViewState {
     init(
         tokenStore: TokenStoreProtocol = TokenStore.shared,
         loginUserStore: LoginUserStoreProtocol = LoginUserStore.shared,
-        namespace: Namespace.ID? = nil,
+        namespace: Namespace.ID? = nil
     ) {
         self.tokenStore = tokenStore
         self.loginUserStore = loginUserStore

@@ -30,14 +30,14 @@ protocol StarredRepoStoreProtocol: AnyObject {
         repoID: Repo.ID,
         accessToken: String,
         owner: String,
-        repo: String,
+        repo: String
     ) async throws
     
     func unstarRepo(
         repoID: Repo.ID,
         accessToken: String,
         owner: String,
-        repo: String,
+        repo: String
     ) async throws
 }
 
@@ -61,11 +61,7 @@ extension StarredRepoStoreProtocol {
     
     func addValues(_ values: [StarredRepo]) async throws {
         try await repository?.addValues(values)
-        let newValuesDic = Dictionary(
-            uniqueKeysWithValues: values.map { value in
-                (value.id, value)
-            })
-        valuesDic.merge(newValuesDic) { _, new in new }
+        valuesDic.registerValues(values)
     }
     
     // MARK: Update
@@ -83,12 +79,13 @@ extension StarredRepoStoreProtocol {
     
     // MARK: Read
     
-    func fetchValues() async throws {
+    func loadSavedValues() async throws {
         guard let repository else {
             return
         }
         let values = try await repository.fetchValuesAll()
-        valuesDic = Dictionary(uniqueKeysWithValues: values.map { ($0.id, $0) }) // Array -> Dictionary
+        valuesDic = [:]
+        valuesDic.registerValues(values)
     }
 
     // MARK: Delete

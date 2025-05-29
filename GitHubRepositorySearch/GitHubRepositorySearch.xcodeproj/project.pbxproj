@@ -9,9 +9,8 @@
 /* Begin PBXBuildFile section */
 		DA30BE3E2DD22A4F0038394C /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = DA30BDF42DD22A4F0038394C /* .swiftlint.yml */; };
 		DA44E0D32DCA02F0001EDD36 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = DA44E0D22DCA02F0001EDD36 /* KeychainAccess */; };
-		DA8BECE92DCA42C6002983CA /* RswiftLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = DA8BECE82DCA42C6002983CA /* RswiftLibrary */; };
+		DA56BC4C2DDD9C1700C66274 /* IKEHGitHubAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = DA56BC4B2DDD9C1700C66274 /* IKEHGitHubAPIClient */; };
 		DA8BEDC12DCA4BF4002983CA /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = DA8BEDC02DCA4BF4002983CA /* Shimmer */; };
-		DAA487282DC1E6F4003581BF /* IKEHGitHubAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = DAA487272DC1E6F4003581BF /* IKEHGitHubAPIClient */; };
 		DABD5A2A2DC1EB71005EDCE8 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = DABD5A292DC1EB71005EDCE8 /* SDWebImageSwiftUI */; };
 		DAC342BB2DD32C3B0086BC09 /* ConcurrencyExtras in Frameworks */ = {isa = PBXBuildFile; productRef = DAC342BA2DD32C3B0086BC09 /* ConcurrencyExtras */; };
 /* End PBXBuildFile section */
@@ -56,11 +55,6 @@
 			path = GitHubRepositorySearch;
 			sourceTree = "<group>";
 		};
-		DAA485BA2DC1C1B0003581BF /* GitHubRepositorySearchUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = GitHubRepositorySearchUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,10 +70,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DA56BC4C2DDD9C1700C66274 /* IKEHGitHubAPIClient in Frameworks */,
 				DA8BEDC12DCA4BF4002983CA /* Shimmer in Frameworks */,
-				DA8BECE92DCA42C6002983CA /* RswiftLibrary in Frameworks */,
 				DABD5A2A2DC1EB71005EDCE8 /* SDWebImageSwiftUI in Frameworks */,
-				DAA487282DC1E6F4003581BF /* IKEHGitHubAPIClient in Frameworks */,
 				DA44E0D32DCA02F0001EDD36 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -91,7 +84,6 @@
 			isa = PBXGroup;
 			children = (
 				DAA485A22DC1C1AE003581BF /* GitHubRepositorySearch */,
-				DAA485BA2DC1C1B0003581BF /* GitHubRepositorySearchUITests */,
 				DA5F1BAF2DD3082000AACB2F /* GitHubRepositorySearchUnitTests */,
 				DAA485A12DC1C1AE003581BF /* Products */,
 				DA30BDF42DD22A4F0038394C /* .swiftlint.yml */,
@@ -141,23 +133,21 @@
 				DAA4859C2DC1C1AE003581BF /* Sources */,
 				DAA4859D2DC1C1AE003581BF /* Frameworks */,
 				DAA4859E2DC1C1AE003581BF /* Resources */,
-				DABA8CCD2DCA3F740075CE7C /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DA8BECEB2DCA42FA002983CA /* PBXTargetDependency */,
+				DAA255FD2DDD9FBF00292207 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				DAA485A22DC1C1AE003581BF /* GitHubRepositorySearch */,
 			);
 			name = GitHubRepositorySearch;
 			packageProductDependencies = (
-				DAA487272DC1E6F4003581BF /* IKEHGitHubAPIClient */,
 				DABD5A292DC1EB71005EDCE8 /* SDWebImageSwiftUI */,
 				DA44E0D22DCA02F0001EDD36 /* KeychainAccess */,
-				DA8BECE82DCA42C6002983CA /* RswiftLibrary */,
 				DA8BEDC02DCA4BF4002983CA /* Shimmer */,
+				DA56BC4B2DDD9C1700C66274 /* IKEHGitHubAPIClient */,
 			);
 			productName = GitHubRepositorySearch;
 			productReference = DAA485A02DC1C1AE003581BF /* GitHubRepositorySearch.app */;
@@ -192,12 +182,12 @@
 			mainGroup = DAA485972DC1C1AE003581BF;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				DAA487262DC1E6F4003581BF /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */,
 				DABD5A282DC1EB71005EDCE8 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
-				DA8BECE72DCA42C6002983CA /* XCRemoteSwiftPackageReference "R" */,
 				DA8BEDBF2DCA4BF4002983CA /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 				DAC342B92DD32C3B0086BC09 /* XCRemoteSwiftPackageReference "swift-concurrency-extras" */,
+				DA56BC4A2DDD9C1700C66274 /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */,
+				DAA255FB2DDD9FB400292207 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DAA485A12DC1C1AE003581BF /* Products */;
@@ -228,26 +218,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		DABA8CCD2DCA3F740075CE7C /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export PATH=\"$PATH:/opt/homebrew/bin\"\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed\"\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		DA5F1BAA2DD3082000AACB2F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -271,9 +241,9 @@
 			target = DAA4859F2DC1C1AE003581BF /* GitHubRepositorySearch */;
 			targetProxy = DA5F1BB22DD3082000AACB2F /* PBXContainerItemProxy */;
 		};
-		DA8BECEB2DCA42FA002983CA /* PBXTargetDependency */ = {
+		DAA255FD2DDD9FBF00292207 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = DA8BECEA2DCA42FA002983CA /* RswiftGenerateInternalResources */;
+			productRef = DAA255FC2DDD9FBF00292207 /* SwiftLintBuildToolPlugin */;
 		};
 /* End PBXTargetDependency section */
 
@@ -546,12 +516,12 @@
 				minimumVersion = 4.2.2;
 			};
 		};
-		DA8BECE72DCA42C6002983CA /* XCRemoteSwiftPackageReference "R" */ = {
+		DA56BC4A2DDD9C1700C66274 /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/mac-cain13/R.swift";
+			repositoryURL = "https://github.com/pommdau/ikeh-github-api-client";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 7.8.0;
+				minimumVersion = 1.0.10;
 			};
 		};
 		DA8BEDBF2DCA4BF4002983CA /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
@@ -562,12 +532,12 @@
 				minimumVersion = 1.5.1;
 			};
 		};
-		DAA487262DC1E6F4003581BF /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */ = {
+		DAA255FB2DDD9FB400292207 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pommdau/ikeh-github-api-client";
+			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 0.59.1;
 			};
 		};
 		DABD5A282DC1EB71005EDCE8 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
@@ -594,24 +564,20 @@
 			package = DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
 			productName = KeychainAccess;
 		};
-		DA8BECE82DCA42C6002983CA /* RswiftLibrary */ = {
+		DA56BC4B2DDD9C1700C66274 /* IKEHGitHubAPIClient */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = DA8BECE72DCA42C6002983CA /* XCRemoteSwiftPackageReference "R" */;
-			productName = RswiftLibrary;
-		};
-		DA8BECEA2DCA42FA002983CA /* RswiftGenerateInternalResources */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = "plugin:RswiftGenerateInternalResources";
+			package = DA56BC4A2DDD9C1700C66274 /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */;
+			productName = IKEHGitHubAPIClient;
 		};
 		DA8BEDC02DCA4BF4002983CA /* Shimmer */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DA8BEDBF2DCA4BF4002983CA /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */;
 			productName = Shimmer;
 		};
-		DAA487272DC1E6F4003581BF /* IKEHGitHubAPIClient */ = {
+		DAA255FC2DDD9FBF00292207 /* SwiftLintBuildToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = DAA487262DC1E6F4003581BF /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */;
-			productName = IKEHGitHubAPIClient;
+			package = DAA255FB2DDD9FB400292207 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
+			productName = "plugin:SwiftLintBuildToolPlugin";
 		};
 		DABD5A292DC1EB71005EDCE8 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;

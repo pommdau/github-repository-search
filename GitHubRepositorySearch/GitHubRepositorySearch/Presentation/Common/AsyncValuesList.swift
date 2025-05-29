@@ -211,7 +211,7 @@ struct AsyncValuesView<
         @ViewBuilder initialView: @escaping () -> InitialView,
         @ViewBuilder loadingView: @escaping () -> LoadingView,
         @ViewBuilder dataView: @escaping ([T]) -> DataView,
-        @ViewBuilder noResultView: @escaping () -> NoResultView,
+        @ViewBuilder noResultView: @escaping () -> NoResultView
     ) {
         self.asyncValues = asyncValues
         self.initialView = initialView()

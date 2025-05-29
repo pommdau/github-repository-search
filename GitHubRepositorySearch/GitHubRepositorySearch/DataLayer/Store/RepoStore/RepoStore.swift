@@ -29,7 +29,7 @@ final class RepoStore: RepoStoreProtocol {
         self.repository = repository
         self.gitHubAPIClient = gitHubAPIClient
         Task {
-            try? await self.fetchValues()
+            try? await self.loadSavedValues()
         }
     }
 }

@@ -69,11 +69,7 @@ extension RepoStoreProtocol {
     
     func addValues(_ values: [Repo]) async throws {
         try await repository?.addValues(values)
-        let newValuesDic = Dictionary(
-            uniqueKeysWithValues: values.map { value in
-                (value.id, value)
-            })
-        valuesDic.merge(newValuesDic) { _, new in new }
+        valuesDic.registerValues(values)
     }
     
     // MARK: Update
@@ -89,12 +85,13 @@ extension RepoStoreProtocol {
     
     // MARK: Read
     
-    func fetchValues() async throws {
+    func loadSavedValues() async throws {
         guard let repository else {
             return
         }
         let values = try await repository.fetchValuesAll()
-        valuesDic = Dictionary(uniqueKeysWithValues: values.map { ($0.id, $0) }) // Array -> Dictionary
+        valuesDic = [:]
+        valuesDic.registerValues(values)
     }
 
     // MARK: Delete
@@ -104,3 +101,4 @@ extension RepoStoreProtocol {
         valuesDic.removeAll()
     }
 }
+

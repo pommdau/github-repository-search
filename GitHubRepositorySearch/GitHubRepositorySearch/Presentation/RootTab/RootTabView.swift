@@ -20,12 +20,7 @@ struct RootTabView: View {
             Tab(RootTabType.search.title, systemImage: RootTabType.search.icon, value: RootTabType.search) {
                 SearchReposView()
             }
-            
-            Tab(RootTabType.starredRepos.title, systemImage: RootTabType.starredRepos.icon, value: RootTabType.starredRepos) {
-//                StarredReposView()
-                StarredReposListView()
-            }
-            
+
             Tab(RootTabType.debug.title, systemImage: RootTabType.debug.icon, value: RootTabType.debug) {
                 DebugView()
             }

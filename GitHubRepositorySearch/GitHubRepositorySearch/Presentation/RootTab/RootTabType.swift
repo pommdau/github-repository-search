@@ -10,7 +10,6 @@ import Foundation
 enum RootTabType: String {
     case profile
     case search
-    case starredRepos
     case debug
     
     var title: String {
@@ -19,8 +18,6 @@ enum RootTabType: String {
             "Profile"
         case .search:
             "Search"
-        case .starredRepos:
-            "Starred"
         case .debug:
             "Debug"
         }
@@ -32,8 +29,6 @@ enum RootTabType: String {
             "person.crop.circle.fill"
         case .search:
             "magnifyingglass"
-        case .starredRepos:
-            "star.fill"
         case .debug:
             "ladybug.fill"
         }
