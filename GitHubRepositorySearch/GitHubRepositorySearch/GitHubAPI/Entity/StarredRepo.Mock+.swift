@@ -1,10 +1,3 @@
-//
-//  IKEHGitHubAPIClient.Mock+.swift
-//  GitHubRepositorySearch
-//
-//  Created by HIROKI IKEUCHI on 2025/05/21.
-//
-
 import Foundation
 import IKEHGitHubAPIClient
 

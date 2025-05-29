@@ -68,6 +68,7 @@ extension LoginUserReposListView {
         
         // MARK: - Lifecycle
         
+        // swiftlint:disable:next type_contents_order
         init(
             asyncRepos: AsyncValues<Repo, Error>,
             repoCellStatusType: RepoCell.StatusType = .pushedAt,
@@ -143,11 +144,7 @@ extension LoginUserReposListView {
 #Preview("initial") {
     LoginUserReposListView.Content(asyncRepos: .initial)
 }
-//
-//#Preview("loading") {
-//    StarredReposListView.Content(asyncRepos: .loading([]), starredRepos: [])
-//}
-//
+
 #Preview("loaded") {
     let repos: [Repo] = Repo.Mock.random(count: 5)
     NavigationStack {
@@ -156,35 +153,3 @@ extension LoginUserReposListView {
         )
     }
 }
-//
-//#Preview("loaded_no_result") {
-//    StarredReposListView.Content(
-//        asyncRepos: .loaded([]),
-//        starredRepos: []
-//    )
-//}
-//
-//#Preview("loading_more") {
-//    let repos: [Repo] = Repo.Mock.random(count: 5)
-//    NavigationStack {
-//        StarredReposListView.Content(
-//            asyncRepos: .loadingMore(repos),
-//            starredRepos: StarredRepo.Mock.randomWithRepos(repos)
-//        )
-//    }
-//}
-//
-//#Preview("error") {
-//    let repos: [Repo] = Repo.Mock.random(count: 5)
-//    StarredReposListView.Content(
-//        asyncRepos: .error(MessageError(description: "No Search Results Error"), repos),
-//        starredRepos: StarredRepo.Mock.randomWithRepos(repos)
-//    )
-//}
-//
-//#Preview("error_no_result") {
-//    StarredReposListView.Content(
-//        asyncRepos: .error(MessageError(description: "No Search Results Error"), []),
-//        starredRepos: []
-//    )
-//}

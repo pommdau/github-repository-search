@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import class IKEHGitHubAPIClient.GitHubAPIClient
 
 struct LoginView: View {
     
@@ -14,13 +13,11 @@ struct LoginView: View {
             
     @State private var viewState: LoginViewState
     
+    // MARK: - LifeCycle
+    
+    // swiftlint:disable:next type_contents_order
     init(namespace: Namespace.ID? = nil) {
         _viewState = State(wrappedValue: LoginViewState(namespace: namespace))
-    }
-    
-    /// Preview用のイニシャライザ
-    fileprivate init(viewState: LoginViewState) {
-        _viewState = State(wrappedValue: viewState)
     }
     
     // MARK: - View
@@ -55,11 +52,6 @@ struct LoginView: View {
 
 // MARK: - Preview
 
-//#Preview {
-//    let viewState = LoginViewState(
-//        tokenStore: TokenStoreStub(),
-//        loginUserStore: LoginUserStoreStub(),
-//        namespace: nil,
-//    )
-//    LoginView(viewState: viewState)
-//}
+#Preview {
+    LoginView()
+}

@@ -20,6 +20,7 @@ final class RepoStoreStub: RepoStoreProtocol {
     // MARK: Stubbed Response (GitHub API)
     var stubbedError: Error? // GitHub APIの処理でエラーを発生させる場合に値をセット
     var stubbedSearchReposResponse: SearchResponse<Repo> = .init(totalCount: .zero, items: [])
+    // swiftlint:disable:next identifier_name
     var stubbedFetchAuthenticatedUserReposResponse: ListResponse<Repo> = .init(items: [], relationLink: nil)
     var stubbedFetchStarredReposResponse: StarredReposResponse = .init(starredRepos: [])
     
