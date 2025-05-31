@@ -17,7 +17,7 @@ struct LoginUserReposListView: View {
                 }
             )
             .errorAlert(error: $state.error)
-            .navigationTitle("User Repositories")
+            .navigationTitle("Your Repositories")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     sortedByToolbarItemContent()
@@ -82,7 +82,7 @@ extension LoginUserReposListView {
         // MARK: - View
         
         var body: some View {
-            AsyncValuesView(asyncValues: asyncRepos) {
+            AsyncValuesList(asyncValues: asyncRepos) {
                 loadingView()
             } loadingView: {
                 loadingView()

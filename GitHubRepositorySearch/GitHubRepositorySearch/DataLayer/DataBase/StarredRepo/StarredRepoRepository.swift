@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// スター済みリポジトリのRepository
 final class StarredRepoRepository: RepositoryProtocol, Sendable {
         
     // MARK: - 型の指定

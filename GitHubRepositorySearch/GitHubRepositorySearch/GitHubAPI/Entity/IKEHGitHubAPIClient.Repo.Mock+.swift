@@ -1,7 +1,7 @@
 import Foundation
 import IKEHGitHubAPIClient
 
-extension Repo.Mock {
+extension IKEHGitHubAPIClient.Repo.Mock {
 
     // MARK: - 固定値のMock
     

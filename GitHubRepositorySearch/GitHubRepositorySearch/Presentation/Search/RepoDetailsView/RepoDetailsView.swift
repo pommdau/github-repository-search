@@ -9,7 +9,6 @@ import SwiftUI
 import struct IKEHGitHubAPIClient.Repo
 
 
-
 struct RepoDetailsView: View {
     
     @State private var state: RepoDetailsViewState
@@ -30,8 +29,7 @@ struct RepoDetailsView: View {
                     repo: repo,
                     isStarred: state.isStarred,
                     isFetchingStarred: state.isFetchingStarred,
-                    hiddenStarButton: state.loginUser == nil,
-                    disableStarButton: state.disableStarButton
+                    hiddenStarButton: state.loginUser == nil
                 ) {
                     state.handleStarButtonTapped()
                 }
@@ -59,9 +57,6 @@ extension RepoDetailsView {
         let isStarred: Bool
         let isFetchingStarred: Bool
         let hiddenStarButton: Bool
-        
-        /// スターボタンを非活性にするか
-        let disableStarButton: Bool
         
         var starButtonTapped: () -> Void = {}
             
@@ -288,8 +283,7 @@ extension RepoDetailsView {
         repo: Repo.Mock.random(),
         isStarred: true,
         isFetchingStarred: false,
-        hiddenStarButton: false,
-        disableStarButton: false
+        hiddenStarButton: false
     )
 }
 
@@ -298,8 +292,7 @@ extension RepoDetailsView {
         repo: Repo.Mock.sampleDataWithoutSomeInfo,
         isStarred: true,
         isFetchingStarred: false,
-        hiddenStarButton: false,
-        disableStarButton: false
+        hiddenStarButton: false
     )
 }
 
@@ -308,7 +301,6 @@ extension RepoDetailsView {
         repo: Repo.Mock.random(),
         isStarred: false,
         isFetchingStarred: false,
-        hiddenStarButton: true,
-        disableStarButton: false
+        hiddenStarButton: true
     )
 }

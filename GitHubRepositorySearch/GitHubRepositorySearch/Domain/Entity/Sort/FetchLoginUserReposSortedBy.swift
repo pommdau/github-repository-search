@@ -1,5 +1,5 @@
 enum FetchLoginUserReposSortedBy: String, CaseIterable, Identifiable, Equatable {
-    case fullNameAsc // デフォルト
+    case fullNameAsc // クエリで指定しない場合のデフォルト
     case fullNameDesc
     case recentlyUpdated
     case leastRecentlyUpdated

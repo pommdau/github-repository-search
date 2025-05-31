@@ -8,6 +8,7 @@
 import Foundation
 import struct IKEHGitHubAPIClient.Repo
 
+/// Repo型のRepository
 final class RepoRepository: RepositoryProtocol, Sendable {
         
     // MARK: - 型の指定

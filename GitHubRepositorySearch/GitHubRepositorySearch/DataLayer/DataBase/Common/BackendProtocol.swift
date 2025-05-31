@@ -24,11 +24,13 @@ protocol BackendProtocol: Actor {
 
 extension BackendProtocol {
     
+    /// データを保存するUserDefaultsのキー
     private var valuesUserDefaultsKey: String {
         let className = String(describing: type(of: self))
         return "\(className)-values"
     }
-        
+     
+    /// Backendに保存されているデータ
     private var values: [Item.ID: Item] {
         get {
             guard let values: [Item.ID: Item] = userDefaults?.codableItem(forKey: valuesUserDefaultsKey) else {

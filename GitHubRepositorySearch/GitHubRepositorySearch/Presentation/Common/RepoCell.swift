@@ -89,7 +89,7 @@ struct RepoCell: View {
         }
     }
 
-    // MARK: - View Parts
+    // MARK: - View Components
 
     @ViewBuilder
     private func userLabel() -> some View {

@@ -10,7 +10,7 @@ import Foundation
 // Webの検索を参考に
 // https://github.com/search?q=Swift&type=repositories
 enum SearchReposSortedBy: String, CaseIterable, Identifiable, Equatable {
-    case bestMatch
+    case bestMatch // クエリで指定しない場合のデフォルト
     case mostStars
     case fewestStars
     case mostForks

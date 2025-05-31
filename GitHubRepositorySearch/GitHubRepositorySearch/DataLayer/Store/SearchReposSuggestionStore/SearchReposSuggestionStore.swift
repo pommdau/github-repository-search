@@ -21,6 +21,8 @@ final class SearchReposSuggestionStore: SearchReposSuggestionStoreProtocol {
     
     init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
-        fetchValues()
+        Task.detached { [weak self] in
+            await self?.loadValues()
+        }
     }
 }
