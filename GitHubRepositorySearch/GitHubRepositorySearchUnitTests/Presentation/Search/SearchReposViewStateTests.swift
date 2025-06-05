@@ -31,22 +31,6 @@ final class SearchReposViewStateTests: XCTestCase {
     }
 }
 
-extension RelationLink.Link {
-    enum Mock {
-        static func createNext(query: String, perPage: Int, page: Int) throws -> RelationLink.Link {
-            .init(
-                id: "next",
-                url: try XCTUnwrap(URL(string: "https://api.github.com/search/repositories?q=\(query)&per_page=\(perPage)&page=\(page)")),
-                queryItems: [
-                    .init(name: "q", value: query),
-                    .init(name: "per_page", value: "\(perPage)"),
-                    .init(name: "page", value: "\(page)")
-                ]
-            )
-        }
-    }
-}
-
 // MARK: - リポジトリの検索のテスト
 
 extension SearchReposViewStateTests {
@@ -60,7 +44,7 @@ extension SearchReposViewStateTests {
             
             let testSearchText = "searchText"
             let testRepos: [Repo] = Repo.Mock.random(count: 10)
-            let testNextLink: RelationLink.Link = try XCTUnwrap(.Mock.createNext(query: "query", perPage: 10, page: 2))
+            let testNextLink: RelationLink.Link = try XCTUnwrap(.Mock.createSearchReposNext(query: "query", perPage: 10, page: 2))
             let repoStore: RepoStoreStub = .init()
             repoStore.stubbedSearchReposResponse = .init(
                 totalCount: testRepos.count,
@@ -231,11 +215,11 @@ private enum TestData {
 
             // 読み込み済みのデータ
             self.loadedRepos = Array(testRepos[0..<10])
-            self.loadedNextLink = try .Mock.createNext(query: searchText, perPage: 10, page: 2)
+            self.loadedNextLink = try .Mock.createSearchReposNext(query: searchText, perPage: 10, page: 2)
                                     
             // 新規に読み込まれるデータ
             self.loadedMoreRepos = Array(testRepos[10..<20])
-            self.loadedMoreNextLink = try .Mock.createNext(query: searchText, perPage: 10, page: 3)
+            self.loadedMoreNextLink = try .Mock.createSearchReposNext(query: searchText, perPage: 10, page: 3)
         }
     }
 }

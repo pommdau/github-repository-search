@@ -36,7 +36,7 @@ extension TokenStoreProtocol {
 
     // MARK: Read
 
-    func fetchValue() {
+    func loadSavedValues() {
         accessToken = keychain?[Keychain.Key.accessToken]
     }
 

@@ -11,21 +11,24 @@ import struct IKEHGitHubAPIClient.LoginUser
 @MainActor
 @Observable
 final class LoginUserViewState {
-       
+    
+    // MARK: - Property
+           
     let tokenStore: TokenStoreProtocol
     let loginUserStore: LoginUserStoreProtocol
     let namespace: Namespace.ID?
     var error: Error?
     
-    // TODO: 再検討
     var loginUser: LoginUser {
         loginUserStore.loginUser ?? .Mock.ikeh
     }
         
+    // MARK: - LifeCycle
+    
     init(
         tokenStore: TokenStoreProtocol = TokenStore.shared,
         loginUserStore: LoginUserStoreProtocol = LoginUserStore.shared,
-        namespace: Namespace.ID?,
+        namespace: Namespace.ID? = nil,
         error: Error? = nil
     ) {
         self.tokenStore = tokenStore
@@ -34,13 +37,14 @@ final class LoginUserViewState {
         self.error = error
     }
     
+    // MARK: - Action
+    
+    /// ログアウトボタンがタップされた
     func handleLogoutButtonTapped() {
         Task {
             do {
                 try await tokenStore.logout()
-                withAnimation {
-                    loginUserStore.deleteValue()
-                }
+                loginUserStore.deleteValue()
             } catch {
                 self.error = error
             }

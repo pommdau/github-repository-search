@@ -19,8 +19,9 @@ final class StarredRepoStoreStub: StarredRepoStoreProtocol {
     
     // MARK: Stubbed Response (GitHub API)
     
+    var stubbedError: Error? // GitHub APIの処理でエラーを発生させる場合に値をセット
     var stubbedCheckIsRepoStarredResponse: Bool = false
-    
+
     // MARK: - LifeCycle
     
     init(valuesDic: [StarredRepo.ID: StarredRepo] = [:]) {
@@ -33,10 +34,24 @@ final class StarredRepoStoreStub: StarredRepoStoreProtocol {
 extension StarredRepoStoreStub {
     
     func checkIsRepoStarred(repoID: IKEHGitHubAPIClient.Repo.ID, accessToken: String, owner: String, repo: String) async throws -> Bool {
-        stubbedCheckIsRepoStarredResponse
+        await Task.yield() // テスト用に実行を1サイクル遅らせる
+        if let stubbedError = stubbedError {
+            throw stubbedError
+        }
+        return stubbedCheckIsRepoStarredResponse
     }
     
-    func starRepo(repoID: IKEHGitHubAPIClient.Repo.ID, accessToken: String, owner: String, repo: String) async throws {}
+    func starRepo(repoID: IKEHGitHubAPIClient.Repo.ID, accessToken: String, owner: String, repo: String) async throws {
+        await Task.yield() // テスト用に実行を1サイクル遅らせる
+        if let stubbedError = stubbedError {
+            throw stubbedError
+        }
+    }
     
-    func unstarRepo(repoID: IKEHGitHubAPIClient.Repo.ID, accessToken: String, owner: String, repo: String) async throws {}
+    func unstarRepo(repoID: IKEHGitHubAPIClient.Repo.ID, accessToken: String, owner: String, repo: String) async throws {
+        await Task.yield() // テスト用に実行を1サイクル遅らせる
+        if let stubbedError = stubbedError {
+            throw stubbedError
+        }
+    }
 }

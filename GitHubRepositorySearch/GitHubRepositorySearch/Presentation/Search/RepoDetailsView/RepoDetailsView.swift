@@ -8,7 +8,6 @@
 import SwiftUI
 import struct IKEHGitHubAPIClient.Repo
 
-
 struct RepoDetailsView: View {
     
     @State private var state: RepoDetailsViewState
@@ -31,10 +30,14 @@ struct RepoDetailsView: View {
                     isFetchingStarred: state.isFetchingStarred,
                     hiddenStarButton: state.loginUser == nil
                 ) {
-                    state.handleStarButtonTapped()
+                    Task {
+                        await state.handleStarButtonTapped()
+                    }
                 }
                 .onAppear {
-                    state.onAppear()
+                    Task {
+                        await state.onAppear()
+                    }
                 }
             } else {
                 ProgressView()

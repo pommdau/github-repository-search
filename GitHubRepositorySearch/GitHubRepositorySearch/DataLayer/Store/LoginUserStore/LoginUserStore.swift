@@ -17,7 +17,6 @@ final class LoginUserStore: LoginUserStoreProtocol {
     static let shared: LoginUserStore = .init()
     
     private(set) var userDefaults: UserDefaults?
-    private let tokenStore: TokenStoreProtocol
     private let gitHubAPIClient: GitHubAPIClient
 
     var loginUser: LoginUser?
@@ -26,11 +25,9 @@ final class LoginUserStore: LoginUserStoreProtocol {
 
     init(
         userDefaults: UserDefaults = .standard,
-        tokenStore: TokenStoreProtocol = TokenStore.shared,
         gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared
     ) {
         self.userDefaults = userDefaults
-        self.tokenStore = tokenStore
         self.gitHubAPIClient = gitHubAPIClient
         Task {
             fetchValue()
@@ -39,14 +36,8 @@ final class LoginUserStore: LoginUserStoreProtocol {
     
     // MARK: - GitHubAPI
     
-    func fetchLoginUser() async throws {
-        guard let accessToken = await tokenStore.accessToken else {
-            return
-        }        
+    func fetchLoginUser(accessToken: String) async throws {
         let loginUser = try await gitHubAPIClient.fetchLoginUser(accessToken: accessToken)
-        withAnimation {
-            // TODO: remove withAnimation
-            addValue(loginUser)
-        }
+        addValue(loginUser)
     }
 }

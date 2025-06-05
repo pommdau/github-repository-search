@@ -30,7 +30,7 @@ final actor TokenStore: TokenStoreProtocol {
         self.gitHubAPIClient = gitHubAPIClient
         
         Task {
-            await fetchValue()
+            await loadSavedValues()
         }
     }
 }
