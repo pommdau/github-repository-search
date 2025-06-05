@@ -168,17 +168,13 @@ extension LoginUserView {
         private func userItems() -> some View {
             Section {
                 NavigationLink {
-                    // swiftlint:disable:next force_unwrapping
-                    //                LoginUserReposView(url: URL(string: "https://api.github.com/users/octocat/repo")!)
-                    Text("hoge")
+                    LoginUserReposListView()
                 } label: {
                     HStack {
                         Image(.bookClosedSquareFill)
+                            .accessibilityLabel(Text("Repositories icon"))
                             .font(.title)
                         Text("Your Repositories")
-                        Spacer()
-                        Text("\(loginUser.publicRepos)")
-                            .foregroundStyle(.secondary)
                     }
                 }
                 

@@ -20,7 +20,8 @@ final class RepoStoreStub: RepoStoreProtocol {
     // MARK: Stubbed Response (GitHub API)
     var stubbedError: Error? // GitHub APIの処理でエラーを発生させる場合に値をセット
     var stubbedSearchReposResponse: SearchResponse<Repo> = .init(totalCount: .zero, items: [])
-    var stubbedFetchUserReposResponse: ListResponse<Repo> = .init(items: [], relationLink: nil)
+    // swiftlint:disable:next identifier_name
+    var stubbedFetchAuthenticatedUserReposResponse: ListResponse<Repo> = .init(items: [], relationLink: nil)
     var stubbedFetchStarredReposResponse: StarredReposResponse = .init(starredRepos: [])
     
     // MARK: - LifeCycle
@@ -48,18 +49,17 @@ extension RepoStoreStub {
         return stubbedSearchReposResponse
     }
         
-    func fetchUserRepos(
-        userName: String,
-        accessToken: String?,
-        sort: String?,
-        direction: String?,
-        perPage: Int?,
-        page: Int?
+    func fetchAuthenticatedUserRepos(
+            accessToken: String,
+            sort: String?,
+            direction: String?,
+            perPage: Int?,
+            page: Int?
     ) async throws -> ListResponse<Repo> {
         await Task.yield() // テスト用に実行を1サイクル遅らせる
         try throwErrorIfNeeded()
-        try await addValues(stubbedFetchUserReposResponse.items)
-        return stubbedFetchUserReposResponse
+        try await addValues(stubbedFetchAuthenticatedUserReposResponse.items)
+        return stubbedFetchAuthenticatedUserReposResponse
     }
     
     func fetchStarredRepos(

@@ -79,7 +79,7 @@ extension StarredReposListView {
         // MARK: - View
         
         var body: some View {
-            AsyncValuesView(asyncValues: asyncRepos) {
+            AsyncValuesList(asyncValues: asyncRepos) {
                 loadingView()
             } loadingView: {
                 loadingView()

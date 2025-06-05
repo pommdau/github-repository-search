@@ -107,7 +107,7 @@ extension SearchReposView {
         // MARK: - View
         
         var body: some View {
-            AsyncValuesView(asyncValues: asyncRepos) {
+            AsyncValuesList(asyncValues: asyncRepos) {
                 initialView()
             } loadingView: {
                 loadingView()

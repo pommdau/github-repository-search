@@ -9,11 +9,18 @@ import SwiftUI
 
 struct StarButton: View {
     
+    // MARK: - Property
+    
+    /// スター状態
     var isStarred: Bool
+    /// スター状態の読み込み込み中かどうか
     var isLoading: Bool = false
+    /// ボタンがタップされた時の処理
     var handleButtonTapped: () -> Void = {}
     
-    var body: some View {                            
+    // MARK: - View
+    
+    var body: some View {
         Button {
             handleButtonTapped()
         } label: {
@@ -51,7 +58,7 @@ struct StarButton: View {
     }
 }
 
-#Preview("読込中の切り替え") {
+#Preview("読込中") {
     @Previewable @State var isProcessing = true
     ZStack {
         Toggle("読込中", isOn: $isProcessing.animation())

@@ -79,59 +79,62 @@ struct DebugView: View {
 
 // MARK: - ReposDetailedList
 
-struct ReposDetailedList: View {
+extension DebugView {
     
-    // MARK: - Property
+    struct ReposDetailedList: View {
         
-    @State private var isRepoListExpanded: Bool = true
-    @State private var showingStarredRepos: Bool = false
-    
-    private let repoStore: RepoStore = .shared
-    private let starredRepoStore: StarredRepoStore = .shared
+        // MARK: - Property
         
-    private var repos: [Repo] {
-        repoStore.valuesDic.values.sorted(by: { $0.id < $1.id })
-    }
+        @State private var isRepoListExpanded: Bool = true
+        @State private var showingStarredRepos: Bool = false
         
-    private var starredRepos: [StarredRepo] {
-        starredRepoStore.valuesDic.values.sorted(by: { $0.id < $1.id })
-    }
-    
-    private var filteredRepos: [Repo] {
-        let starredRepoIDs = starredRepos.map { $0.id }
-        if showingStarredRepos {
-            return repos.compactMap { repo in
-                starredRepoIDs.contains(repo.id) ? repo : nil
-            }
-        } else {
-            return repos
+        private let repoStore: RepoStore = .shared
+        private let starredRepoStore: StarredRepoStore = .shared
+        
+        private var repos: [Repo] {
+            repoStore.valuesDic.values.sorted(by: { $0.id < $1.id })
         }
-    }
-
-    // MARK: - View
         
-    var body: some View {
-        List {
-            Toggle(isOn: $showingStarredRepos.animation()) {
-                Text("スター済")
-            }
-            DisclosureGroup(isExpanded: $isRepoListExpanded) {
-                ForEach(filteredRepos) { repo in
-                    HStack {
-                        if starredRepos.map({ $0.repoID }).contains(repo.id) {
-                            Image(systemName: "star.fill")
-                                .foregroundStyle(Color(uiColor: .systemYellow))
-                                .accessibility(label: Text("star icon"))
-                        }
-                        Text("\(repo.fullName)")
-                    }
+        private var starredRepos: [StarredRepo] {
+            starredRepoStore.valuesDic.values.sorted(by: { $0.id < $1.id })
+        }
+        
+        private var filteredRepos: [Repo] {
+            let starredRepoIDs = starredRepos.map { $0.id }
+            if showingStarredRepos {
+                return repos.compactMap { repo in
+                    starredRepoIDs.contains(repo.id) ? repo : nil
                 }
-            } label: {
-                LabeledContent("リポジトリ") {
-                    Text("\(filteredRepos.count)")
-                        .animation(.default, value: filteredRepos)
-                        .monospacedDigit()
-                        .contentTransition(.numericText())
+            } else {
+                return repos
+            }
+        }
+        
+        // MARK: - View
+        
+        var body: some View {
+            List {
+                Toggle(isOn: $showingStarredRepos.animation()) {
+                    Text("スター済")
+                }
+                DisclosureGroup(isExpanded: $isRepoListExpanded) {
+                    ForEach(filteredRepos) { repo in
+                        HStack {
+                            if starredRepos.map({ $0.repoID }).contains(repo.id) {
+                                Image(systemName: "star.fill")
+                                    .foregroundStyle(Color(uiColor: .systemYellow))
+                                    .accessibility(label: Text("star icon"))
+                            }
+                            Text("\(repo.fullName)")
+                        }
+                    }
+                } label: {
+                    LabeledContent("リポジトリ") {
+                        Text("\(filteredRepos.count)")
+                            .animation(.default, value: filteredRepos)
+                            .monospacedDigit()
+                            .contentTransition(.numericText())
+                    }
                 }
             }
         }

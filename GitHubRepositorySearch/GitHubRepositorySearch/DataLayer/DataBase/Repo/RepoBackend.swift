@@ -8,6 +8,7 @@
 import Foundation
 import struct IKEHGitHubAPIClient.Repo
 
+/// Repo型のバックエンド
 final actor RepoBackend: BackendProtocol {
     typealias Item = Repo
     static let shared: RepoBackend = .init()

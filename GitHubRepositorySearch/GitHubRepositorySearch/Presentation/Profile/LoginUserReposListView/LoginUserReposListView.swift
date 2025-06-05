@@ -1,31 +1,23 @@
-//
-//  UserReposListView.swift
-//  GitHubRepositorySearch
-//
-//  Created by HIROKI IKEUCHI on 2025/05/10.
-//
-
 import SwiftUI
 import IKEHGitHubAPIClient
 
-struct UserReposListView: View {
+struct LoginUserReposListView: View {
     
-    @State private var state: StarredReposListViewState = .init()
+    @State private var state: LoginUserReposListViewState = .init()
     
     var body: some View {
         NavigationStack {
             Content(
                 asyncRepos: state.asyncRepos,
-                starredRepos: state.starredRepos,
                 repoCellStatusType: state.repoCellStatusType,
                 bottomCellOnAppear: { _ in
                     Task {
-                        await state.handleFetchStarredReposMore()
+                        await state.handleFetchUserReposMore()
                     }
                 }
             )
             .errorAlert(error: $state.error)
-            .navigationTitle("User Repositories")
+            .navigationTitle("Your Repositories")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     sortedByToolbarItemContent()
@@ -43,8 +35,7 @@ struct UserReposListView: View {
     private func sortedByToolbarItemContent() -> some View {
         Menu {
             Picker("Sorted By", selection: $state.sortedBy) {
-                ForEach(FetchStarredReposSortedBy.allCases) { type in
-                    /// 選択項目の一覧
+                ForEach(FetchLoginUserReposSortedBy.allCases) { type in
                     Text(type.title).tag(type)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
@@ -63,7 +54,7 @@ struct UserReposListView: View {
 
 // MARK: - Content
 
-extension UserReposListView {
+extension LoginUserReposListView {
            
     struct Content: View {
         
@@ -72,14 +63,26 @@ extension UserReposListView {
         @Namespace private var namespace
         
         let asyncRepos: AsyncValues<Repo, Error>
-        let starredRepos: [StarredRepo]
-        var repoCellStatusType: RepoCell.StatusType = .starredAt
-        var bottomCellOnAppear: (Repo.ID) -> Void = { _ in }
+        let repoCellStatusType: RepoCell.StatusType
+        var bottomCellOnAppear: (Repo.ID) -> Void
+        
+        // MARK: - Lifecycle
+        
+        // swiftlint:disable:next type_contents_order
+        init(
+            asyncRepos: AsyncValues<Repo, Error>,
+            repoCellStatusType: RepoCell.StatusType = .pushedAt,
+            bottomCellOnAppear: @escaping (Repo.ID) -> Void = { _ in }
+        ) {
+            self.asyncRepos = asyncRepos
+            self.repoCellStatusType = repoCellStatusType
+            self.bottomCellOnAppear = bottomCellOnAppear
+        }
         
         // MARK: - View
         
         var body: some View {
-            AsyncValuesView(asyncValues: asyncRepos) {
+            AsyncValuesList(asyncValues: asyncRepos) {
                 loadingView()
             } loadingView: {
                 loadingView()
@@ -88,8 +91,8 @@ extension UserReposListView {
             } noResultView: {
                 ContentUnavailableView(
                     "No Results",
-                    systemImage: "star",
-                    description: Text("No starred repositories found.")
+                    systemImage: "magnifyingglass",
+                    description: Text("No your repositories found.")
                 )
             }
         }
@@ -117,7 +120,6 @@ extension UserReposListView {
                 } label: {
                     RepoCell(
                         repo: repo,
-                        starredRepo: starredRepos.first(where: { $0.repoID == repo.id }),
                         statusType: repoCellStatusType
                     )
                     .padding(.vertical, 4)
@@ -140,51 +142,14 @@ extension UserReposListView {
 // MARK: - Preview
 
 #Preview("initial") {
-    UserReposListView.Content(asyncRepos: .initial, starredRepos: [])
-}
-
-#Preview("loading") {
-    UserReposListView.Content(asyncRepos: .loading([]), starredRepos: [])
+    LoginUserReposListView.Content(asyncRepos: .initial)
 }
 
 #Preview("loaded") {
     let repos: [Repo] = Repo.Mock.random(count: 5)
     NavigationStack {
-        UserReposListView.Content(
-            asyncRepos: .loaded(repos),
-            starredRepos: StarredRepo.Mock.randomWithRepos(repos)
+        LoginUserReposListView.Content(
+            asyncRepos: .loaded(repos)
         )
     }
-}
-
-#Preview("loaded_no_result") {
-    UserReposListView.Content(
-        asyncRepos: .loaded([]),
-        starredRepos: []
-    )
-}
-
-#Preview("loading_more") {
-    let repos: [Repo] = Repo.Mock.random(count: 5)
-    NavigationStack {
-        UserReposListView.Content(
-            asyncRepos: .loadingMore(repos),
-            starredRepos: StarredRepo.Mock.randomWithRepos(repos)
-        )
-    }
-}
-
-#Preview("error") {
-    let repos: [Repo] = Repo.Mock.random(count: 5)
-    UserReposListView.Content(
-        asyncRepos: .error(MessageError(description: "No Search Results Error"), repos),
-        starredRepos: StarredRepo.Mock.randomWithRepos(repos)
-    )
-}
-
-#Preview("error_no_result") {
-    UserReposListView.Content(
-        asyncRepos: .error(MessageError(description: "No Search Results Error"), []),
-        starredRepos: []
-    )
 }

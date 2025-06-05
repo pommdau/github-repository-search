@@ -8,6 +8,7 @@
 import Foundation
 import IKEHGitHubAPIClient
 
+/// スター済みリポジトリの情報
 struct StarredRepo: Identifiable, Equatable, Sendable, Codable {
     
     /// For Identifiable

@@ -97,7 +97,7 @@ extension SearchReposViewState {
     /// リポジトリ検索の一連の処理の実行
     func performSearchRepos(query: String, page: Int? = nil, isLoadingMore: Bool = false) {
         // 検索を実行するかの確認
-        if !Self.shouldSearchRepos(query: query, asyncRepoIDs: asyncRepoIDs) {
+        if !shouldSearchRepos(query: query) {
             return
         }
         // 状態の更新
@@ -121,7 +121,7 @@ extension SearchReposViewState {
         }        
     }
         
-    private static func shouldSearchRepos(query: String, asyncRepoIDs: AsyncValues<Repo.ID, Error>) -> Bool {
+    private func shouldSearchRepos(query: String) -> Bool {
         // 検索語句が空の場合は検索を行わない
         if query.isEmpty {
             return false

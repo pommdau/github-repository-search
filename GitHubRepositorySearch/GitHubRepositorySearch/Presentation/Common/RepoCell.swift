@@ -16,6 +16,8 @@ struct RepoCell: View {
     enum StatusType {
         /// 最終更新日時
         case updatedAt
+        /// 最終Push日時
+        case pushedAt
         /// スター日時
         case starredAt
     }
@@ -32,6 +34,11 @@ struct RepoCell: View {
                 return ""
             }
             return "Updated \(date.convertToRelativeDateText())"
+        case .pushedAt:
+            guard let date = ISO8601DateFormatter.shared.date(from: repo.pushedAt) else {
+                return ""
+            }
+            return "Pushed \(date.convertToRelativeDateText())"
         case .starredAt:
             guard
                 let starredAt = starredRepo?.starredAt,
@@ -82,7 +89,7 @@ struct RepoCell: View {
         }
     }
 
-    // MARK: - View Parts
+    // MARK: - View Components
 
     @ViewBuilder
     private func userLabel() -> some View {
@@ -109,11 +116,16 @@ struct RepoCell: View {
 
     @ViewBuilder
     private func repoNameLabel() -> some View {
-        Text(repo.name)
-            .lineLimit(1)
-            .font(.title3)
-            .bold()
-            .padding(.vertical, 2)
+        HStack(spacing: 4) {
+            if repo.isPrivate {
+                Image(systemName: "lock.fill")
+                    .accessibilityLabel(Text("Private Repository Icon"))
+            }
+            Text(repo.name)
+                .lineLimit(1)
+                .font(.title3)
+                .bold()
+        }
     }
 
     @ViewBuilder
@@ -184,5 +196,10 @@ struct RepoCell: View {
 
 #Preview("いくつか情報が空の場合", traits: .sizeThatFitsLayout) {
     RepoCell(repo: Repo.Mock.sampleDataWithoutSomeInfo)
+        .padding()
+}
+
+#Preview("プライベートリポジトリ", traits: .sizeThatFitsLayout) {
+    RepoCell(repo: Repo.Mock.privateRepo)
         .padding()
 }

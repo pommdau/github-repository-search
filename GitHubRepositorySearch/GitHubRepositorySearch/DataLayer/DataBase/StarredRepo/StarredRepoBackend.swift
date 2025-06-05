@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// StarredRepo型のBackend
 final actor StarredRepoBackend: BackendProtocol {
     typealias Item = StarredRepo
     static let shared: StarredRepoBackend = .init()
