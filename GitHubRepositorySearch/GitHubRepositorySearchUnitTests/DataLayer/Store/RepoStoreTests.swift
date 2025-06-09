@@ -177,7 +177,7 @@ extension RepoStoreTests {
         XCTAssertEqual(sut.repos.sortedByID(), testRepos.sortedByID())
     }
     
-    func testFetchAuthenticatedUserReposSuccessa() async throws {
+    func testFetchStarredReposSuccess() async throws {
         
         // MARK: Given
 

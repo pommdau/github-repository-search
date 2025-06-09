@@ -5,8 +5,6 @@
 //  Created by HIROKI IKEUCHI on 2025/05/03.
 //
 
-//  refs:
-
 import SwiftUI
 
 private struct LocalizedAlertError: LocalizedError {
@@ -26,7 +24,6 @@ private struct LocalizedAlertError: LocalizedError {
     }
 }
 
-// TODO: GitHubAPIClientErrorとの統合
 extension View {
     /// エラーモーダルを扱いやすくするためのUtils
     /// - SeeAlso: [SwiftUI Alert Guide + Code Examples](https://www.avanderlee.com/swiftui/error-alert-presenting/)
@@ -41,44 +38,3 @@ extension View {
         }
     }
 }
-
-// MARK: - Preview
-/*
-private enum SampleError: LocalizedError {
-    case networkError
-    case dataCorruption
-    case unknown
-    
-    var errorDescription: String? {
-        switch self {
-        case .networkError:
-            return "通信エラーが発生しました。"
-        case .dataCorruption:
-            return "データが破損しています。"
-        case .unknown:
-            return "不明なエラーが発生しました。"
-        }
-    }
-    
-    var recoverySuggestion: String? {
-        switch self {
-        case .networkError:
-            return "インターネット接続を確認してください。"
-        case .dataCorruption:
-            return "もう一度データを取得してください。"
-        case .unknown:
-            return "アプリを再起動してください。"
-        }
-    }
-}
-
-#Preview {
-    @Previewable @State var viewError: Error?
-    VStack {
-        Button("Show Error") {
-            viewError = SampleError.networkError
-        }
-    }
-    .errorAlert(error: $viewError)
-}
-*/

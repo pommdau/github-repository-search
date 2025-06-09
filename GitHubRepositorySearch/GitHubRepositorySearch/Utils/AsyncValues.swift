@@ -30,6 +30,8 @@ enum AsyncValues<T: Equatable, E: Error> {
     }
 }
 
+// MARK: - Equatable
+
 extension AsyncValues: Equatable {
     
     static func == (lhs: AsyncValues<T, E>, rhs: AsyncValues<T, E>) -> Bool {
@@ -49,8 +51,9 @@ extension AsyncValues: Equatable {
             return false
         }
     }
-    
 }
+
+// MARK: - Utils
 
 /// 型判定のためのUtils
 /// - SeeAlso: [associated values抜きでのenumの比較をスマートにしたい #Swift - Qiita](https://qiita.com/kntkymt/items/b73f74c29fd4e399b6b7)

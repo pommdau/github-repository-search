@@ -16,11 +16,6 @@ protocol TokenStoreProtocol: Actor {
     var accessToken: String? { get set }
     var keychain: Keychain? { get }
     var gitHubAPIClient: GitHubAPIClientProtocol? { get }
-    
-//    // MARK: - GitHub API
-//    func openLoginPageInBrowser() async throws
-//    func fetchAccessTokenWithCallbackURL(_ url: URL) async throws
-//    func logout() async throws
 }
 
 // MARK: - CRUD
@@ -62,13 +57,13 @@ extension TokenStoreProtocol {
         }
     }
     
-    func logout() async throws {
-        guard let accessToken else {
-            return
-        }
+    func logout() async throws {        
         defer {
             // サーバ上の情報を削除できない場合もローカル上の情報を削除する
             deleteValue()
+        }
+        guard let accessToken else {
+            return
         }
         try await gitHubAPIClient?.logout(accessToken: accessToken) // サーバ上の情報の削除
     }

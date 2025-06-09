@@ -6,12 +6,40 @@
 //
 
 import Foundation
-import class IKEHGitHubAPIClient.GitHubAPIClient
+import IKEHGitHubAPIClient
 
 extension GitHubAPIClient {
     
     /// GitHubAPIClientのシングルトン
-    static let shared: GitHubAPIClient = .init(
+    static let shared: GitHubAPIClientProtocol = ProcessInfo.processInfo.environment["ENABLE_DUMMY_API"] == "true" ?
+    gitHubAPIClientStubShared :
+    gitHubAPIClientShared
+            
+    /// GitHubAPIClientStubのシングルトン
+    private static let gitHubAPIClientStubShared: GitHubAPIClientStub = .init(
+        // GitHubAPIClientAuthorizationProtocol
+        openLoginPageInBrowserStubbedResponse: .success(()),
+        recieveLoginCallBackURLAndFetchAccessTokenStubbedResponse: .success("stubbed_access_token"),
+        logoutStubbedResponse: .success(()),
+            
+        // GitHubAPIClientFetchReposProtocol
+        searchReposStubbedResponse: .success(.init(totalCount: 10, items: Repo.Mock.random(count: 10))),
+        fetchAuthenticatedUserReposStubbedResponse: .success(.init(items: Repo.Mock.random(count: 10))),
+        fetchUserReposStubbedResponse: .success(.init(items: Repo.Mock.random(count: 10))),
+        fetchRepoStubbedResponse: .success(Repo.Mock.random()),
+        
+        // GitHubAPIClientFetchUserProtocol
+        fetchLoginUserStubbedResponse: .success(LoginUser.Mock.ikeh),
+        fetchUserStubbedResponse: .success(User.Mock.random()),
+        
+        // GitHubAPIClientStarredProtocol
+        fetchStarredReposStubbedResponse: .success(.init(starredRepos: IKEHGitHubAPIClient.StarredRepo.Mock.randomWithRepos(Repo.Mock.random(count: 10)))),
+        checkIsRepoStarredStubbedResponse: .success(false),
+        starRepoStubbedResponse: .success(()),
+        unstarRepoStubbedResponse: .success(())
+    )
+    /// GitHubAPIClientのシングルトン
+    private static let gitHubAPIClientShared: GitHubAPIClient = .init(
         clientID: GitHubAPICredentials.clientID,
         clientSecret: GitHubAPICredentials.clientSecret,
         // swiftlint:disable:next force_unwrapping
@@ -21,6 +49,3 @@ extension GitHubAPIClient {
         urlSession: URLSession.shared
     )
 }
-
-/// Protocolはライブラリで実装済みのメソッドのみなので継承のみ
-//extension GitHubAPIClient: GitHubAPIClientProtocol {}

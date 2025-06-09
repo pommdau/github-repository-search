@@ -65,7 +65,6 @@ extension RepoStore {
         perPage: Int?,
         page: Int?
     ) async throws -> ListResponse<Repo> {
-        
         let response = try await gitHubAPIClient.fetchAuthenticatedUserRepos(
             accessToken: accessToken,
             visibility: nil,

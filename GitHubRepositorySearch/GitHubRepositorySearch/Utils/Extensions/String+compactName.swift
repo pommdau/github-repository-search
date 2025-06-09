@@ -8,6 +8,8 @@
 import SwiftUI
 
 extension String {
+    /// 数値を短い文字列に変換する
+    /// e.g. 1234 -> "1.2K"
     static func compactName(_ value: Int) -> String {
         return "\(IntegerFormatStyle<Int>().notation(.compactName).format(value))"
     }
@@ -15,7 +17,8 @@ extension String {
 
 // MARK: - Preview
 
-// refs: [SwiftUIで多言語化に対応してプレビューで確認する](https://dev.classmethod.jp/articles/swiftui-localization/)
+/// refs: [SwiftUIで多言語化に対応してプレビューで確認する](https://dev.classmethod.jp/articles/swiftui-localization/)
+
 #Preview(traits: .sizeThatFitsLayout) {
     let localizationIds = ["en", "ja"]
     let values = [0, 10, 123, 1234, 12345, 123456, 1234567, 12345678]

@@ -8,32 +8,73 @@
 import SwiftUI
 import IKEHGitHubAPIClient
 
-struct DebugView: View {
-    
+// MARK: - ViewState
+
+@MainActor
+@Observable
+final class DebugViewState {
+
     // MARK: - Property
             
     private let repoStore: RepoStore = .shared
     private let starredRepoStore: StarredRepoStore = .shared
         
-    private var repos: [Repo] {
+    var repos: [Repo] {
         repoStore.valuesDic.values.sorted(by: { $0.id < $1.id })
     }
+    
+    // MARK: - Actions
+    
+    func handleResetReposDataButtonTapped() {
+        UserDefaults.standard.removeObject(forKey: "RepoBackend-values")
+        UserDefaults.standard.removeObject(forKey: "StarredRepoBackend-values")
+        // Storeの更新
+        Task {
+            try await repoStore.loadSavedValues()
+            try await starredRepoStore.loadSavedValues()
+        }
+    }
+    
+    func handleResetAllUserDefaultsButtonTapped() {
+        guard let identifier = Bundle.main.bundleIdentifier else {
+            print("Failed to clear UserDefaults. Bundle Identifier not found.")
+            return
+        }
+        UserDefaults().removePersistentDomain(forName: identifier)
+        // Storeの更新
+        Task {
+            try await repoStore.loadSavedValues()
+            try await starredRepoStore.loadSavedValues()
+            exit(0)
+        }
+    }
+}
 
+// MARK: - DebugView
+
+struct DebugView: View {
+    
+    @State private var state: DebugViewState = .init()
+        
     // MARK: - View
             
     var body: some View {
         NavigationStack {
             List {
                 Section("Actions") {
-                    resetUserDefaultsButton()
-                    resetReposDataButton()
+                    Button("リポジトリ情報の削除", role: .destructive) {
+                        state.handleResetReposDataButtonTapped()
+                    }                    
+                    Button("全データの削除(アプリを終了します)", role: .destructive) {
+                        state.handleResetAllUserDefaultsButtonTapped()
+                    }
                 }
                 Section("Saved Data") {
                     NavigationLink {
                         ReposDetailedList()
                     } label: {
                         LabeledContent("リポジトリ") {
-                            Text("\(repos.count)")
+                            Text("\(state.repos.count)")
                                 .monospacedDigit()
                                 .contentTransition(.numericText())
                         }
@@ -42,38 +83,7 @@ struct DebugView: View {
             }
             .listStyle(.sidebar)
             .navigationTitle("Debug Menu")
-        }
-    }
-    
-    // MARK: - View Components
-    
-    @ViewBuilder
-    private func resetUserDefaultsButton() -> some View {
-        Button("全データの削除", role: .destructive) {
-            guard let identifier = Bundle.main.bundleIdentifier else {
-                print("Failed to clear UserDefaults. Bundle Identifier not found.")
-                return
-            }
-            UserDefaults().removePersistentDomain(forName: identifier)
-            // Storeの更新
-            Task {
-                try await repoStore.loadSavedValues()
-                try await starredRepoStore.loadSavedValues()
-            }
-        }
-    }
-    
-    @ViewBuilder
-    private func resetReposDataButton() -> some View {
-        Button("リポジトリ情報の削除", role: .destructive) {
-            UserDefaults.standard.removeObject(forKey: "RepoBackend-values")
-            UserDefaults.standard.removeObject(forKey: "StarredRepoBackend-values")
-            // Storeの更新
-            Task {
-                try await repoStore.loadSavedValues()
-                try await starredRepoStore.loadSavedValues()
-            }
-        }
+        }        
     }
 }
 
