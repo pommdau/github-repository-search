@@ -18,13 +18,13 @@ final class RepoStore: RepoStoreProtocol {
     let repository: RepoRepository?
     var valuesDic: [Repo.ID: Repo] = [:]
     
-    private let gitHubAPIClient: GitHubAPIClient
+    private let gitHubAPIClient: GitHubAPIClientProtocol
     
     // MARK: - LifeCycle
     
     init(
         repository: RepoRepository? = .shared,
-        gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared
+        gitHubAPIClient: GitHubAPIClientProtocol = GitHubAPIClient.shared
     ) {
         self.repository = repository
         self.gitHubAPIClient = gitHubAPIClient
@@ -68,10 +68,15 @@ extension RepoStore {
         
         let response = try await gitHubAPIClient.fetchAuthenticatedUserRepos(
             accessToken: accessToken,
+            visibility: nil,
+            affiliation: nil,
+            type: nil,
             sort: sort,
             direction: direction,
             perPage: perPage,
-            page: page
+            page: page,
+            since: nil,
+            before: nil
         )
         try await addValues(response.items)
         return response

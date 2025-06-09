@@ -9,3 +9,10 @@ extension Array where Element: Identifiable {
             })
     }
 }
+
+extension Array where Element: Identifiable, Element.ID == Int {
+    /// IDでソートする(デフォルトは昇順)
+    func sortedByID(reversed: Bool = false) -> [Element] {
+        sorted { $0.id < $1.id }
+    }
+}

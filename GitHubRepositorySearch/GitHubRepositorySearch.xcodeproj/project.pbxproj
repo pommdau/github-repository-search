@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		DA30BE3E2DD22A4F0038394C /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = DA30BDF42DD22A4F0038394C /* .swiftlint.yml */; };
 		DA44E0D32DCA02F0001EDD36 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = DA44E0D22DCA02F0001EDD36 /* KeychainAccess */; };
-		DA56BC4C2DDD9C1700C66274 /* IKEHGitHubAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = DA56BC4B2DDD9C1700C66274 /* IKEHGitHubAPIClient */; };
+		DA55B55A2DF6CE9300348445 /* IKEHGitHubAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = DA55B5592DF6CE9300348445 /* IKEHGitHubAPIClient */; };
 		DA8BEDC12DCA4BF4002983CA /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = DA8BEDC02DCA4BF4002983CA /* Shimmer */; };
 		DABD5A2A2DC1EB71005EDCE8 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = DABD5A292DC1EB71005EDCE8 /* SDWebImageSwiftUI */; };
 		DAC342BB2DD32C3B0086BC09 /* ConcurrencyExtras in Frameworks */ = {isa = PBXBuildFile; productRef = DAC342BA2DD32C3B0086BC09 /* ConcurrencyExtras */; };
@@ -70,7 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA56BC4C2DDD9C1700C66274 /* IKEHGitHubAPIClient in Frameworks */,
+				DA55B55A2DF6CE9300348445 /* IKEHGitHubAPIClient in Frameworks */,
 				DA8BEDC12DCA4BF4002983CA /* Shimmer in Frameworks */,
 				DABD5A2A2DC1EB71005EDCE8 /* SDWebImageSwiftUI in Frameworks */,
 				DA44E0D32DCA02F0001EDD36 /* KeychainAccess in Frameworks */,
@@ -147,7 +147,7 @@
 				DABD5A292DC1EB71005EDCE8 /* SDWebImageSwiftUI */,
 				DA44E0D22DCA02F0001EDD36 /* KeychainAccess */,
 				DA8BEDC02DCA4BF4002983CA /* Shimmer */,
-				DA56BC4B2DDD9C1700C66274 /* IKEHGitHubAPIClient */,
+				DA55B5592DF6CE9300348445 /* IKEHGitHubAPIClient */,
 			);
 			productName = GitHubRepositorySearch;
 			productReference = DAA485A02DC1C1AE003581BF /* GitHubRepositorySearch.app */;
@@ -186,8 +186,8 @@
 				DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				DA8BEDBF2DCA4BF4002983CA /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 				DAC342B92DD32C3B0086BC09 /* XCRemoteSwiftPackageReference "swift-concurrency-extras" */,
-				DA56BC4A2DDD9C1700C66274 /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */,
 				DAA255FB2DDD9FB400292207 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
+				DA55B5582DF6CE9300348445 /* XCLocalSwiftPackageReference "../../ikeh-github-api-client" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DAA485A12DC1C1AE003581BF /* Products */;
@@ -507,6 +507,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		DA55B5582DF6CE9300348445 /* XCLocalSwiftPackageReference "../../ikeh-github-api-client" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../ikeh-github-api-client";
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -514,14 +521,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.2.2;
-			};
-		};
-		DA56BC4A2DDD9C1700C66274 /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pommdau/ikeh-github-api-client";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.10;
 			};
 		};
 		DA8BEDBF2DCA4BF4002983CA /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
@@ -564,9 +563,8 @@
 			package = DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
 			productName = KeychainAccess;
 		};
-		DA56BC4B2DDD9C1700C66274 /* IKEHGitHubAPIClient */ = {
+		DA55B5592DF6CE9300348445 /* IKEHGitHubAPIClient */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = DA56BC4A2DDD9C1700C66274 /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */;
 			productName = IKEHGitHubAPIClient;
 		};
 		DA8BEDC02DCA4BF4002983CA /* Shimmer */ = {

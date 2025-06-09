@@ -15,7 +15,7 @@ protocol TokenStoreProtocol: Actor {
     
     var accessToken: String? { get set }
     var keychain: Keychain? { get }
-    var gitHubAPIClient: GitHubAPIClient? { get }
+    var gitHubAPIClient: GitHubAPIClientProtocol? { get }
     
 //    // MARK: - GitHub API
 //    func openLoginPageInBrowser() async throws

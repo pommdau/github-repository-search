@@ -17,13 +17,13 @@ final class StarredRepoStore: StarredRepoStoreProtocol {
     var repository: StarredRepoRepository?
     var valuesDic: [StarredRepo.ID: StarredRepo] = [:]
 
-    private let gitHubAPIClient: GitHubAPIClient
+    private let gitHubAPIClient: GitHubAPIClientProtocol
     
     // MARK: - LifeCycle
     
     init(
         repository: StarredRepoRepository? = .shared,
-        gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared
+        gitHubAPIClient: GitHubAPIClientProtocol = GitHubAPIClient.shared
     ) {
         self.repository = repository
         self.gitHubAPIClient = gitHubAPIClient

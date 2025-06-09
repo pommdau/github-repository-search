@@ -17,7 +17,7 @@ final class LoginUserStore: LoginUserStoreProtocol {
     static let shared: LoginUserStore = .init()
     
     private(set) var userDefaults: UserDefaults?
-    private let gitHubAPIClient: GitHubAPIClient
+    private let gitHubAPIClient: GitHubAPIClientProtocol
 
     var loginUser: LoginUser?
         
@@ -25,7 +25,7 @@ final class LoginUserStore: LoginUserStoreProtocol {
 
     init(
         userDefaults: UserDefaults = .standard,
-        gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared
+        gitHubAPIClient: GitHubAPIClientProtocol = GitHubAPIClient.shared
     ) {
         self.userDefaults = userDefaults
         self.gitHubAPIClient = gitHubAPIClient
