@@ -1,9 +1,0 @@
-query GetRepos($username: String!) {
-  user(login: $username) {
-    repositories(first: 10) {
-      nodes {
-        ...RepositoryFields
-      }
-    }
-  }
-}

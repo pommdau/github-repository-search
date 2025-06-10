@@ -1,7 +1,0 @@
-query FetchUser($login: String!) {
-  user(
-    login: $login
-  ) {
-    ...UserFields
-  }
-}
