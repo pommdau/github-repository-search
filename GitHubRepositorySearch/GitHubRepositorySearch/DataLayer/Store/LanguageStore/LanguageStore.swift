@@ -9,7 +9,9 @@ import SwiftUI
 
 /// 言語のタイトルと色を管理するStore
 /// - SeeAlso: [github-colors/colors.json](https://github.com/ozh/github-colors/blob/master/colors.json)
-struct LanguageStore {
+@MainActor
+@Observable
+final class LanguageStore {
 
     // MARK: - Properties
 

@@ -10,7 +10,7 @@ import IKEHGitHubAPIClient
 
 extension GitHubAPIClient {
     
-    /// GitHubAPIClientのシングルトン
+    /// GitHubAPIClientのシングルトン(Schemeで設定したEnvironment Variableで切り替える))
     static let shared: GitHubAPIClientProtocol = ProcessInfo.processInfo.environment["ENABLE_DUMMY_API"] == "true" ?
     gitHubAPIClientStubShared :
     gitHubAPIClientShared
