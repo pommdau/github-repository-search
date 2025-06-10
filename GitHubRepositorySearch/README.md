@@ -28,18 +28,26 @@
 ### アーキテクチャ
 
 - SVVS(MVVM + Storeパターン)
-- 参考: [ChatworksさんのiOSDC2023の発表](https://github.com/chatwork/svvs-sample?tab=readme-ov-file)
+    - 参考: [ChatworksさんのiOSDC2023の発表](https://github.com/chatwork/svvs-sample?tab=readme-ov-file)
 
 ![image](https://i.imgur.com/g224phy.png)
+
+|名称|役割|
+|---|---|
+|View|画面の提供|
+|ViewState|Viewの状態とアクションの管理|
+|Store|アプリ内で利用する共通情報の一元管理|
+|Repository/Backend|ローカルでのデータ永続化|
+|Entiry|取り扱うデータ型の定義|
 
 <details>
 <summary>採用理由</summary>
 
-- データフローが簡潔で安全になる点
+- データフローが簡潔で安全になる
     - Storeを「Single Source of Truth」とし、ユーザのアクションやAPI通信の結果を一元的に管理することで、データの不整合を防止できる
-    - `Observation`の登場でリアクティブ部分をより簡潔に書けるようになったことも追い風
-- また`View`からロジックと状態変化の部分を`ViewState`に切り出すことで、ユニットテストが書きやすい点
-- `Store`-`ViewState`-`View`と小さい単位で扱いながら、プロダクトの成長に合わせてスケールできる点
+    - `Observation`の登場でリアクティブ部分をより簡潔に書けるようになったことも嬉しい
+- また`View`からロジックと状態変化の部分を`ViewState`に切り出すことで、ユニットテストが書きやすい
+- `Store`-`ViewState`-`View`と小さい単位で扱いながら、プロダクトの成長に合わせてスケールできる
 
 </details>
 
@@ -113,7 +121,7 @@ enum GitHubAPICredentials {
 }
 ```
 
-- または上記の代替として、簡単に動作を確認したい場合は下記のSchemeからビルド・実行してみてください
+- または上記の代替として、簡単に動作を確認したい場合は下記のSchemeからビルド・実行してください
 - ただし簡易的なStubを差し込んでいるだけなので、検索の続きの読み込みやスター処理など一部動作しない箇所があります
 
 <img width="532" alt="image" src="https://github.com/user-attachments/assets/a5950b45-29c8-40a5-9e63-b2871d370116" />
