@@ -94,3 +94,26 @@ extension RepoStore {
 |[swift\-http\-types](https://github.com/apple/swift-http-types)|HTTP通信処理を型安全に扱えるため|
 |[SwiftLintPlugins](https://github.com/SimplyDanny/SwiftLintPlugins)|SwiftLintのプラグイン|
 |[SwiftUI\-Shimmer](https://github.com/markiv/SwiftUI-Shimmer)|スケルトンスクリーンで利用|
+
+## 動作確認の手順
+
+- 準備として個人のGitHubのOAuth Appを作成する必要があります
+  - 参考: [iOSアプリでGitHubAPIのOAuth認証を行う](https://zenn.dev/ikeh1024/articles/dd5678087362c4)
+- その後下記のようなファイルを作成してください
+
+```swift
+// GitHubAPICredentials.swift
+
+/// GitHubAPIの認証情報(.gitignoreで管理から除外)
+enum GitHubAPICredentials {
+    /// クライアントID
+    static let clientID = "<your-client-id>"
+    /// クライアントシークレット
+    static let clientSecret = "<your-client-secret>"
+}
+```
+
+- または上記の代替として、簡単に動作を確認したい場合は下記のSchemeからビルド・実行してみてください
+- ただし簡易的なStubを差し込んでいるだけなので、検索の続きの読み込みやスター処理など一部動作しない箇所があります
+
+<img width="503" alt="image" src="https://github.com/user-attachments/assets/16bb5647-c9cc-4543-a7f6-5a0e7104ef99" />
