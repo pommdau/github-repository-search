@@ -7,6 +7,7 @@
 
 import SwiftUI
 import IKEHGitHubAPIClient
+import LicenseList
 
 // MARK: - ViewState
 
@@ -61,29 +62,53 @@ struct DebugView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section("Actions") {
-                    Button("リポジトリ情報の削除", role: .destructive) {
-                        state.handleResetReposDataButtonTapped()
-                    }                    
-                    Button("全データの削除(アプリを終了します)", role: .destructive) {
-                        state.handleResetAllUserDefaultsButtonTapped()
-                    }
-                }
-                Section("Saved Data") {
-                    NavigationLink {
-                        ReposDetailedList()
-                    } label: {
-                        LabeledContent("リポジトリ") {
-                            Text("\(state.repos.count)")
-                                .monospacedDigit()
-                                .contentTransition(.numericText())
-                        }
-                    }
-                }
+                actionsSection()
+                savedDataSection()
+                licenseSection()
             }
             .listStyle(.sidebar)
             .navigationTitle("Debug Menu")
         }        
+    }
+    
+    @ViewBuilder
+    private func actionsSection() -> some View {
+        Section("Actions") {
+            Button("リポジトリ情報の削除", role: .destructive) {
+                state.handleResetReposDataButtonTapped()
+            }
+            Button("全データの削除(アプリを終了します)", role: .destructive) {
+                state.handleResetAllUserDefaultsButtonTapped()
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func savedDataSection() -> some View {
+        Section("Saved Data") {
+            NavigationLink {
+                ReposDetailedList()
+            } label: {
+                LabeledContent("リポジトリ") {
+                    Text("\(state.repos.count)")
+                        .monospacedDigit()
+                        .contentTransition(.numericText())
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func licenseSection() -> some View {
+        Section("License") {
+            NavigationLink {
+                LicenseListView()
+                    .licenseViewStyle(.withRepositoryAnchorLink)
+                    .navigationTitle("LICENSE")
+            } label: {
+                Text("ライセンス一覧")
+            }
+        }
     }
 }
 
