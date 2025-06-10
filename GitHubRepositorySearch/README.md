@@ -116,4 +116,5 @@ enum GitHubAPICredentials {
 - または上記の代替として、簡単に動作を確認したい場合は下記のSchemeからビルド・実行してみてください
 - ただし簡易的なStubを差し込んでいるだけなので、検索の続きの読み込みやスター処理など一部動作しない箇所があります
 
-<img width="503" alt="image" src="https://github.com/user-attachments/assets/16bb5647-c9cc-4543-a7f6-5a0e7104ef99" />
+<img width="532" alt="image" src="https://github.com/user-attachments/assets/a5950b45-29c8-40a5-9e63-b2871d370116" />
+
