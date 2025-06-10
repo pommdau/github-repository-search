@@ -6,7 +6,11 @@
   - [株式会社ゆめみ iOS エンジニアコードチェック課題](https://github.com/yumemi-inc/ios-engineer-codecheck)
   - [以前に同課題を作成したもの](https://github.com/pommdau/github-repository-search)
 
-## スクリーンショット
+## プレビュー
+
+|ログイン・ログアウト|ユーザのコンテンツ表示|リポジトリ検索|
+|---|---|---|
+|<video src="https://github.com/user-attachments/assets/c258418a-ce7d-4597-bacc-b5bbf97d47a3">|<video src="https://github.com/user-attachments/assets/9e2da800-c728-4bdf-a12c-a66ef5b7cfac">|<video src="https://github.com/user-attachments/assets/cacac18a-fafc-4792-952b-a249525ad8d0">|
 
 ## 技術スタック
 ### 全般
