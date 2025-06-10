@@ -18,7 +18,7 @@ protocol LoginUserStoreProtocol: AnyObject {
 
     // MARK: - GitHubAPI
 
-    func fetchLoginUser() async throws
+    func fetchLoginUser(accessToken: String) async throws
 }
 
 // MARK: - CRUD

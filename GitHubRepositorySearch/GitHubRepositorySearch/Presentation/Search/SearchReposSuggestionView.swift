@@ -52,7 +52,7 @@ struct SearchReposSuggestionView: View {
     }
     
     @ViewBuilder
-    fileprivate func recommendSection() -> some View {
+    private func recommendSection() -> some View {
         Section("Recommend") {
             ForEach(store.recommendedSuggestions, id: \.self) { suggestion in
                 Label(suggestion, systemImage: "magnifyingglass")

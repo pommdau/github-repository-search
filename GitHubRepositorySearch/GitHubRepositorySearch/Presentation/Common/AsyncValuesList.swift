@@ -1,5 +1,6 @@
 import SwiftUI
 
+// swiftlint:disable file_types_order
 /// AsyncValuesを表示する汎用のList
 /// - SeeAlso: [非同期処理をラクにする！SwiftUIでの設計パターンの紹介](https://zenn.dev/timetree/articles/97ad70c4611894)
 /// - SeeAlso: [SwiftUI Viewの責務分離 - Speaker Deck](https://speakerdeck.com/elmetal/separation-the-responsibilities-of-swiftui-view?slide=12)
@@ -11,10 +12,10 @@ struct AsyncValuesList<
     LoadingView: View,
     NoResultView: View
 >: View {
+    
     // MARK: - Property
     
     var asyncValues: AsyncValues<T, E>
-
     var initialView: InitialView
     var loadingView: LoadingView
     var dataView: ([T]) -> DataView
@@ -70,10 +71,11 @@ struct AsyncValuesList<
             .id(UUID())
     }
 }
+// swiftlint:enable file_types_order
 
 // MARK: - Preview
 
-struct PreviewModel: Identifiable, Equatable {
+private struct PreviewModel: Identifiable, Equatable {
     
     static let sampleData: [Self] = [
         .init(name: "Apple"),

@@ -15,12 +15,11 @@ final class RepoDetailsViewState {
     // MARK: - Public Property
     
     let repoID: Repo.ID
-    var isFetchingStarred: Bool = false
+    private(set) var isFetchingStarred: Bool = false
+    private(set) var isUpdatingStarred: Bool = false
     var error: Error?
     
     // MARK: - Private Property
-    
-    private var isUpdatingStarred: Bool = false
     
     // MARK: Store
     
@@ -63,27 +62,6 @@ final class RepoDetailsViewState {
         self.loginUserStore = loginUserStore
         self.repoStore = repoStore
         self.starredRepoStore = starredRepoStore
-    }
-}
-
-// MARK: - Actions
-
-extension RepoDetailsViewState {
-    
-    func onAppear() {
-        Task {
-            await checkIfRepoIsStarred()
-        }
-    }
-    
-    func handleStarButtonTapped() {
-        // すでに処理中の場合は何もしない
-        if isUpdatingStarred {
-            return
-        }
-        Task {
-            await updateStarred()
-        }
     }
 }
 
@@ -158,5 +136,22 @@ extension RepoDetailsViewState {
             try? await repoStore.update(repoID: repo.id, starsCount: currentStarsCount)
             self.error = error
         }
+    }
+}
+
+// MARK: - Actions
+
+extension RepoDetailsViewState {
+    
+    func onAppear() async {
+        await checkIfRepoIsStarred()
+    }
+    
+    func handleStarButtonTapped() async {
+        // すでに処理中の場合は何もしない
+        if isUpdatingStarred {
+            return
+        }
+        await updateStarred()
     }
 }

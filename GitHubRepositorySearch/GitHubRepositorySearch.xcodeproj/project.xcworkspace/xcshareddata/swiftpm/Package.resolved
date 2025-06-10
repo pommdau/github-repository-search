@@ -1,13 +1,13 @@
 {
-  "originHash" : "3ae49dd68b0e7040a65374b6832433b9f12a4a166f42d7b79718317263de656a",
+  "originHash" : "b96415d89409f10551b444000fcf07fbf8e5b0347fa5dbf08d8a44c3f64d93e3",
   "pins" : [
     {
       "identity" : "ikeh-github-api-client",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/pommdau/ikeh-github-api-client",
       "state" : {
-        "revision" : "6aee89a7e4b52b46b3c4e3b39fbdc543f4352cd4",
-        "version" : "1.0.13"
+        "revision" : "ce10ce9fc14d88fddfec3897e70483b5451c602d",
+        "version" : "1.0.14"
       }
     },
     {
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "84e546727d66f1adc5439debad16270d0fdd04e7",
         "version" : "4.2.2"
+      }
+    },
+    {
+      "identity" : "licenselist",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/cybozu/LicenseList",
+      "state" : {
+        "revision" : "0f83f934ee437461b87870b62871108b882a143a",
+        "version" : "2.0.3"
       }
     },
     {

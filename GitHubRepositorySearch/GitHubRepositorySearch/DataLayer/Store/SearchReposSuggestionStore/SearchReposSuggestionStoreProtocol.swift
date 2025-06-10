@@ -71,8 +71,7 @@ extension SearchReposSuggestionStoreProtocol {
     // MARK: Read
     
     /// 保存されている履歴を取得
-    /// - Note: 初回のView表示時のラグをなくすためasyncにしている
-    /// - TODO: 他の原因もありえるので要観察
+    /// - Note: 初回のView表示時のラグをなくすためasyncにしている(他の原因もありえるので要観察)
     func loadValues() async {
         histories = userDefaults?.codableItem(forKey: UserDefaults.Key.SearchReposSuggestionStore.histories) ?? []
     }

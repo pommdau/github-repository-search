@@ -9,10 +9,12 @@
 /* Begin PBXBuildFile section */
 		DA30BE3E2DD22A4F0038394C /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = DA30BDF42DD22A4F0038394C /* .swiftlint.yml */; };
 		DA44E0D32DCA02F0001EDD36 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = DA44E0D22DCA02F0001EDD36 /* KeychainAccess */; };
-		DA56BC4C2DDD9C1700C66274 /* IKEHGitHubAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = DA56BC4B2DDD9C1700C66274 /* IKEHGitHubAPIClient */; };
+		DA55B55A2DF6CE9300348445 /* IKEHGitHubAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = DA55B5592DF6CE9300348445 /* IKEHGitHubAPIClient */; };
 		DA8BEDC12DCA4BF4002983CA /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = DA8BEDC02DCA4BF4002983CA /* Shimmer */; };
 		DABD5A2A2DC1EB71005EDCE8 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = DABD5A292DC1EB71005EDCE8 /* SDWebImageSwiftUI */; };
 		DAC342BB2DD32C3B0086BC09 /* ConcurrencyExtras in Frameworks */ = {isa = PBXBuildFile; productRef = DAC342BA2DD32C3B0086BC09 /* ConcurrencyExtras */; };
+		DAFEEE872DF7FA5000A771C9 /* IKEHGitHubAPIClient in Frameworks */ = {isa = PBXBuildFile; productRef = DAFEEE862DF7FA5000A771C9 /* IKEHGitHubAPIClient */; };
+		DAFEEE8A2DF8007700A771C9 /* LicenseList in Frameworks */ = {isa = PBXBuildFile; productRef = DAFEEE892DF8007700A771C9 /* LicenseList */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,9 +72,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA56BC4C2DDD9C1700C66274 /* IKEHGitHubAPIClient in Frameworks */,
+				DA55B55A2DF6CE9300348445 /* IKEHGitHubAPIClient in Frameworks */,
 				DA8BEDC12DCA4BF4002983CA /* Shimmer in Frameworks */,
+				DAFEEE8A2DF8007700A771C9 /* LicenseList in Frameworks */,
 				DABD5A2A2DC1EB71005EDCE8 /* SDWebImageSwiftUI in Frameworks */,
+				DAFEEE872DF7FA5000A771C9 /* IKEHGitHubAPIClient in Frameworks */,
 				DA44E0D32DCA02F0001EDD36 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -147,7 +151,9 @@
 				DABD5A292DC1EB71005EDCE8 /* SDWebImageSwiftUI */,
 				DA44E0D22DCA02F0001EDD36 /* KeychainAccess */,
 				DA8BEDC02DCA4BF4002983CA /* Shimmer */,
-				DA56BC4B2DDD9C1700C66274 /* IKEHGitHubAPIClient */,
+				DA55B5592DF6CE9300348445 /* IKEHGitHubAPIClient */,
+				DAFEEE862DF7FA5000A771C9 /* IKEHGitHubAPIClient */,
+				DAFEEE892DF8007700A771C9 /* LicenseList */,
 			);
 			productName = GitHubRepositorySearch;
 			productReference = DAA485A02DC1C1AE003581BF /* GitHubRepositorySearch.app */;
@@ -186,8 +192,9 @@
 				DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				DA8BEDBF2DCA4BF4002983CA /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 				DAC342B92DD32C3B0086BC09 /* XCRemoteSwiftPackageReference "swift-concurrency-extras" */,
-				DA56BC4A2DDD9C1700C66274 /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */,
 				DAA255FB2DDD9FB400292207 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
+				DAFEEE852DF7FA5000A771C9 /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */,
+				DAFEEE882DF8007700A771C9 /* XCRemoteSwiftPackageReference "LicenseList" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DAA485A12DC1C1AE003581BF /* Products */;
@@ -516,14 +523,6 @@
 				minimumVersion = 4.2.2;
 			};
 		};
-		DA56BC4A2DDD9C1700C66274 /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/pommdau/ikeh-github-api-client";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.10;
-			};
-		};
 		DA8BEDBF2DCA4BF4002983CA /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/markiv/SwiftUI-Shimmer";
@@ -556,6 +555,22 @@
 				minimumVersion = 1.3.1;
 			};
 		};
+		DAFEEE852DF7FA5000A771C9 /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pommdau/ikeh-github-api-client";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.14;
+			};
+		};
+		DAFEEE882DF8007700A771C9 /* XCRemoteSwiftPackageReference "LicenseList" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/cybozu/LicenseList";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -564,9 +579,8 @@
 			package = DA44E0D12DCA02F0001EDD36 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
 			productName = KeychainAccess;
 		};
-		DA56BC4B2DDD9C1700C66274 /* IKEHGitHubAPIClient */ = {
+		DA55B5592DF6CE9300348445 /* IKEHGitHubAPIClient */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = DA56BC4A2DDD9C1700C66274 /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */;
 			productName = IKEHGitHubAPIClient;
 		};
 		DA8BEDC02DCA4BF4002983CA /* Shimmer */ = {
@@ -588,6 +602,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DAC342B92DD32C3B0086BC09 /* XCRemoteSwiftPackageReference "swift-concurrency-extras" */;
 			productName = ConcurrencyExtras;
+		};
+		DAFEEE862DF7FA5000A771C9 /* IKEHGitHubAPIClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DAFEEE852DF7FA5000A771C9 /* XCRemoteSwiftPackageReference "ikeh-github-api-client" */;
+			productName = IKEHGitHubAPIClient;
+		};
+		DAFEEE892DF8007700A771C9 /* LicenseList */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DAFEEE882DF8007700A771C9 /* XCRemoteSwiftPackageReference "LicenseList" */;
+			productName = LicenseList;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

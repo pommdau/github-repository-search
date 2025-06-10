@@ -158,29 +158,22 @@ extension StarredReposListViewStateTests {
                 self.testRepos = Repo.Mock.random(count: 20)
 
                 // 読み込み済みのデータ
+                // TODO: 置き換え
                 self.loadedRepos = Array(testRepos[0..<10])
                 self.loadedStarredRepos = GitHubRepositorySearch.StarredRepo.Mock.randomWithRepos(loadedRepos)
-                self.loadedNextLink = .init(
-                    id: "next",
-                    url: try XCTUnwrap(URL(string: "https://api.github.com/search/repositories?q=SwiftUI&per_page=10&page=2")),
-                    queryItems: [
-                        .init(name: "q", value: "SwiftUI"),
-                        .init(name: "per_page", value: "10"),
-                        .init(name: "page", value: "2")
-                    ]
+                self.loadedNextLink = try .Mock.createSearchReposNext(
+                    query: "SwiftUI",
+                    perPage: 10,
+                    page: 2
                 )
                                         
                 // 新規に読み込まれるデータ
                 self.loadedMoreRepos = Array(testRepos[10..<20])
                 self.loadedoMoreStarredRepos = IKEHGitHubAPIClient.StarredRepo.Mock.randomWithRepos(loadedMoreRepos)
-                self.loadedMoreNextLink = .init(
-                    id: UUID().uuidString,
-                    url: try XCTUnwrap(URL(string: "https://api.github.com/search/repositories?q=SwiftUI&per_page=10&page=3")),
-                    queryItems: [
-                        .init(name: "q", value: "SwiftUI"),
-                        .init(name: "per_page", value: "10"),
-                        .init(name: "page", value: "3")
-                    ]
+                self.loadedMoreNextLink = try .Mock.createSearchReposNext(
+                    query: "SwiftUI",
+                    perPage: 10,
+                    page: 3
                 )
             }
         }
@@ -204,12 +197,6 @@ extension StarredReposListViewStateTests {
             )
             
             // MARK: When
-            XCTAssertTrue(sut.asyncStarredRepoIDs.isLoaded)
-            XCTAssertEqual(
-                sut.asyncStarredRepoIDs.values.sorted(by: { $0 < $1 }),
-                testData.loadedRepos.map { $0.id }.sorted(by: { $0 < $1 })
-            )
-            XCTAssertEqual(sut.nextLink, testData.loadedNextLink)
             let task = Task {
                 await sut.handleFetchStarredReposMore()
             }

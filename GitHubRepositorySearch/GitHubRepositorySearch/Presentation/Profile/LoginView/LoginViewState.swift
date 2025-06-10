@@ -15,7 +15,6 @@ final class LoginViewState {
     // MARK: - Property
     
     let tokenStore: TokenStoreProtocol
-    let loginUserStore: LoginUserStoreProtocol
     let namespace: Namespace.ID?
     var error: Error?
     
@@ -23,11 +22,9 @@ final class LoginViewState {
     
     init(
         tokenStore: TokenStoreProtocol = TokenStore.shared,
-        loginUserStore: LoginUserStoreProtocol = LoginUserStore.shared,
         namespace: Namespace.ID? = nil
     ) {
         self.tokenStore = tokenStore
-        self.loginUserStore = loginUserStore
         self.namespace = namespace
     }
     

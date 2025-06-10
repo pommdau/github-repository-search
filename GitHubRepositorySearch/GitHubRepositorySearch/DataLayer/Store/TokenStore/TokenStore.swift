@@ -17,20 +17,20 @@ final actor TokenStore: TokenStoreProtocol {
     
     let keychain: Keychain?
     var accessToken: String?
-    var gitHubAPIClient: GitHubAPIClient?
+    var gitHubAPIClient: GitHubAPIClientProtocol?
         
     // MARK: - LifeCycle
     
     init(
         keyChain: Keychain? = Keychain(service: Keychain.Service.oauth),
-        gitHubAPIClient: GitHubAPIClient = GitHubAPIClient.shared
+        gitHubAPIClient: GitHubAPIClientProtocol = GitHubAPIClient.shared
     ) {
         // DI
         self.keychain = keyChain
         self.gitHubAPIClient = gitHubAPIClient
         
         Task {
-            await fetchValue()
+            await loadSavedValues()
         }
     }
 }

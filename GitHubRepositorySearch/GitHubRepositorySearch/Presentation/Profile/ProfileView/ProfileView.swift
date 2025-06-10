@@ -28,11 +28,14 @@ private extension ProfileView {
         let isLoggedIn: Bool
         
         var body: some View {
-            if isLoggedIn {
-                LoginUserView(namespace: namespace)
-            } else {
-                LoginView(namespace: namespace)
+            VStack {
+                if isLoggedIn {
+                    LoginUserView(namespace: namespace)
+                } else {
+                    LoginView(namespace: namespace)
+                }
             }
+            .animation(.default, value: isLoggedIn)
         }
     }
 }
@@ -40,13 +43,14 @@ private extension ProfileView {
 // MARK: - Preview
 
 private extension ProfileView {
+    
     struct PreviewView: View {
         
         @State private var isLoggedIn = false
                 
         var body: some View {
             ZStack {
-                Toggle("Login: ", isOn: $isLoggedIn.animation())
+                Toggle("Login: ", isOn: $isLoggedIn)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
                         .fill(.blue.opacity(0.4))

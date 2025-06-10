@@ -15,7 +15,7 @@ final actor TokenStoreStub: TokenStoreProtocol {
     
     var accessToken: String?
     let keychain: Keychain? = nil // Stubではデータの永続化を行わないのでnil
-    let gitHubAPIClient: GitHubAPIClient? = nil // Stubではデータの通信を行わないのでnil
+    let gitHubAPIClient: GitHubAPIClientProtocol? = nil // Stubではデータの通信を行わないのでnil
     
     // MARK: - LifeCycle
     
