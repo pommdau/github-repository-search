@@ -98,7 +98,7 @@ extension LoginUserStoreTests {
             return
         } catch {
             // MARK: Then
-            guard let clientError = error as? GitHubAPIClientError else {
+            guard let _ = error as? GitHubAPIClientError else {
                 XCTFail("期待するエラーが検出されませんでした: \(error)")
                 return
             }

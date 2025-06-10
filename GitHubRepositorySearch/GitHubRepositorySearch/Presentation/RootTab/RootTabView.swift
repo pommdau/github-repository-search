@@ -16,7 +16,6 @@ struct RootTabView: View {
             Tab(RootTabType.profile.title, systemImage: RootTabType.profile.icon, value: RootTabType.profile) {
                 ProfileView()
             }
-
             Tab(RootTabType.search.title, systemImage: RootTabType.search.icon, value: RootTabType.search) {
                 SearchReposView()
             }

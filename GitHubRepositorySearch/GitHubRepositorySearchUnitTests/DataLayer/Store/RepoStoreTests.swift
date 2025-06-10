@@ -142,6 +142,7 @@ extension RepoStoreTests {
                 page: nil
             )
             XCTFail("期待するエラーが検出されませんでした")
+            return
         } catch {
             // MARK: Then
             guard let _ = error as? GitHubAPIClientError else {
