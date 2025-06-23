@@ -4,7 +4,7 @@
 - キーワードを入力しGitHubリポジトリを検索したり、ユーザのリポジトリやスター済みのリポジトリを確認できるiOSアプリケーションです
 - 下記リポジトリを基底としています。
   - [株式会社ゆめみ iOS エンジニアコードチェック課題](https://github.com/yumemi-inc/ios-engineer-codecheck)
-  - [以前に同課題を作成したもの](https://github.com/pommdau/github-repository-search)
+  - [以前に同課題を作成したもの](https://github.com/pommdau/iOSEngineerCodeCheck)
 
 ## プレビュー
 
